@@ -2,8 +2,6 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -11,6 +9,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
+
+import Enums.SurfaceType;
 
 public class Board extends JComponent implements MouseInputListener, ComponentListener {
 	private static final long serialVersionUID = 1L;
@@ -28,20 +28,20 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	}
 
 	public void iteration() {
-		for (int x = 1; x < points.length - 1; ++x)
-			for (int y = 1; y < points[x].length - 1; ++y)
-				points[x][y].updateVelocity();
-
-		for (int x = 1; x < points.length - 1; ++x)
-			for (int y = 1; y < points[x].length - 1; ++y)
-				points[x][y].updatePresure();
+//		for (int x = 1; x < points.length - 1; ++x)
+//			for (int y = 1; y < points[x].length - 1; ++y)
+//				points[x][y].updateVelocity();
+//
+//		for (int x = 1; x < points.length - 1; ++x)
+//			for (int y = 1; y < points[x].length - 1; ++y)
+//				points[x][y].updatePresure();
 		this.repaint();
 	}
 
 	public void clear() {
 		for (int x = 0; x < points.length; ++x)
 			for (int y = 0; y < points[x].length; ++y) {
-				points[x][y].clear();
+//				points[x][y].clear();
 			}
 		this.repaint();
 	}
@@ -88,8 +88,8 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 		for (x = 0; x < points.length; ++x) {
 			for (y = 0; y < points[x].length; ++y) {
 					g.setColor(Color.LIGHT_GRAY);
-					float change = points[x][y].getPressure();
-					if (change > 0.5) {
+					SurfaceType type = points[x][y].getType();
+					if (type == SurfaceType.ROAD) {
 						g.setColor(Color.WHITE);
 					}
 
