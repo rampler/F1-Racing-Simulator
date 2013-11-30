@@ -13,7 +13,7 @@ public class Point {
 	private int state;
 	
 	public Point() {
-		direction = Direction.TOP;
+		direction = Direction.NONE;
 		type = SurfaceType.GRASS;
 		carCenter = false;
 		angle = 0;
