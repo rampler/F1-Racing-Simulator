@@ -1,7 +1,5 @@
 package Enums;
 
-import java.io.Serializable;
-
-public enum SurfaceType implements Serializable{
+public enum SurfaceType {
 	ROAD, GRASS, SAND, WORSE_ROAD, BARRIER
 }
