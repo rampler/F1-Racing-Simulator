@@ -11,14 +11,14 @@ public class Program extends JFrame {
 	private GraphicsDevice device;
 
 	public Program() {
-		setTitle("F1 Racing Simulator");
+		setTitle("F1 Racing Simulator Track Editor");
 		this.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		gof = new GUI(this);
 		gof.initialize(this.getContentPane());
-		device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		device.setFullScreenWindow(this);
+		this.setExtendedState(
+        this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
 		
 	}

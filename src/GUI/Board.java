@@ -10,11 +10,13 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
 
+import Enums.Direction;
 import Enums.SurfaceType;
 
 public class Board extends JComponent implements MouseInputListener, ComponentListener {
 	private static final long serialVersionUID = 1L;
 	private Point[][] points;
+	private Track track;
 	private int size = 4;
 	private int width=340, height=180;
 	public int editType = 0;
@@ -27,6 +29,9 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 		setOpaque(true);
 	}
 
+	public Track getTrack(){ return track; }
+	public void setTrack(Track track){ this.track = track; points = track.getPoints(); }
+	
 	public void iteration() {
 //		for (int x = 1; x < points.length - 1; ++x)
 //			for (int y = 1; y < points[x].length - 1; ++y)
@@ -52,10 +57,20 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 		for (int x = 0; x < points.length; ++x)
 			for (int y = 0; y < points[x].length; ++y)
 				points[x][y] = new Point();
+				track = new Track("Silverstone", points);
 
 		for (int x = 1; x < points.length-1; ++x) {
 			for (int y = 1; y < points[x].length-1; ++y) {
-				// TODO: add von Neuman neighborhood
+				Point temp[] = new Point[8];
+				temp[Direction.TOP_LEFT.getNum()] = points[x-1][y-1];
+				temp[Direction.TOP.getNum()] = points[x-1][y];
+				temp[Direction.TOP_RIGHT.getNum()] = points[x-1][y+1];
+				temp[Direction.LEFT.getNum()] = points[x][y-1];
+				temp[Direction.RIGHT.getNum()] = points[x][y+1];
+				temp[Direction.BOTTOM_LEFT.getNum()] = points[x+1][y-1];
+				temp[Direction.BOTTOM.getNum()] = points[x+1][y];
+				temp[Direction.BOTTOM_RIGHT.getNum()] = points[x+1][y+1];
+				points[x][y].setNeighbors(temp);
 			}
 		}
 	}
@@ -114,7 +129,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	}
 
 	public void componentResized(ComponentEvent e) {
-		initialize(width, height);
+		if(track == null) initialize(width, height);
 	}
 
 	public void mouseDragged(MouseEvent e) {
