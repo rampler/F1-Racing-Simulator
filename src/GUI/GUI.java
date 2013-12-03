@@ -13,34 +13,25 @@ import java.util.Scanner;
 import java.util.regex.MatchResult;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Enums.Direction;
+import Enums.SurfaceType;
 
 public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
-	private Timer timer;
 	private Board board;
-	private JButton start, clear, exit, save, open;
-	private JComboBox<Integer> drawType;
-	private JSlider pred;
-	private JFrame frame;
-	private int iterNum = 0;
-	private final int maxDelay = 500, initDelay = 100;
-	private boolean running = false;
+	private JButton exit, save, open;
+	private JComboBox<String> typeBox, directionBox;
+	private JCheckBox directionShowed;
 
-	public GUI(JFrame jf) {
-		frame = jf;
-		timer = new Timer(initDelay, this);
-		timer.stop();
+	public GUI() {
 	}
 
 	public void initialize(Container container) {
@@ -48,14 +39,11 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		container.setSize(new Dimension(1024, 768));
 
 		JPanel buttonPanel = new JPanel();
-
-		start = new JButton("Start");
-		start.setActionCommand("Start");
-		start.addActionListener(this);
-
-		clear = new JButton("Clear");
-		clear.setActionCommand("clear");
-		clear.addActionListener(this);
+		
+		directionShowed = new JCheckBox();
+		directionShowed.setText("Tryb kierunków");
+		directionShowed.setActionCommand("directionShowed");
+		directionShowed.addActionListener(this);
 		
 		exit = new JButton("Exit");
 		exit.setActionCommand("exit");
@@ -68,24 +56,36 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		open = new JButton("Open");
 		open.setActionCommand("open");
 		open.addActionListener(this);
-
-		pred = new JSlider();
-		pred.setMinimum(0);
-		pred.setMaximum(maxDelay);
-		pred.addChangeListener(this);
-		pred.setValue(maxDelay - timer.getDelay());
 		
-	//	drawType = new JComboBox<Integer>(Point.types);
-	//	drawType.addActionListener(this);
-	//	drawType.setActionCommand("drawType");
-
-		buttonPanel.add(start);
-		buttonPanel.add(clear);
+		String[] list = new String[5]; 
+		int i=0;
+		for(SurfaceType value : SurfaceType.values()) 
+		{
+			list[i] = value.toString();
+			i++;
+		}
+		typeBox = new JComboBox<String>(list);
+		typeBox.addActionListener(this);
+		typeBox.setActionCommand("typeBox");
+		
+		list = new String[9]; 
+		i=0;
+		for(Direction value : Direction.values()) 
+		{
+			list[i] = value.toString();
+			i++;
+		}
+		directionBox = new JComboBox<String>(list);
+		directionBox.setSelectedIndex(2);
+		directionBox.addActionListener(this);
+		directionBox.setActionCommand("directionBox");
+		
 		buttonPanel.add(exit);
 		buttonPanel.add(save);
 		buttonPanel.add(open);
-//		buttonPanel.add(drawType);
-		buttonPanel.add(pred);
+		buttonPanel.add(typeBox);
+		buttonPanel.add(directionBox);
+		buttonPanel.add(directionShowed);
 
 		board = new Board(1024, 768 - buttonPanel.getHeight());
 		container.add(board, BorderLayout.CENTER);
@@ -93,63 +93,43 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(timer)) {
-			iterNum++;
-			frame.setTitle("Sound simulation (" + Integer.toString(iterNum) + " iteration)");
-			board.iteration();
-		} else {
-			String command = e.getActionCommand();
-			if (command.equals("Start")) {
-				if (!running) {
-					timer.start();
-					start.setText("Pause");
-				} else {
-					timer.stop();
-					start.setText("Start");
-				}
-				running = !running;
-				clear.setEnabled(true);
-
-			} else if (command.equals("clear")) {
-				iterNum = 0;
-				timer.stop();
-				start.setEnabled(true);
-				board.clear();
-				frame.setTitle("Cellular Automata Toolbox");
+		String command = e.getActionCommand();
+		if (command.equals("exit")) {
+			for(Frame frame : Frame.getFrames())
+				frame.dispose();					
+		}
+		else if (command.equals("save")) {
+			try
+			{
+				File file = new File(board.getTrack().getName()+".track");
+				saveTrack(file, board.getTrack());
 			}
-			else if (command.equals("exit")) {
-				for(Frame frame : Frame.getFrames())
-					frame.dispose();					
+			catch(IOException exp){JOptionPane.showMessageDialog(this, "Saving problem!");};
+		}
+		else if (command.equals("open")) {
+			try
+			{
+				JFileChooser fc = new JFileChooser();
+				fc.showOpenDialog(this);
+				File file = fc.getSelectedFile();
+				board.setTrack(loadTrack(file));
+				board.repaint();
 			}
-			else if (command.equals("save")) {
-				try
-				{
-					File file = new File(board.getTrack().getName()+".track");
-					saveTrack(file, board.getTrack());
-				}
-				catch(IOException exp){JOptionPane.showMessageDialog(this, "Saving problem!");};
-			}
-			else if (command.equals("open")) {
-				try
-				{
-					JFileChooser fc = new JFileChooser();
-					fc.showOpenDialog(this);
-					File file = fc.getSelectedFile();
-					board.setTrack(loadTrack(file));
-					board.repaint();
-				}
-				catch(IOException exp){JOptionPane.showMessageDialog(this, "Track loading problem!");};
-			}
-			else if (command.equals("drawType")){
-				int newType = (Integer)drawType.getSelectedItem();
-				board.editType = newType;
-			}
-
+			catch(IOException exp){JOptionPane.showMessageDialog(this, "Track loading problem!");};
+		}
+		else if(command.equals("typeBox")){
+			board.type = SurfaceType.valueOf((String)typeBox.getSelectedItem());
+		}
+		else if(command.equals("directionBox")){
+			board.direction = Direction.valueOf((String)directionBox.getSelectedItem());
+		}
+		else if(command.equals("directionShowed")){
+			board.directionShowed = directionShowed.isSelected();
+			board.repaint();
 		}
 	}
 
 	public void stateChanged(ChangeEvent e) {
-		timer.setDelay(maxDelay - pred.getValue());
 	}
 	
 	private void saveTrack(File file, Track track) throws FileNotFoundException
@@ -164,6 +144,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			}
 		out.close();
 	}
+	
 	private Track loadTrack(File file) throws FileNotFoundException
 	{
 		Scanner in = new Scanner(file);

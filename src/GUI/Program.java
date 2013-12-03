@@ -11,7 +11,7 @@ public class Program extends JFrame {
 		this.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		gof = new GUI(this);
+		gof = new GUI();
 		gof.initialize(this.getContentPane());
 		this.setExtendedState(
         this.getExtendedState() | JFrame.MAXIMIZED_BOTH);

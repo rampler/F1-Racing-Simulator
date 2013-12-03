@@ -18,7 +18,9 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	private Track track;
 	private int size = 4;
 	private int width=340, height=180;
-	public int editType = 0;
+	public SurfaceType type = SurfaceType.ROAD;
+	public Direction direction = Direction.TOP;
+	public boolean directionShowed = false;
 
 	public Board(int length, int height) {
 		addMouseListener(this);
@@ -30,25 +32,6 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 
 	public Track getTrack(){ return track; }
 	public void setTrack(Track track){ this.track = track; points = track.getPoints(); }
-	
-	public void iteration() {
-//		for (int x = 1; x < points.length - 1; ++x)
-//			for (int y = 1; y < points[x].length - 1; ++y)
-//				points[x][y].updateVelocity();
-//
-//		for (int x = 1; x < points.length - 1; ++x)
-//			for (int y = 1; y < points[x].length - 1; ++y)
-//				points[x][y].updatePresure();
-		this.repaint();
-	}
-
-	public void clear() {
-		for (int x = 0; x < points.length; ++x)
-			for (int y = 0; y < points[x].length; ++y) {
-//				points[x][y].clear();
-			}
-		this.repaint();
-	}
 
 	private void initialize(int length, int height) {
 		points = new Point[length][height];
@@ -86,25 +69,69 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 		int lastY = height*size;
 
 		int x = firstX;
-		while (x < lastX) {
+		while (x < lastX+1) {
 			g.drawLine(x, firstY, x, lastY);
 			x += gridSpace;
 		}
 
 		int y = firstY;
-		while (y < lastY) {
+		while (y < lastY+1) {
 			g.drawLine(firstX, y, lastX, y);
 			y += gridSpace;
 		}
 
-		g.setColor(Color.LIGHT_GRAY);
 		for (x = 0; x < points.length; ++x) {
 			for (y = 0; y < points[x].length; ++y) {
-					g.setColor(Color.LIGHT_GRAY);
+				if(!directionShowed)
+				{
 					SurfaceType type = points[x][y].getType();
 					if (type == SurfaceType.ROAD) {
+						g.setColor(Color.DARK_GRAY);
+					}
+					else if (type == SurfaceType.BARRIER) {
+						g.setColor(Color.RED);
+					}
+					else if (type == SurfaceType.GRASS) {
+						g.setColor(Color.GREEN);
+					}
+					else if (type == SurfaceType.SAND) {
+						g.setColor(Color.YELLOW);
+					}
+					else if (type == SurfaceType.WORSE_ROAD) {
+						g.setColor(Color.LIGHT_GRAY);
+					}
+				}
+				else
+				{
+					Direction direction = points[x][y].getDirection();
+					if (direction == Direction.NONE) {
 						g.setColor(Color.WHITE);
 					}
+					else if (direction == Direction.TOP) {
+						g.setColor(Color.RED);
+					}
+					else if (direction == Direction.BOTTOM) {
+						g.setColor(Color.BLACK);
+					}
+					else if (direction == Direction.LEFT) {
+						g.setColor(Color.BLUE);
+					}
+					else if (direction == Direction.RIGHT) {
+						g.setColor(Color.MAGENTA);
+					}
+					else if (direction == Direction.TOP_LEFT) {
+						g.setColor(Color.CYAN);
+					}
+					else if (direction == Direction.TOP_RIGHT) {
+						g.setColor(Color.PINK);
+					}
+					else if (direction == Direction.BOTTOM_LEFT) {
+						g.setColor(Color.YELLOW);
+					}
+					else if (direction == Direction.BOTTOM_RIGHT) {
+						g.setColor(Color.ORANGE);
+					}
+				}
 
 				g.fillRect((x * size) + 1, (y * size) + 1, (size - 1), (size - 1));
 			}
@@ -116,12 +143,9 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 		int x = e.getX() / size;
 		int y = e.getY() / size;
 		if ((x < points.length) && (x > 0) && (y < points[x].length) && (y > 0)) {
-			if(editType==0){
-				points[x][y].clicked();
-			}
-			else {
-		//		points[x][y].type= editType;
-			}
+			if(type == SurfaceType.ROAD || type == SurfaceType.WORSE_ROAD) points[x][y].change(type, direction);
+			else if(directionShowed) points[x][y].change(direction);
+			else points[x][y].change(type);
 			this.repaint();
 		}
 	}
@@ -131,17 +155,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		int x = e.getX() / size;
-		int y = e.getY() / size;
-		if ((x < points.length) && (x > 0) && (y < points[x].length) && (y > 0)) {
-			if(editType==0){
-				points[x][y].clicked();
-			}
-			else {
-			//	points[x][y].type= editType;
-			}
-			this.repaint();
-		}
+		mouseClicked(e);
 	}
 
 	public void mouseExited(MouseEvent e) {

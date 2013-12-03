@@ -29,10 +29,13 @@ public class Point {
 		this.neighbors = neighbors;
 	}
 	
-	//To erase or change
-	public void clicked()
+	//Only in TrackEditor
+	public void change(SurfaceType type){ this.type = type; }
+	public void change(Direction direction){ this.direction = direction; }
+	public void change(SurfaceType type, Direction direction)
 	{
-		type = SurfaceType.ROAD;
+		this.type = type;
+		this.direction = direction;
 	}
 	
 	public SurfaceType getType(){ return type; }
