@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{cellularAutomata}
+Cellular automata.
+\newblock \url{http://plato.stanford.edu/entries/cellular-automata/}.
+\newblock Accessed: 04-12-2013.
+
+\bibitem{nature}
+Nature of code.
+\newblock \url{http://natureofcode.com/book/chapter-7-cellular-automata/}.
+\newblock Accessed: 04-12-2013.
+
+\bibitem{particleSimulation}
+Carter Chamberlain.
+\newblock Particle simulation with cellular automaton.
+\newblock 2009.
+
+\end{thebibliography}
