@@ -11,18 +11,17 @@ import javax.swing.event.MouseInputListener;
 
 import Enums.Direction;
 import Enums.SurfaceType;
+import POJOs.Point;
+import POJOs.Track;
 
 public class Board extends JComponent implements MouseInputListener, ComponentListener {
 	private static final long serialVersionUID = 1L;
 	private Point[][] points;
 	private Track track;
 	private int size = 4;
-	private int width=340, height=180;
-	public SurfaceType type = SurfaceType.ROAD;
-	public Direction direction = Direction.TOP;
-	public boolean directionShowed = false;
+	private final int width=340, height=180;
 
-	public Board(int length, int height) {
+	public Board() {
 		addMouseListener(this);
 		addComponentListener(this);
 		addMouseMotionListener(this);
@@ -82,55 +81,21 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 
 		for (x = 0; x < points.length; ++x) {
 			for (y = 0; y < points[x].length; ++y) {
-				if(!directionShowed)
-				{
-					SurfaceType type = points[x][y].getType();
-					if (type == SurfaceType.ROAD) {
-						g.setColor(Color.DARK_GRAY);
-					}
-					else if (type == SurfaceType.BARRIER) {
-						g.setColor(Color.RED);
-					}
-					else if (type == SurfaceType.GRASS) {
-						g.setColor(Color.GREEN);
-					}
-					else if (type == SurfaceType.SAND) {
-						g.setColor(Color.YELLOW);
-					}
-					else if (type == SurfaceType.WORSE_ROAD) {
-						g.setColor(Color.LIGHT_GRAY);
-					}
+				SurfaceType type = points[x][y].getType();
+				if (type == SurfaceType.ROAD) {
+					g.setColor(Color.DARK_GRAY);
 				}
-				else
-				{
-					Direction direction = points[x][y].getDirection();
-					if (direction == Direction.NONE) {
-						g.setColor(Color.WHITE);
-					}
-					else if (direction == Direction.TOP) {
-						g.setColor(Color.RED);
-					}
-					else if (direction == Direction.BOTTOM) {
-						g.setColor(Color.BLACK);
-					}
-					else if (direction == Direction.LEFT) {
-						g.setColor(Color.BLUE);
-					}
-					else if (direction == Direction.RIGHT) {
-						g.setColor(Color.MAGENTA);
-					}
-					else if (direction == Direction.TOP_LEFT) {
-						g.setColor(Color.CYAN);
-					}
-					else if (direction == Direction.TOP_RIGHT) {
-						g.setColor(Color.PINK);
-					}
-					else if (direction == Direction.BOTTOM_LEFT) {
-						g.setColor(Color.YELLOW);
-					}
-					else if (direction == Direction.BOTTOM_RIGHT) {
-						g.setColor(Color.ORANGE);
-					}
+				else if (type == SurfaceType.BARRIER) {
+					g.setColor(Color.RED);
+				}
+				else if (type == SurfaceType.GRASS) {
+					g.setColor(Color.GREEN);
+				}
+				else if (type == SurfaceType.SAND) {
+					g.setColor(Color.YELLOW);
+				}
+				else if (type == SurfaceType.WORSE_ROAD) {
+					g.setColor(Color.LIGHT_GRAY);
 				}
 
 				g.fillRect((x * size) + 1, (y * size) + 1, (size - 1), (size - 1));
@@ -139,47 +104,19 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 
 	}
 
-	public void mouseClicked(MouseEvent e) {
-		int x = e.getX() / size;
-		int y = e.getY() / size;
-		if ((x < points.length) && (x > 0) && (y < points[x].length) && (y > 0)) {
-			if(type == SurfaceType.ROAD || type == SurfaceType.WORSE_ROAD) points[x][y].change(type, direction);
-			else if(directionShowed) points[x][y].change(direction);
-			else points[x][y].change(type);
-			this.repaint();
-		}
-	}
-
 	public void componentResized(ComponentEvent e) {
 		if(track == null) initialize(width, height);
 	}
-
-	public void mouseDragged(MouseEvent e) {
-		mouseClicked(e);
-	}
-
-	public void mouseExited(MouseEvent e) {
-	}
-
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	public void componentShown(ComponentEvent e) {
-	}
-
-	public void componentMoved(ComponentEvent e) {
-	}
-
-	public void mouseReleased(MouseEvent e) {
-	}
-
-	public void mouseMoved(MouseEvent e) {
-	}
-
-	public void componentHidden(ComponentEvent e) {
-	}
-
-	public void mousePressed(MouseEvent e) {
-	}
+	
+	public void mouseClicked(MouseEvent e) {}
+	public void mouseDragged(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {}
+	public void componentShown(ComponentEvent e) {}
+	public void componentMoved(ComponentEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
+	public void mouseMoved(MouseEvent e) {}
+	public void componentHidden(ComponentEvent e) {}
+	public void mousePressed(MouseEvent e) {}
 
 }

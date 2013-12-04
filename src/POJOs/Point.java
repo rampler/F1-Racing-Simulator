@@ -1,4 +1,4 @@
-package GUI;
+package POJOs;
 
 import Enums.Direction;
 import Enums.SurfaceType;
@@ -27,15 +27,6 @@ public class Point {
 		this.angle = angle;
 		this.state = state;
 		this.neighbors = neighbors;
-	}
-	
-	//Only in TrackEditor
-	public void change(SurfaceType type){ this.type = type; }
-	public void change(Direction direction){ this.direction = direction; }
-	public void change(SurfaceType type, Direction direction)
-	{
-		this.type = type;
-		this.direction = direction;
 	}
 	
 	public SurfaceType getType(){ return type; }

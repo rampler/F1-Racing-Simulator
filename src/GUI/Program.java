@@ -13,8 +13,7 @@ public class Program extends JFrame {
 
 		gof = new GUI();
 		gof.initialize(this.getContentPane());
-		this.setExtendedState(
-        this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
 		
 	}

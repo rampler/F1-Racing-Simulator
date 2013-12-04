@@ -1,4 +1,5 @@
-package GUI;
+package POJOs;
+
 
 public class Track {
 	

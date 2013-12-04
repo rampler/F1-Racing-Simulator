@@ -8,28 +8,25 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Enums.Direction;
-import Enums.SurfaceType;
+import POJOs.Point;
+import POJOs.Track;
 
 public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
 	private Board board;
-	private JButton exit, save, open;
-	private JComboBox<String> typeBox, directionBox;
-	private JCheckBox directionShowed;
+	private JButton exit, open;
 
 	public GUI() {
 	}
@@ -40,55 +37,20 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 
 		JPanel buttonPanel = new JPanel();
 		
-		directionShowed = new JCheckBox();
-		directionShowed.setText("Tryb kierunków");
-		directionShowed.setActionCommand("directionShowed");
-		directionShowed.addActionListener(this);
-		
 		exit = new JButton("Exit");
 		exit.setActionCommand("exit");
 		exit.addActionListener(this);
-		
-		save = new JButton("Save");
-		save.setActionCommand("save");
-		save.addActionListener(this);
 		
 		open = new JButton("Open");
 		open.setActionCommand("open");
 		open.addActionListener(this);
 		
-		String[] list = new String[5]; 
-		int i=0;
-		for(SurfaceType value : SurfaceType.values()) 
-		{
-			list[i] = value.toString();
-			i++;
-		}
-		typeBox = new JComboBox<String>(list);
-		typeBox.addActionListener(this);
-		typeBox.setActionCommand("typeBox");
-		
-		list = new String[9]; 
-		i=0;
-		for(Direction value : Direction.values()) 
-		{
-			list[i] = value.toString();
-			i++;
-		}
-		directionBox = new JComboBox<String>(list);
-		directionBox.setSelectedIndex(2);
-		directionBox.addActionListener(this);
-		directionBox.setActionCommand("directionBox");
-		
 		buttonPanel.add(exit);
-		buttonPanel.add(save);
 		buttonPanel.add(open);
-		buttonPanel.add(typeBox);
-		buttonPanel.add(directionBox);
-		buttonPanel.add(directionShowed);
 
-		board = new Board(1024, 768 - buttonPanel.getHeight());
-		container.add(board, BorderLayout.CENTER);
+		board = new Board();
+		JScrollPane scrollPane = new JScrollPane(board);
+		container.add(scrollPane, BorderLayout.CENTER);
 		container.add(buttonPanel, BorderLayout.SOUTH);
 	}
 
@@ -97,14 +59,6 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		if (command.equals("exit")) {
 			for(Frame frame : Frame.getFrames())
 				frame.dispose();					
-		}
-		else if (command.equals("save")) {
-			try
-			{
-				File file = new File(board.getTrack().getName()+".track");
-				saveTrack(file, board.getTrack());
-			}
-			catch(IOException exp){JOptionPane.showMessageDialog(this, "Saving problem!");};
 		}
 		else if (command.equals("open")) {
 			try
@@ -117,34 +71,16 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			}
 			catch(IOException exp){JOptionPane.showMessageDialog(this, "Track loading problem!");};
 		}
-		else if(command.equals("typeBox")){
-			board.type = SurfaceType.valueOf((String)typeBox.getSelectedItem());
-		}
-		else if(command.equals("directionBox")){
-			board.direction = Direction.valueOf((String)directionBox.getSelectedItem());
-		}
-		else if(command.equals("directionShowed")){
-			board.directionShowed = directionShowed.isSelected();
-			board.repaint();
-		}
 	}
 
-	public void stateChanged(ChangeEvent e) {
-	}
+	public void stateChanged(ChangeEvent e) {}
 	
-	private void saveTrack(File file, Track track) throws FileNotFoundException
-	{
-		Point[][] points = track.getPoints();
-		PrintWriter out = new PrintWriter(file);
-		out.write(track.getName()+";"+points.length+";"+points[0].length+"\n");
-		for(int i=0; i<points.length; i++)
-			for(int j=0; j<points[i].length; j++)
-			{
-				out.write(points[i][j].getType()+";"+points[i][j].getDirection()+";"+points[i][j].getState()+";"+points[i][j].getAngle()+";"+points[i][j].isCarCenter()+"\n");
-			}
-		out.close();
-	}
-	
+	/**
+	 * Loading Track from file
+	 * @param file 
+	 * @return loaded Track
+	 * @throws FileNotFoundException
+	 */
 	private Track loadTrack(File file) throws FileNotFoundException
 	{
 		Scanner in = new Scanner(file);
