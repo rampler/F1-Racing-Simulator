@@ -1,4 +1,4 @@
-track = imread('track-grid.jpg');
+track = imread('hungaroring.png');
 [X Y Z] = size(track);
 
 for i=1:X
@@ -17,4 +17,4 @@ for i=1:X
 end
 
 figure(1), imshow(track);
-imwrite(track, 'track-grid-matlab.jpg', 'jpg');
+imwrite(track, 'hungaroring-matlab.jpg', 'jpg');
