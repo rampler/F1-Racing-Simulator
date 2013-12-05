@@ -60,6 +60,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	}
 
 	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		g.setColor(Color.GRAY);
 		drawNetting(g, size);
 	}

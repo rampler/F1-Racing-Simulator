@@ -32,10 +32,12 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private Board board;
 	private JButton exit, open, simulation, start, pause, clear, about;
 	private double screenWidth, screenHeight;
+	private Container parent;
 
 	public GUI() {}
 
 	public void initialize(Container container) {
+		parent = container;
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS)); //new BorderLayout());
 		container.setSize(new Dimension(1024, 768));
 
@@ -102,9 +104,15 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			{
 				JFileChooser fc = new JFileChooser();
 				fc.showOpenDialog(this);
-				File file = fc.getSelectedFile();
-				board.setTrack(loadTrack(file));
-				board.repaint();
+				if(fc.getSelectedFile() != null) 
+				{
+					File file = fc.getSelectedFile();
+					board.setTrack(loadTrack(file));
+					board.repaint();
+					this.repaint();
+					parent.repaint();
+				}
+				
 			}
 			catch(IOException exp){JOptionPane.showMessageDialog(this, "Track loading problem!");};
 		}

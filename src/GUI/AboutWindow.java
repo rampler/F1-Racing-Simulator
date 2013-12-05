@@ -29,24 +29,24 @@ public class AboutWindow extends JPanel{
 	       try {                
 	          image = ImageIO.read(new File("res/about.png"));
 	          uri = new URI("https://github.com/rampler/F1-Racing-Simulator");
+	          
+	          JButton button = new JButton();
+		       button.setText("Github: github.com/rampler/F1-Racing-Simulator");
+		       button.setHorizontalAlignment(SwingConstants.LEFT);
+		       button.setBorderPainted(false);
+		       button.setOpaque(false);
+		       button.setBackground(Color.WHITE);
+		       button.setToolTipText(uri.toString());
+		       button.addActionListener(new ActionListener(){
+		    	   @Override public void actionPerformed(ActionEvent e) {
+			        open(uri);
+			      }});
+		       JPanel bottomPanel = new JPanel();
+		       bottomPanel.add(button);
+		       this.add(bottomPanel, BorderLayout.SOUTH);
 	       } 
 	       catch (IOException ex) { JOptionPane.showMessageDialog(this, "Something goes wrong!"); }
-	       catch (URISyntaxException e) { e.printStackTrace(); }
-	       
-	       JButton button = new JButton();
-	       button.setText("Github: github.com/rampler/F1-Racing-Simulator");
-	       button.setHorizontalAlignment(SwingConstants.LEFT);
-	       button.setBorderPainted(false);
-	       button.setOpaque(false);
-	       button.setBackground(Color.WHITE);
-	       button.setToolTipText(uri.toString());
-	       button.addActionListener(new ActionListener(){
-	    	   @Override public void actionPerformed(ActionEvent e) {
-		        open(uri);
-		      }});
-	       JPanel bottomPanel = new JPanel();
-	       bottomPanel.add(button);
-	       this.add(bottomPanel, BorderLayout.SOUTH);
+	       catch (URISyntaxException e) { JOptionPane.showMessageDialog(this, "Something goes wrong!"); }
 	    }
 
     @Override
@@ -57,9 +57,8 @@ public class AboutWindow extends JPanel{
     
     private static void open(URI uri) {
         if (Desktop.isDesktopSupported()) {
-          try {
-            Desktop.getDesktop().browse(uri);
-          } catch (IOException e) {}
+          try { Desktop.getDesktop().browse(uri);} 
+          catch (IOException e) {}
         }
     }
 }
