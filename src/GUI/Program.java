@@ -1,5 +1,10 @@
 package GUI;
+import java.awt.EventQueue;
+
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 public class Program extends JFrame {
 
@@ -7,6 +12,12 @@ public class Program extends JFrame {
 	private GUI gof;
 
 	public Program() {
+		try { UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceGraphiteLookAndFeel"); //"com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception exc) { SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JOptionPane.showMessageDialog(null, "Error!", "Message", JOptionPane.ERROR_MESSAGE);
+            }
+        }); }
 		setTitle("F1 Racing Simulator Track Editor");
 		this.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -14,11 +25,19 @@ public class Program extends JFrame {
 		gof = new GUI();
 		gof.initialize(this.getContentPane());
 		this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-		this.setVisible(true);
 		
 	}
 
 	public static void main(String[] args) {
-		new Program();
+		EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    Program frame = new Program();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 	}
 }

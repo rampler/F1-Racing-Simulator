@@ -20,8 +20,11 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	private Track track;
 	private int size = 4;
 	private final int width=340, height=180;
+	private final int screenWidth, screenHeight;
 
-	public Board() {
+	public Board(int screenWidth, int screenHeight) {
+		this.screenHeight = screenHeight;
+		this.screenWidth = screenWidth;
 		addMouseListener(this);
 		addComponentListener(this);
 		addMouseMotionListener(this);
@@ -62,10 +65,14 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 	}
 
 	private void drawNetting(Graphics g, int gridSpace) {
-		int firstX = 0;
-		int firstY = 0;
-		int lastX = width*size;
-		int lastY = height*size;
+		
+		int verticalOffset = (screenHeight - 755)/2;
+		int horizontalOffset = (screenWidth - 1363)/2;
+
+		int firstX = horizontalOffset;
+		int firstY = verticalOffset;
+		int lastX = width*size+horizontalOffset;
+		int lastY = height*size+verticalOffset;
 
 		int x = firstX;
 		while (x < lastX+1) {
@@ -98,7 +105,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 					g.setColor(Color.LIGHT_GRAY);
 				}
 
-				g.fillRect((x * size) + 1, (y * size) + 1, (size - 1), (size - 1));
+				g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
 			}
 		}
 
