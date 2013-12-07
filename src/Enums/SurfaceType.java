@@ -1,5 +1,10 @@
 package Enums;
 
+/**
+ * Track surface types
+ * @author Mateusz
+ *
+ */
 public enum SurfaceType {
-	ROAD, GRASS, SAND, WORSE_ROAD, BARRIER
+	ROAD, GRASS, WORSE_ROAD, BARRIER
 }

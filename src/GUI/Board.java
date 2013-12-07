@@ -94,13 +94,10 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 					g.setColor(Color.DARK_GRAY);
 				}
 				else if (type == SurfaceType.BARRIER) {
-					g.setColor(Color.RED);
+					g.setColor(Color.BLUE);
 				}
 				else if (type == SurfaceType.GRASS) {
 					g.setColor(Color.GREEN);
-				}
-				else if (type == SurfaceType.SAND) {
-					g.setColor(Color.YELLOW);
 				}
 				else if (type == SurfaceType.WORSE_ROAD) {
 					g.setColor(Color.LIGHT_GRAY);

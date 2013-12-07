@@ -38,7 +38,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 
 	public void initialize(Container container) {
 		parent = container;
-		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS)); //new BorderLayout());
+		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		container.setSize(new Dimension(1024, 768));
 
 		JPanel buttonPanel = new JPanel();

@@ -39,7 +39,7 @@ public class AboutWindow extends JPanel{
 		       button.setToolTipText(uri.toString());
 		       button.addActionListener(new ActionListener(){
 		    	   @Override public void actionPerformed(ActionEvent e) {
-			        open(uri);
+			        openURI(uri);
 			      }});
 		       JPanel bottomPanel = new JPanel();
 		       bottomPanel.add(button);
@@ -55,7 +55,7 @@ public class AboutWindow extends JPanel{
         g.drawImage(image, 0, 0, null);         
     }
     
-    private static void open(URI uri) {
+    private static void openURI(URI uri) {
         if (Desktop.isDesktopSupported()) {
           try { Desktop.getDesktop().browse(uri);} 
           catch (IOException e) {}

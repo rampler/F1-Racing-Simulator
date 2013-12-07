@@ -12,6 +12,7 @@ public class Point {
 	private int angle;
 	private int state;
 	
+	//Constructors
 	public Point() {
 		direction = Direction.NONE;
 		type = SurfaceType.GRASS;
@@ -29,14 +30,17 @@ public class Point {
 		this.neighbors = neighbors;
 	}
 	
+	//Getters
 	public SurfaceType getType(){ return type; }
 	public Direction getDirection(){ return direction; }
 	public int getAngle(){ return angle; }
 	public int getState(){ return state; }
 	public Point[] getNeighbors(){ return neighbors; }
 	
+	//Is's
 	public boolean isCarCenter(){ return carCenter; }
 	
+	//Setters
 	public void setNeighbors(Point[] neighbors){ this.neighbors = neighbors; }
 	public void setState(int state){ this.state = state; }
 	public void setCarCenter(boolean carCenter){ this.carCenter = carCenter; }
