@@ -1,18 +1,27 @@
 \begin{thebibliography}{1}
 
-\bibitem{cellularAutomata}
-Cellular automata.
-\newblock \url{http://plato.stanford.edu/entries/cellular-automata/}.
-\newblock Accessed: 04-12-2013.
-
-\bibitem{nature}
-Nature of code.
-\newblock \url{http://natureofcode.com/book/chapter-7-cellular-automata/}.
-\newblock Accessed: 04-12-2013.
-
 \bibitem{particleSimulation}
 Carter Chamberlain.
 \newblock Particle simulation with cellular automaton.
 \newblock 2009.
+
+\bibitem{cellularAutomata}
+Jacopo~Tagliabue Francesco~Berto.
+\newblock Cellular automata.
+\newblock \url{http://plato.stanford.edu/entries/cellular-automata}.
+\newblock Accessed: 04-12-2013.
+
+\bibitem{track}
+Formula One World~Championship Limited.
+\newblock Hungaroring circuit.
+\newblock
+  \url{http://www.formula1.com/races/in_detail/hungary_903/circuit_diagram.html}.
+\newblock Accessed: 07-12-2013.
+
+\bibitem{nature}
+Daniel Shiffman.
+\newblock Nature of code.
+\newblock \url{http://natureofcode.com/book/chapter-7-cellular-automata/}.
+\newblock Accessed: 04-12-2013.
 
 \end{thebibliography}

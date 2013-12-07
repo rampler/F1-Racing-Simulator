@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.11.13)  4 DEC 2013 15:49
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.11.13)  7 DEC 2013 15:28
 entering extended mode
 **documentation.tex
 
@@ -416,56 +416,78 @@ LaTeX Font Info:    External font `plex10' loaded for size
 LaTeX Font Info:    External font `plex10' loaded for size
 (Font)              <6> on input line 50.
 
+Underfull \hbox (badness 10000) in paragraph at lines 63--64
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 65--66
+
+ []
+
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <10> on input line 71.
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <7> on input line 71.
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <5> on input line 71.
+[1
+
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 79.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omscmr.fd"
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 79.
+
 ("C:\Users\Sabina Rydzek\Documents\GitHub\F1-Racing-Simulator\doc\documentation
 .bbl"
-LaTeX Font Info:    Try loading font information for OT4+cmtt on input line 5.
+LaTeX Font Info:    Try loading font information for OT4+cmtt on input line 11.
+
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\polski\ot4cmtt.fd"
 File: ot4cmtt.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <10> on input line 5.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <7> on input line 5.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <5> on input line 5.
-
-Underfull \hbox (badness 10000) in paragraph at lines 4--7
-[]\OT4/cmr/m/n/10 Cellular au-to-mata.  $\OT4/cmtt/m/n/10 http : / / plato . st
-anford . edu / entries /$
+Underfull \hbox (badness 3343) in paragraph at lines 15--20
+[]\OT4/cmr/m/n/10 Formula One World Cham-pion-ship Li-mi-ted.  Hun-ga-ro-ring c
+ir-cuit.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 9--12
-[]\OT4/cmr/m/n/10 Nature of code.  $\OT4/cmtt/m/n/10 http : / / natureofcode . 
-com / book /$
+Underfull \hbox (badness 10000) in paragraph at lines 15--20
+$\OT4/cmtt/m/n/10 http : / / www . formula1 . com / races / in _ detail / hunga
+ry _ 903 / circuit _$
  []
 
-) [1
-
-{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
+) [2]
 ("C:\Users\Sabina Rydzek\Documents\GitHub\F1-Racing-Simulator\doc\documentation
 .aux") ) 
 Here is how much of TeX's memory you used:
- 2142 strings out of 493921
- 27513 string characters out of 3144851
- 79306 words of memory out of 3000000
- 5407 multiletter control sequences out of 15000+200000
- 14081 words of font info for 40 fonts, out of 3000000 for 9000
+ 2163 strings out of 493921
+ 27856 string characters out of 3144851
+ 81309 words of memory out of 3000000
+ 5424 multiletter control sequences out of 15000+200000
+ 15121 words of font info for 42 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 27i,6n,24p,334b,288s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,6n,24p,715b,244s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/pltt.enc}{C:/Prog
-ram Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plrm.enc}{C:/Program Files (x86)/
-MiKTeX 2.9/fonts/enc/dvips/pl/plsc.enc}<C:/Program Files (x86)/MiKTeX 2.9/fonts
-/type1/public/pl/plbx12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
-ic/pl/plbx9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plcsc1
-0.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr10.pfb><C:/Pr
-ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr12.pfb><C:/Program Files 
-(x86)/MiKTeX 2.9/fonts/type1/public/pl/plr17.pfb><C:/Program Files (x86)/MiKTeX
- 2.9/fonts/type1/public/pl/plr9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/ty
-pe1/public/pl/pltt10.pfb>
-Output written on documentation.pdf (1 page, 63065 bytes).
+ram Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plmi.enc}{C:/Program Files (x86)/
+MiKTeX 2.9/fonts/enc/dvips/pl/plit.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts
+/enc/dvips/pl/plrm.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/pl
+sc.enc}<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10
+.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plbx12.pfb><C:/Pr
+ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plbx9.pfb><C:/Program Files 
+(x86)/MiKTeX 2.9/fonts/type1/public/pl/plcsc10.pfb><C:/Program Files (x86)/MiKT
+eX 2.9/fonts/type1/public/pl/plmi10.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
+s/type1/public/pl/plr10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
+ic/pl/plr12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr17.
+pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr9.pfb><C:/Progr
+am Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plti10.pfb><C:/Program Files (x
+86)/MiKTeX 2.9/fonts/type1/public/pl/pltt10.pfb>
+Output written on documentation.pdf (2 pages, 96964 bytes).
 PDF statistics:
- 41 PDF objects out of 1000 (max. 8388607)
+ 58 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
