@@ -89,7 +89,7 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 						g.setColor(Color.DARK_GRAY);
 					}
 					else if (type == SurfaceType.BARRIER) {
-						g.setColor(Color.RED);
+						g.setColor(Color.BLUE);
 					}
 					else if (type == SurfaceType.GRASS) {
 						g.setColor(Color.GREEN);
@@ -143,8 +143,8 @@ public class Board extends JComponent implements MouseInputListener, ComponentLi
 		int x = e.getX() / size;
 		int y = e.getY() / size;
 		if ((x < points.length) && (x > 0) && (y < points[x].length) && (y > 0)) {
-			if(type == SurfaceType.ROAD || type == SurfaceType.WORSE_ROAD) points[x][y].change(type, direction);
-			else if(directionShowed) points[x][y].change(direction);
+			//if(type == SurfaceType.ROAD || type == SurfaceType.WORSE_ROAD) points[x][y].change(type, direction);
+			if(directionShowed) points[x][y].change(direction);
 			else points[x][y].change(type);
 			this.repaint();
 		}
