@@ -2,126 +2,108 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.regex.MatchResult;
 
-import javax.swing.JComponent;
-import javax.swing.event.MouseInputListener;
+import javax.swing.JPanel;
 
 import Enums.Direction;
 import Enums.SurfaceType;
+import Exceptions.FileFormatException;
 import POJOs.Point;
 import POJOs.Track;
 
-public class Board extends JComponent implements MouseInputListener, ComponentListener {
+public class Board extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private Point[][] points;
 	private Track track;
-	private int size = 4;
-	private final int width=340, height=180;
-	private final int screenWidth, screenHeight;
+	private final int SIZE = 4;
+	private final int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 	public Board(int screenWidth, int screenHeight) {
-		this.screenHeight = screenHeight;
-		this.screenWidth = screenWidth;
-		addMouseListener(this);
-		addComponentListener(this);
-		addMouseMotionListener(this);
-		setBackground(Color.GRAY);
-		setOpaque(true);
+		this.SCREEN_HEIGHT = screenHeight;
+		this.SCREEN_WIDTH = screenWidth;
+		setBackground(Color.DARK_GRAY);
 	}
 
 	public Track getTrack(){ return track; }
 	public void setTrack(Track track){ this.track = track; points = track.getPoints(); }
-
-	private void initialize(int length, int height) {
-		points = new Point[length][height];
-
-		for (int x = 0; x < points.length; ++x)
-			for (int y = 0; y < points[x].length; ++y)
-				points[x][y] = new Point();
-				track = new Track("Silverstone", points);
-
-		for (int x = 1; x < points.length-1; ++x) {
-			for (int y = 1; y < points[x].length-1; ++y) {
-				Point temp[] = new Point[8];
-				temp[Direction.TOP_LEFT.getNum()] = points[x-1][y-1];
-				temp[Direction.TOP.getNum()] = points[x-1][y];
-				temp[Direction.TOP_RIGHT.getNum()] = points[x-1][y+1];
-				temp[Direction.LEFT.getNum()] = points[x][y-1];
-				temp[Direction.RIGHT.getNum()] = points[x][y+1];
-				temp[Direction.BOTTOM_LEFT.getNum()] = points[x+1][y-1];
-				temp[Direction.BOTTOM.getNum()] = points[x+1][y];
-				temp[Direction.BOTTOM_RIGHT.getNum()] = points[x+1][y+1];
-				points[x][y].setNeighbors(temp);
-			}
+	
+	/**
+	 * Loading Track from file
+	 * @param file
+	 * @throws FileNotFoundException - file not found
+	 * @throws FileFormatException - regex doesn't match
+	 */
+	public void loadTrack(File file) throws FileNotFoundException, FileFormatException
+	{
+		Scanner in = new Scanner(file);
+		in.findInLine("(\\w+);(\\d+);(\\d+)");
+		try
+		{ 
+			MatchResult result = in.match();
+			Point[][] points = new Point[Integer.parseInt(result.group(2))][Integer.parseInt(result.group(3))];
+			String trackName = result.group(1);
+			for(int x=0; x<points.length; x++)
+				for(int y=0; y<points[x].length; y++)
+				{
+					in.nextLine();
+					in.findInLine("(\\w+);(\\w+);(\\d+);(\\d+);(\\w+)");
+					result = in.match();
+					
+					points[x][y] = new Point();
+					points[x][y].setType(result.group(1));
+					points[x][y].setDirection(result.group(2));
+					points[x][y].setState(Integer.parseInt(result.group(3)));
+					points[x][y].setAngle(Integer.parseInt(result.group(4)));
+					points[x][y].setCarCenter(Boolean.getBoolean(result.group(5)));
+					
+					if(x>0 && y>0 && x<points.length-1 && y<points[x].length-1)
+					{
+						Point temp[] = new Point[8];
+						temp[Direction.TOP_LEFT.getNum()] = points[x-1][y-1];
+						temp[Direction.TOP.getNum()] = points[x-1][y];
+						temp[Direction.TOP_RIGHT.getNum()] = points[x-1][y+1];
+						temp[Direction.LEFT.getNum()] = points[x][y-1];
+						temp[Direction.RIGHT.getNum()] = points[x][y+1];
+						temp[Direction.BOTTOM_LEFT.getNum()] = points[x+1][y-1];
+						temp[Direction.BOTTOM.getNum()] = points[x+1][y];
+						temp[Direction.BOTTOM_RIGHT.getNum()] = points[x+1][y+1];
+						points[x][y].setNeighbors(temp);
+					}
+				}
+			in.close();
+			setTrack(new Track(trackName, points));
 		}
+		catch(IllegalStateException e){ throw new FileFormatException(); }
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(Color.GRAY);
-		drawNetting(g, size);
+		if(track != null) drawNetting(g);
 	}
 
-	private void drawNetting(Graphics g, int gridSpace) {
-		
-		int verticalOffset = (screenHeight - 755)/2;
-		int horizontalOffset = (screenWidth - 1363)/2;
+	/**
+	 * Draw visualization of Points table
+	 * @param g - Graphics
+	 */
+	private void drawNetting(Graphics g) {
+		int verticalOffset = (SCREEN_HEIGHT- (points[0].length*SIZE+35))/2;
+		int horizontalOffset = (SCREEN_WIDTH - (points.length*SIZE+SIZE-1))/2;
 
-		int firstX = horizontalOffset;
-		int firstY = verticalOffset;
-		int lastX = width*size+horizontalOffset;
-		int lastY = height*size+verticalOffset;
-
-		int x = firstX;
-		while (x < lastX+1) {
-			g.drawLine(x, firstY, x, lastY);
-			x += gridSpace;
-		}
-
-		int y = firstY;
-		while (y < lastY+1) {
-			g.drawLine(firstX, y, lastX, y);
-			y += gridSpace;
-		}
-
-		for (x = 0; x < points.length; ++x) {
-			for (y = 0; y < points[x].length; ++y) {
+		for (int x = 0; x < points.length; ++x) {
+			for (int y = 0; y < points[x].length; ++y) {
 				SurfaceType type = points[x][y].getType();
-				if (type == SurfaceType.ROAD) {
-					g.setColor(Color.DARK_GRAY);
-				}
-				else if (type == SurfaceType.BARRIER) {
-					g.setColor(Color.BLUE);
-				}
-				else if (type == SurfaceType.GRASS) {
-					g.setColor(Color.GREEN);
-				}
-				else if (type == SurfaceType.WORSE_ROAD) {
-					g.setColor(Color.LIGHT_GRAY);
-				}
-
-				g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
+				if (type == SurfaceType.ROAD) { g.setColor(Color.DARK_GRAY); }
+				else if (type == SurfaceType.BARRIER) { g.setColor(Color.BLUE); }
+				else if (type == SurfaceType.GRASS) { g.setColor(Color.GREEN); }
+				else if (type == SurfaceType.WORSE_ROAD) { g.setColor(Color.LIGHT_GRAY); }
+				
+				g.fillRect((x * SIZE+horizontalOffset) + 1, (y * SIZE+verticalOffset) + 1, (SIZE - 1), (SIZE - 1));
 			}
 		}
-
 	}
-
-	public void componentResized(ComponentEvent e) {
-		if(track == null) initialize(width, height);
-	}
-	
-	public void mouseClicked(MouseEvent e) {}
-	public void mouseDragged(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
-	public void mouseEntered(MouseEvent e) {}
-	public void componentShown(ComponentEvent e) {}
-	public void componentMoved(ComponentEvent e) {}
-	public void mouseReleased(MouseEvent e) {}
-	public void mouseMoved(MouseEvent e) {}
-	public void componentHidden(ComponentEvent e) {}
-	public void mousePressed(MouseEvent e) {}
-
 }

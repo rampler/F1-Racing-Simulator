@@ -12,12 +12,13 @@ public class Program extends JFrame {
 	private GUI gof;
 
 	public Program() {
-		try { UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceGraphiteLookAndFeel"); //"com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception exc) { SwingUtilities.invokeLater(new Runnable() {
+		try { UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceGraphiteLookAndFeel"); }
+        catch (Exception exc) { SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 JOptionPane.showMessageDialog(null, "Error!", "Message", JOptionPane.ERROR_MESSAGE);
             }
         }); }
+		
 		setTitle("F1 Racing Simulator Track Editor");
 		this.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,12 +32,8 @@ public class Program extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
                     Program frame = new Program();
                     frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         });
 	}
