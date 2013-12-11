@@ -1,9 +1,8 @@
 package Enums;
 
 /**
- * Directions
- * Everyone direction contain unique number.
- * @author Mateusz
+ * Direction contain unique representation number.
+ * @author Sabina Rydzek, Kacper Furmañski, Mateusz Kotlarz
  *
  */
 public enum Direction {

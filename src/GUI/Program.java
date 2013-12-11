@@ -6,6 +6,11 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+/**
+ * Main program class - LookAndFeel changed to Substance
+ * @author Sabina Rydzek, Kacper Furmañski, Mateusz Kotlarz
+ *
+ */
 public class Program extends JFrame {
 
 	private static final long serialVersionUID = 1L;

@@ -1,5 +1,10 @@
 package POJOs;
 
+/**
+ * Track class contains name and table of points
+ * @author Sabina Rydzek, Kacper Furmañski, Mateusz Kotlarz
+ *
+ */
 public class Track {
 	
 	private String name;

@@ -18,6 +18,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+/**
+ * Credits window
+ * @author Sabina Rydzek, Kacper Furmañski, Mateusz Kotlarz
+ *
+ */
 public class AboutWindow extends JPanel{
 
 	private static final long serialVersionUID = 1L;
