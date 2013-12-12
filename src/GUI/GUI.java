@@ -22,6 +22,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Enums.Direction;
+import Enums.DriverSkill;
 import Enums.SurfaceType;
 
 public class GUI extends JPanel implements ActionListener, ChangeListener {
@@ -136,50 +137,44 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	{
 		Point[][] points = track.getPoints();
 		PrintWriter out = new PrintWriter(file);
-		out.write(track.getName()+";"+points.length+";"+points[0].length+"\n");
+		out.write(track.getName()+";"+points.length+";"+points[0].length+";1"+"\n");
 		for(int i=0; i<points.length; i++)
 			for(int j=0; j<points[i].length; j++)
 			{
 				out.write(points[i][j].getType()+";"+points[i][j].getDirection()+";"+points[i][j].getState()+";"+points[i][j].getAngle()+";"+points[i][j].isCarCenter()+"\n");
 			}
+		out.write("Sebastian Vettel;EXPERT;200;200\n");
+		//TODO Kierowcy
 		out.close();
 	}
 	
 	private Track loadTrack(File file) throws FileNotFoundException
 	{
 		Scanner in = new Scanner(file);
-		in.findInLine("(\\w+);(\\d+);(\\d+)");
+		in.findInLine("(\\w+);(\\d+);(\\d+);(\\d+)");
 		MatchResult result = in.match();
 		Point[][] points = new Point[Integer.parseInt(result.group(2))][Integer.parseInt(result.group(3))];
 		String trackName = result.group(1);
+		int driversCount = Integer.parseInt(result.group(4));
 		for(int x=0; x<points.length; x++)
 			for(int y=0; y<points[x].length; y++)
 			{
 				in.nextLine();
-				in.findInLine("(\\w+);(\\w+);(\\d+);(\\d+);(\\w+)");
+				in.findInLine("(\\w+);(\\w+)");
 				result = in.match();
 				
 				points[x][y] = new Point();
 				points[x][y].setType(result.group(1));
 				points[x][y].setDirection(result.group(2));
-				points[x][y].setState(Integer.parseInt(result.group(3)));
-				points[x][y].setAngle(Integer.parseInt(result.group(4)));
-				points[x][y].setCarCenter(Boolean.getBoolean(result.group(5)));
 				
-				if(x>0 && y>0 && x<points.length-1 && y<points[x].length-1)
-				{
-					Point temp[] = new Point[8];
-					temp[Direction.TOP_LEFT.getNum()] = points[x-1][y-1];
-					temp[Direction.TOP.getNum()] = points[x-1][y];
-					temp[Direction.TOP_RIGHT.getNum()] = points[x-1][y+1];
-					temp[Direction.LEFT.getNum()] = points[x][y-1];
-					temp[Direction.RIGHT.getNum()] = points[x][y+1];
-					temp[Direction.BOTTOM_LEFT.getNum()] = points[x+1][y-1];
-					temp[Direction.BOTTOM.getNum()] = points[x+1][y];
-					temp[Direction.BOTTOM_RIGHT.getNum()] = points[x+1][y+1];
-					points[x][y].setNeighbors(temp);
-				}
 			}
+		for(int x=0; x<driversCount; x++)
+        {
+                in.nextLine();
+                in.findInLine("(\\w+);(\\w+);(\\d+);(\\d+)");
+                result = in.match();
+                //cars.add(new Car(result.group(1),DriverSkill.valueOf(result.group(2)),Integer.parseInt(result.group(3)),Integer.parseInt(result.group(4))));
+        }
 		in.close();
 		return new Track(trackName, points);
 	}
