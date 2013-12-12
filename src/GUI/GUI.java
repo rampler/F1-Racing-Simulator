@@ -57,7 +57,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		open.setActionCommand("open");
 		open.addActionListener(this);
 		
-		String[] list = new String[5]; 
+		String[] list = new String[6]; 
 		int i=0;
 		for(SurfaceType value : SurfaceType.values()) 
 		{
