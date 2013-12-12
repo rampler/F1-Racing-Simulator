@@ -11,6 +11,7 @@ import java.util.regex.MatchResult;
 import javax.swing.JPanel;
 
 import Enums.Direction;
+import Enums.DriverSkill;
 import Enums.Dryness;
 import Enums.SurfaceType;
 import Enums.Tire;
@@ -70,31 +71,35 @@ public class Board extends JPanel{
 	{
 		//Loading Track parameters
 		Scanner in = new Scanner(file);
-		in.findInLine("(\\w+);(\\d+);(\\d+)");
+		in.findInLine("(\\w+);(\\d+);(\\d+);(\\d+)");
 		try
 		{ 
 			MatchResult result = in.match();
 			Point[][] points = new Point[Integer.parseInt(result.group(2))][Integer.parseInt(result.group(3))];
 			String trackName = result.group(1);
+			int driversCount = Integer.parseInt(result.group(4));
 			
 			//Loading points
 			for(int x=0; x<points.length; x++)
 				for(int y=0; y<points[x].length; y++)
 				{
 					in.nextLine();
-					in.findInLine("(\\w+);(\\w+);(\\d+);(\\d+);(\\w+)");
+					in.findInLine("(\\w+);(\\w+)");
 					result = in.match();
 					
 					points[x][y] = new Point();
 					points[x][y].setType(result.group(1));
 					points[x][y].setDirection(result.group(2));
-					points[x][y].setState(Integer.parseInt(result.group(3)));
-					points[x][y].setAngle(Integer.parseInt(result.group(4)));
-					points[x][y].setCarCenter(Boolean.getBoolean(result.group(5)));
 				}
 			
 			//Loading drivers
-			//TODO
+			for(int x=0; x<driversCount; x++)
+			{
+				in.nextLine();
+				in.findInLine("(\\w+);(\\w+);(\\d+);(\\d+)");
+				result = in.match();
+				cars.add(new Car(result.group(1),DriverSkill.valueOf(result.group(2)),Integer.parseInt(result.group(3)),Integer.parseInt(result.group(4))));
+			}
 			in.close();
 			
 			//Adding neighborhood
