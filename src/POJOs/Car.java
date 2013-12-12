@@ -23,7 +23,6 @@ public class Car {
 	 * Setting up initial parameters
 	 * @param driverName
 	 * @param driverSkill
-	 * @param tyreType
 	 * @param posStartX
 	 * @param posStartY
 	 */
