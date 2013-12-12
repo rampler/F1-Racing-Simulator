@@ -102,6 +102,9 @@ public class Board extends JPanel{
 			}
 			in.close();
 			
+			//Adding drivers to points
+			for(Car car : cars) points[car.getPosStartX()-1][car.getPosStartY()-1].setCar(car);
+			
 			//Adding neighborhood
 			for(int x=0; x<points.length; x++)
 				for(int y=0; y<points[x].length; y++)
@@ -131,9 +134,21 @@ public class Board extends JPanel{
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(track != null) drawNetting(g);
+		if(track != null) 
+		{
+			drawNetting(g);
+			drawCars(g);
+		}
 	}
 
+	/**
+	 * Draw cars visualization
+	 * @param g
+	 */
+	private void drawCars(Graphics g) {
+		//TODO
+	}
+	
 	/**
 	 * Draw visualization of Points table
 	 * @param g - Graphics

@@ -195,7 +195,7 @@ public class GUI extends JPanel implements ActionListener {
 	{
 		JFrame param = new JFrame("Simulation Parameters");
 		param.setLayout(new BorderLayout());
-		param.setBounds((int)(screenWidth-500)/2, (int)(screenHeight-400)/2, 300, 100);
+		param.setBounds((int)(screenWidth-300)/2, (int)(screenHeight-100)/2, 300, 100);
 		JPanel optionsPanel = new JPanel();
 		optionsPanel.setLayout(new GridLayout(2,2));
 		
