@@ -19,7 +19,7 @@
 %	PACKAGES AND DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass{article}
+\documentclass[12p]{extarticle}
 \usepackage[utf8]{inputenc}
 \usepackage{polski}
 \usepackage[polish]{babel}
@@ -51,8 +51,10 @@
 
 
 \begin{abstract}
-Projekt ten obejmuje stworzenie modelu wyścigu Formuły 1 oraz jego symulację na domyślnie wczytanym torze Hungaroring Circuit. Wykorzystuje automaty komórkowe. Symulowane są różne czynniki i typy nawierzchni mające wpływ na trasę i sposób jazdy bolidów. Dodane są również czynniki atmosferyczne. Umożliwia odczyt prędkości poszczególnych bolidów. Projekt jest otwarty i umożliwia tworzenie i wczytywanie innych tras w odpowiednim formacie.
+Projekt ten obejmuje stworzenie modelu wyścigu Formuły 1 oraz jego symulację na domyślnie wczytanym torze (używanym przez nas torem jest Hungaroring Circuit). Wykorzystuje automaty komórkowe. Symulowane są różne czynniki i typy nawierzchni mające wpływ na trasę i sposób jazdy bolidów. Próbujemy zamodelować umiejętności kierowców, które mają wpływ na styl ich jazdy oraz umiejętność przewidywania. W końcowej fazie planowane jest również zamodelowanie pitstopu. Dodane będą również czynniki atmosferyczne. Statystyki umożliwiają odczyt prędkości poszczególnych bolidów oraz ich pozycję na mecie. Projekt jest otwarty i umożliwia tworzenie i wczytywanie innych tras w odpowiednim formacie.
 \end{abstract}
+
+\pagebreak
 
 %----------------------------------------------------------------------------------------
 %SECTION 1
@@ -60,33 +62,45 @@ Projekt ten obejmuje stworzenie modelu wyścigu Formuły 1 oraz jego symulację 
 
 \section{Automaty komórkowe}
 
-W projekcie zastosowany jest model automatów komórkowe. Jest to dyskretny, nieliniowy model, który składa się ze skończonej oraz uporządkowanej liczby \textit{komórek}, które w każdej chwili posiadają swój z góry określony stan, który wyznaczany jest tylko na podstawie komórek sąsiadujących (wg. wybranego sąsiedztwa) \cite{cellularAutomata}. \\
+W projekcie zastosowany jest model automatów komórkowych. Jest to dyskretny, nieliniowy model, który składa się ze skończonej oraz uporządkowanej liczby \textit{komórek}, które w każdej chwili posiadają swój z góry określony stan, który wyznaczany jest na podstawie komórek sąsiadujących (wg. wybranego sąsiedztwa). \\
 
-Takie podejście pozwala wyeliminować nadmiarowe obliczenia oraz potrzebę śledzenia pozycji. Dodatkowo, pozwala na dodatkowe optymalizacje przy wykorzystaniu programowania równoległego. \\
+Takie podejście pozwala wyeliminować nadmiarowe obliczenia oraz potrzebę śledzenia pozycji. Dodatkowo, pozwala na dodatkowe optymalizacje przy wykorzystaniu programowania równoległego \cite{cellularAutomata}. \\
 
-Tor F1 oraz jego otoczenie jest tablicą komórek o różnych współczynnikach w zależności od ich typu (trawa, krawężnik, asfalt itp.). Głównym problemem w zastosowaniu modelu automatów komórkowych jest to, że bolid jako ciało stałe zajmuje więcej niż jedną komórkę. Oddziaływanie na siebie wielu \textit{bloków} komórek kłóci się z podstawowym założeniem, że w obliczeniach pod uwagę brane są tylko komórki w określonym sąsiedztwie \cite{particleSimulation}. Aby poradzić sobie z tym problemem, bolid przedstawiony jest tylko jako środek ciężkości (jego obrzeża są nakładką na torze), a sąsiedztwo zostało odpowiednio rozszerzone.
+Tor F1 oraz jego otoczenie jest tablicą komórek o różnych współczynnikach w zależności od ich typu (trawa, krawężnik, asfalt itp.). Głównym problemem w zastosowaniu modelu automatów komórkowych jest to, że bolid jako ciało stałe zajmuje więcej niż jedną komórkę. Oddziaływanie na siebie wielu \textit{bloków} komórek kłóci się z podstawowym założeniem, że w obliczeniach pod uwagę brane są tylko komórki w określonym sąsiedztwie \cite{particleSimulation}. Aby poradzić sobie z tym problemem, bolid przedstawiony jest tylko jako środek ciężkości (jego obrzeża są nakładką na torze). 
 
 \subsection{Grid} 
 
-Wybraliśmy Hungaroring Circut, znajdujący się w pobliżu Budapesztu. Ma on $4.381$km długości oraz $14$ zakrętów \cite{track}. 
+Wybraliśmy Hungaroring Circut, znajdujący się w pobliżu Budapesztu. Ma on $4.381$km długości oraz $14$ zakrętów \cite{track}. Na przedstawienie toru jako tablicy złożonej z komórek odpowiedniego typu pozwala TrackEditor. Część potrzebnych nam skryptów wykonaliśmy w środowisku Matlab.
 
 \subsection{Czas}
 
-Automaty komórkowe nie działają w \textit{czasie rzeczywistym}. Zmiana czasu to stworzenie nowej generacji komórek na podstawie określonych reguł ich zachowania \cite{nature}. 
+Automaty komórkowe nie działają w \textit{czasie rzeczywistym}. Zmiana czasu to stworzenie nowej generacji komórek na podstawie określonych reguł ich zachowania \cite{nature}. Z powodu ograniczenia przez wielkość komórek, staramy się uzyskać średnio cztery generacje w ciągu trzech sekund, tak, aby możliwe było zamodelowanie rzeczywistej prędkości bolidów na torze. 
 
 \subsection{Typy komórek}
 \begin{itemize}
-\item SurfaceType - Road, Grass, Worse Road, Sand, Barrier, None - określają typ nawierzchni oraz przypisane im współczynniki, które wpływają na m.in. na szybkość, przyczepność
-\item Direction -  Top-left, Top, Top-right, Left, Right, Bottom-Left, Bottom, Bottom-Right - określają prawdopodobny kierunek poruszania się bolidu po torze, wykorzystywane przy określaniu idealnej trasy
-\item Angle -  wykorzystywany przy modelowaniu zakrętów
+\item SurfaceType - Road, Grass, Worse Road, Barrier, None - określają typ nawierzchni oraz przypisane im współczynniki, które wpływają na m.in. na szybkość, przyczepność bolidów. Bolidy, które znajdą się na trawie lub barierkach, wypadają z wyścigu. Worse Road ma gorsze współczynniki niż Road, można z niej wrócić jednak jeszcze do wyścigu.
+\item Direction -  Top-left, Top, Top-right, Left, Right, Bottom-Left, Bottom, Bottom-Right - określają kierunki, w których może poruszać się bolid, z tych wybierane są te, na które pozwala orientacja bolidu, trasa oraz reguły. Kierunki wykorzystywane są również przy określaniu idealnej trasy.
+\item Angle -  wykorzystywany przy modelowaniu zakrętów oraz ustalaniu orientacji bolidu w przestrzeni.
 \end{itemize}
 
 \subsection{Stany}
 
-Komórka może mieć stan \textit{zajęty}, kiedy znajduje się tam środek ciężkości bolidu, oraz \textit{wolny}. Sam bolid jest jedynie nakładką na tor.
+Komórka może mieć stan \textit{zajęty}, kiedy znajduje się tam środek ciężkości bolidu, oraz \textit{wolny}. 
 
-\subsection{Reguły}
-todo
+
+\section{Modelowanie ruchu bolidów}
+Projektowanie modelu ruchu bolidów oparliśmy na rozwiązaniu przedstawionym w pracy \textit{Social Distances} \cite{was}. Samochód reprezentowany jest przez prostokąt o środku znajdującym się w środku jednej z komórek, której bok reprezentuje długość 42m. Przyjmując średnią prędkość samochodu jako $200 km/h$ możemy wyrysowywać nową pozycję bolidów co niecałą sekundę. Samochód może poruszać się w 8 kierunkach, z których każdy jest odpowiednim kątem obrotu prostokąta będącego naszym bolidem. Przejazd bolidu na sąsiednią, odpowiednią komórkę zależny jest od orientacji bolidów w przestrzeni (czyli położenia reprezentujących je prostokątów). Bolidy starają się unikać kolizji, dlatego jeżeli konfiguracja uznana jest za niebezpieczną, bolid może zwolnić, przyspieszyć, bądź spróbować zmienić swoją orientację. Oczywiście, jeżeli nie będzie to możliwe, na co mogą wypływać odpowiednie współczynniki przyczepności albo umiejętności kierowców, nastąpi zderzenie i bolidy wypadną z toru.   \\
+
+Podobnie jak w modelowaniu ruchu pieszych, przyjmujemy asymetryczne otoczenie bolidu. Kierowca widzi więcej przed sobą niż za sobą, a obiekty znajdujące się w polu widzenia mogą wpływać na jego decyzje. 
+
+\subsection{Poruszanie się}
+Orientacja bolidu zmieniana jest w trakcie poruszania się do kolejnej komórki. Bardziej doświadczeni kierowcy będą próbowali orientować swoje bolidy tak, jak prowadzi trasa idealna. Będą mieć również priorytet przejazdu do tej komórki nad kierowcami mniej doświadczonymi. 
+
+Brana jest pod uwagę pozycja, którą samochód chce osiągnąć. Jeżeli jest to niemożliwe, samochód stara się wyznaczyć swój nowy cel. Odpowiada to stanowi \textit{Wait} \cite{was}. 
+
+\section{Implementacja}
+Algorytm zaimplementowany będzie przy użyciu języka programowania Java. GUI jest zmodyfikowanym GUI używanym na laboratoriach z Symulacji i Sterowania Procesów Dyskretnych. Opis paczek oraz klas wraz z komentarzami dostępny jest jako \textit{JavaDocs}.
+	
 %----------------------------------------------------------------------------------------
 \bibliographystyle{plain}
 \bibliography{bibliography}
