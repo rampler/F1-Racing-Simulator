@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=latex 2013.12.4)  13 DEC 2013 00:57
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.11.13)  13 DEC 2013 08:42
 entering extended mode
 **documentation.tex
 
@@ -356,10 +356,18 @@ Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
 File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
-Package graphics Info: Driver file: dvips.def on input line 91.
+Package graphics Info: Driver file: pdftex.def on input line 91.
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\dvips.def"
-File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count88
 ))
 \Gin@req@height=\dimen109
 \Gin@req@width=\dimen110
@@ -385,6 +393,20 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 48.
 LaTeX Font Info:    ... okay on input line 48.
 LaTeX Font Info:    Checking defaults for OT4/cmr/m/n on input line 48.
 LaTeX Font Info:    ... okay on input line 48.
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count89
+\scratchdimen=\dimen111
+\scratchbox=\box26
+\nofMPsegments=\count90
+\nofMParguments=\count91
+\everyMPshowfont=\toks17
+\MPscratchCnt=\count92
+\MPscratchDim=\dimen112
+\MPnumerator=\count93
+\makeMPintoPDFobject=\count94
+\everyMPtoPDFconversion=\toks18
+)
 LaTeX Font Info:    Try loading font information for OML+plm on input line 50.
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\polski\omlplm.fd"
 File: omlplm.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
@@ -409,7 +431,7 @@ LaTeX Font Info:    External font `plex10' loaded for size
 (Font)              <6> on input line 50.
  [1
 
-]
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
 Underfull \hbox (badness 10000) in paragraph at lines 65--66
 
  []
@@ -451,20 +473,38 @@ ir-cuit.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 15--20
-\OT4/cmtt/m/n/10 http : / / www . formula1 . com / races / in _ detail / hungar
-y _ 903 / circuit _
+$\OT4/cmtt/m/n/10 http : / / www . formula1 . com / races / in _ detail / hunga
+ry _ 903 / circuit _$
  []
 
 ) [4]
 ("C:\Users\Sabina Rydzek\Documents\GitHub\F1-Racing-Simulator\doc\documentation
 .aux") ) 
 Here is how much of TeX's memory you used:
- 1612 strings out of 493922
- 21839 string characters out of 3144875
- 71917 words of memory out of 3000000
- 4883 multiletter control sequences out of 15000+200000
+ 2199 strings out of 493921
+ 30078 string characters out of 3144851
+ 81482 words of memory out of 3000000
+ 5456 multiletter control sequences out of 15000+200000
  15121 words of font info for 42 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 25i,6n,24p,1106b,242s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,6n,24p,1106b,242s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/pltt.enc}{C:/Prog
+ram Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plmi.enc}{C:/Program Files (x86)/
+MiKTeX 2.9/fonts/enc/dvips/pl/plit.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts
+/enc/dvips/pl/plrm.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/pl
+sc.enc}<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10
+.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plbx12.pfb><C:/Pr
+ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plbx9.pfb><C:/Program Files 
+(x86)/MiKTeX 2.9/fonts/type1/public/pl/plcsc10.pfb><C:/Program Files (x86)/MiKT
+eX 2.9/fonts/type1/public/pl/plmi10.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
+s/type1/public/pl/plr10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
+ic/pl/plr12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr17.
+pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr9.pfb><C:/Progr
+am Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plti10.pfb><C:/Program Files (x
+86)/MiKTeX 2.9/fonts/type1/public/pl/pltt10.pfb>
+Output written on documentation.pdf (4 pages, 106335 bytes).
+PDF statistics:
+ 64 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
-Output written on documentation.dvi (4 pages, 9920 bytes).
