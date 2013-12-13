@@ -70,11 +70,13 @@ Tor F1 oraz jego otoczenie jest tablicą komórek o różnych współczynnikach 
 
 \subsection{Grid} 
 
-Wybraliśmy Hungaroring Circut, znajdujący się w pobliżu Budapesztu. Ma on $4.381$km długości oraz $14$ zakrętów \cite{track}. Na przedstawienie toru jako tablicy złożonej z komórek odpowiedniego typu pozwala TrackEditor. Część potrzebnych nam skryptów wykonaliśmy w środowisku Matlab.
+Wybraliśmy Hungaroring Circut, znajdujący się w pobliżu Budapesztu. Ma on $4.381$km długości oraz $14$ zakrętów \cite{track}. Na przedstawienie toru jako tablicy złożonej z komórek odpowiedniego typu pozwala TrackEditor. Część potrzebnych nam skryptów wykonaliśmy w środowisku Matlab. \\
+
+Do toru ręcznie dodany jest punkt startowy oraz ustawione na starcie bolidy.
 
 \subsection{Czas}
 
-Automaty komórkowe nie działają w \textit{czasie rzeczywistym}. Zmiana czasu to stworzenie nowej generacji komórek na podstawie określonych reguł ich zachowania \cite{nature}. Z powodu ograniczenia przez wielkość komórek, staramy się uzyskać średnio cztery generacje w ciągu trzech sekund, tak, aby możliwe było zamodelowanie rzeczywistej prędkości bolidów na torze. 
+Automaty komórkowe nie działają w \textit{czasie rzeczywistym}. Zmiana czasu to stworzenie nowej generacji komórek na podstawie określonych reguł ich zachowania \cite{nature}. Z powodu ograniczenia przez wielkość komórek, staramy się uzyskać średnio cztery do pięciu generacji w ciągu trzech sekund, tak, aby możliwe było zamodelowanie rzeczywistej prędkości bolidów na torze. 
 
 \subsection{Typy komórek}
 \begin{itemize}
@@ -85,18 +87,28 @@ Automaty komórkowe nie działają w \textit{czasie rzeczywistym}. Zmiana czasu 
 
 \subsection{Stany}
 
-Komórka może mieć stan \textit{zajęty}, kiedy znajduje się tam środek ciężkości bolidu, oraz \textit{wolny}. 
+Komórki mogą zawierać środki ciężkości bolidów, które mogą czekać na start, mogą poruszać się w określonym kierunku, bądź \textit{czekać}, oceniać obecną sytuację i ewentualnie zmieniać swój cel. 
 
+\subsection{Reprezentacja bolidu}
+Docelowo bolid będzie reprezentowany przez środek ciężkości znajdujący się w jednej komórce i nakładkę, która będzie zajmowała pół komórki z przodu i pół komórki z tyłu bolidu.
+
+\subsection{Sąsiedztwo}
+Dobrym sąsiedztwem do zastosowania jest rozszerzone sąsiedztwo Moore'a, które pozwoli kierowcom na szerszy zakres widzenia.
 
 \section{Modelowanie ruchu bolidów}
-Projektowanie modelu ruchu bolidów oparliśmy na rozwiązaniu przedstawionym w pracy \textit{Social Distances} \cite{was}. Samochód reprezentowany jest przez prostokąt o środku znajdującym się w środku jednej z komórek, której bok reprezentuje długość 42m. Przyjmując średnią prędkość samochodu jako $200 km/h$ możemy wyrysowywać nową pozycję bolidów co niecałą sekundę. Samochód może poruszać się w 8 kierunkach, z których każdy jest odpowiednim kątem obrotu prostokąta będącego naszym bolidem. Przejazd bolidu na sąsiednią, odpowiednią komórkę zależny jest od orientacji bolidów w przestrzeni (czyli położenia reprezentujących je prostokątów). Bolidy starają się unikać kolizji, dlatego jeżeli konfiguracja uznana jest za niebezpieczną, bolid może zwolnić, przyspieszyć, bądź spróbować zmienić swoją orientację. Oczywiście, jeżeli nie będzie to możliwe, na co mogą wypływać odpowiednie współczynniki przyczepności albo umiejętności kierowców, nastąpi zderzenie i bolidy wypadną z toru.   \\
+Projektowanie modelu ruchu bolidów oparliśmy na rozwiązaniu przedstawionym w pracy \textit{Social Distances} \cite{was}. Samochód reprezentowany jest przez prostokąt o środku znajdującym się w środku jednej z komórek, której bok reprezentuje długość 42m. Przyjmując średnią prędkość samochodu jako $200 km/h$ możemy wyrysowywać nową pozycję bolidów co niecałą sekundę. \\
 
-Podobnie jak w modelowaniu ruchu pieszych, przyjmujemy asymetryczne otoczenie bolidu. Kierowca widzi więcej przed sobą niż za sobą, a obiekty znajdujące się w polu widzenia mogą wpływać na jego decyzje. 
+Samochód może poruszać się w 8 kierunkach, z których każdy jest odpowiednim kątem obrotu prostokąta będącego naszym bolidem. Przejazd bolidu na sąsiednią, odpowiednią komórkę zależny jest od orientacji bolidów w przestrzeni (czyli położenia reprezentujących je prostokątów). Bolidy starają się unikać kolizji, dlatego jeżeli konfiguracja uznana jest za niebezpieczną, bolid może zwolnić, przyspieszyć, bądź spróbować zmienić swoją orientację. Oczywiście, jeżeli nie będzie to możliwe, na co mogą wypływać odpowiednie współczynniki przyczepności albo umiejętności kierowców, nastąpi zderzenie i bolidy wypadną z toru.   \\
+
+\subsection{Skalowanie}
+Dużym problemem jest skalowanie, ponieważ tory są bardzo duże w stosunku do wielkości bolidu. Jednym z planowanych rozwiązań jest możliwość przybliżania i oddalania widoku.
 
 \subsection{Poruszanie się}
-Orientacja bolidu zmieniana jest w trakcie poruszania się do kolejnej komórki. Bardziej doświadczeni kierowcy będą próbowali orientować swoje bolidy tak, jak prowadzi trasa idealna. Będą mieć również priorytet przejazdu do tej komórki nad kierowcami mniej doświadczonymi. 
+Orientacja bolidu zmieniana jest w trakcie poruszania się do kolejnej komórki. Bardziej doświadczeni kierowcy będą próbowali orientować swoje bolidy tak, jak prowadzi trasa idealna. Będą mieć również priorytet przejazdu do tej komórki nad kierowcami mniej doświadczonymi. \\
 
-Brana jest pod uwagę pozycja, którą samochód chce osiągnąć. Jeżeli jest to niemożliwe, samochód stara się wyznaczyć swój nowy cel. Odpowiada to stanowi \textit{Wait} \cite{was}. 
+Brana jest pod uwagę pozycja, którą samochód chce osiągnąć. Jeżeli jest to niemożliwe, samochód stara się wyznaczyć swój nowy cel. Odpowiada to stanowi \textit{Wait} \cite{was}. \\
+
+Jednym z naszych rozwiązań modelowania poruszania się samochodów na zakrętach, jest sygnalizowanie zakrętów wcześniej, tak, żeby kierowcy mieli czas, by odpowiednio zareagować na informację o ostrym zmianie kierunku. Odpowiednie współczynniki pozwolą określić, czy bolid wypadnie z zakrętu, czy będzie musiał zwolnić, bądź przyspieszyć.
 
 \section{Implementacja}
 Algorytm zaimplementowany będzie przy użyciu języka programowania Java. GUI jest zmodyfikowanym GUI używanym na laboratoriach z Symulacji i Sterowania Procesów Dyskretnych. Opis paczek oraz klas wraz z komentarzami dostępny jest jako \textit{JavaDocs}.
