@@ -6,7 +6,7 @@ package Enums;
  *
  */
 public enum SurfaceType {
-	ROAD(1), GRASS(0.3), WORSE_ROAD(0.9), BARRIER(0), START_LINE(1); //TODO calculate parameters
+	ROAD(1), GRASS(0.3), WORSE_ROAD(0.9), BARRIER(0), START_LINE(1), SAND(0.1); //TODO calculate parameters
 	
 	private double adhesion;
 	SurfaceType(double adhesion){ this.adhesion = adhesion; }

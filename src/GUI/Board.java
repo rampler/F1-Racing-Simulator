@@ -166,6 +166,7 @@ public class Board extends JPanel{
 				else if (type == SurfaceType.GRASS) g.setColor(Color.GREEN);
 				else if (type == SurfaceType.WORSE_ROAD) g.setColor(Color.LIGHT_GRAY);
 				else if (type == SurfaceType.START_LINE) g.setColor(Color.WHITE);
+				else if (type == SurfaceType.SAND) g.setColor(Color.YELLOW);
 				
 				g.fillRect((x * SIZE+horizontalOffset) + 1, (y * SIZE+verticalOffset) + 1, (SIZE - 1), (SIZE - 1));
 			}
