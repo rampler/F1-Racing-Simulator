@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,10 +30,16 @@ public class Board extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private Point[][] points;
 	private Track track;
-	private final int SIZE = 4;
+	private int size = 4;
 	private final int SCREEN_WIDTH, SCREEN_HEIGHT;
 	private Dryness trackDryness;
 	private LinkedList<Car> cars;
+	
+	private int sizeScalePercent = 100;
+	private int verticalOffset = 0;
+	private int horizontalOffset = 0;
+	private int simulationWidth = 0;
+	private int simulationHeight = 0;
 
 	/**
 	 * Constructor gets screen size and setting background color
@@ -43,13 +50,21 @@ public class Board extends JPanel{
 		this.SCREEN_HEIGHT = screenHeight;
 		this.SCREEN_WIDTH = screenWidth;
 		setBackground(Color.DARK_GRAY);
-		cars = new LinkedList<Car>();
 		trackDryness = Dryness.DRY;
 	}
 
 	public Track getTrack(){ return track; }
-	public void setTrack(Track track){ this.track = track; points = track.getPoints(); }
+	public int getSizeScalePercent(){ return sizeScalePercent; }
+	public void setTrack(Track track){ this.track = track; points = track.getPoints(); refreshSimulationSize(); }
 	public void setTrackDryness(Dryness dryness){ trackDryness = dryness; }
+	public void setSizeScalePercent(int sizeScalePercent){ 
+		this.sizeScalePercent = sizeScalePercent; 
+		if(sizeScalePercent == 100) size = 4;
+		else if(sizeScalePercent == 50) size = 2;
+		else if(sizeScalePercent == 200) size = 8;
+		refreshSimulationSize();
+		repaint();
+	}
 	
 	/**
 	 * Changing tires type of all cars
@@ -93,6 +108,7 @@ public class Board extends JPanel{
 				}
 			
 			//Loading drivers
+			cars = new LinkedList<Car>();
 			for(int x=0; x<driversCount; x++)
 			{
 				in.nextLine();
@@ -137,8 +153,26 @@ public class Board extends JPanel{
 		if(track != null) 
 		{
 			drawNetting(g);
-			drawCars(g);
+			if(sizeScalePercent >= 100) drawCars(g);
 		}
+	}
+	
+	/**
+	 * Refresh values about simulation netting size
+	 */
+	private void refreshSimulationSize()
+	{
+		simulationWidth = points.length*size+size-1;
+		simulationHeight = points[0].length*size+35;
+		
+		if(simulationWidth < SCREEN_WIDTH) horizontalOffset = (SCREEN_WIDTH - simulationWidth)/2;
+		else verticalOffset = 0;
+		
+		if(simulationHeight < SCREEN_HEIGHT-35) verticalOffset = (SCREEN_HEIGHT- simulationHeight)/2;
+		else horizontalOffset = 0;
+		
+		this.setPreferredSize(new Dimension(simulationWidth, simulationHeight-35));
+		this.getParent().revalidate(); //Revalidate ScrollPane
 	}
 
 	/**
@@ -154,9 +188,6 @@ public class Board extends JPanel{
 	 * @param g - Graphics
 	 */
 	private void drawNetting(Graphics g) {
-		int verticalOffset = (SCREEN_HEIGHT- (points[0].length*SIZE+35))/2;
-		int horizontalOffset = (SCREEN_WIDTH - (points.length*SIZE+SIZE-1))/2;
-
 		for (int x = 0; x < points.length; ++x) {
 			for (int y = 0; y < points[x].length; ++y) {
 				SurfaceType type = points[x][y].getType();
@@ -168,7 +199,7 @@ public class Board extends JPanel{
 				else if (type == SurfaceType.START_LINE) g.setColor(Color.WHITE);
 				else if (type == SurfaceType.SAND) g.setColor(Color.YELLOW);
 				
-				g.fillRect((x * SIZE+horizontalOffset) + 1, (y * SIZE+verticalOffset) + 1, (SIZE - 1), (SIZE - 1));
+				g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
 			}
 		}
 	}

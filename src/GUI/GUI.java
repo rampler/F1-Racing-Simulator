@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Hashtable;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -20,6 +21,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import Enums.Dryness;
 import Enums.Tire;
@@ -30,11 +34,13 @@ import Exceptions.FileFormatException;
  * @author Sabina Rydzek, Kacper Furmañski, Mateusz Kotlarz
  *
  */
-public class GUI extends JPanel implements ActionListener {
+public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
 	private Board board;
 	private JButton exit, open, simulation, start, pause, clear, about;
 	private JComboBox<String> drynessCB, tiresCB;
+	private JScrollPane scrollPane;
+	private JSlider zoom;
 	private double screenWidth, screenHeight;
 	private Container parent;
 	private File loadedTrackFile;
@@ -73,6 +79,16 @@ public class GUI extends JPanel implements ActionListener {
 		simulation = new JButton("Simulation Parameters");
 		simulation.setActionCommand("parameters");
 		simulation.addActionListener(this);
+        
+        zoom = new JSlider(0,2);
+        Hashtable<Integer, JLabel> hashtable = new Hashtable<>();
+        hashtable.put(0, new JLabel("50%"));
+        hashtable.put(1, new JLabel("100%"));
+        hashtable.put(2, new JLabel("200%"));
+        zoom.setLabelTable(hashtable);
+        zoom.setPaintLabels(true);
+        zoom.setSnapToTicks(true);
+        zoom.addChangeListener(this);
 		
 		
 		buttonPanel.add(open);
@@ -84,21 +100,26 @@ public class GUI extends JPanel implements ActionListener {
 		buttonPanel.add(Box.createHorizontalStrut(100));
 		buttonPanel.add(about);
 		buttonPanel.add(exit);
+		buttonPanel.add(Box.createHorizontalStrut(100));
+		buttonPanel.add(new JLabel("Zoom:"));
+		buttonPanel.add(zoom);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		screenWidth = screenSize.getWidth();
 		screenHeight = screenSize.getHeight();
 		board = new Board((int)screenWidth, (int)screenHeight);
-		board.setPreferredSize(new Dimension(1363,729));
 		
-		JScrollPane scrollPane = new JScrollPane(board);
+		scrollPane = new JScrollPane(board);
+		scrollPane.setPreferredSize(new Dimension(1363,729));
 		container.add(scrollPane, BorderLayout.CENTER);
 		container.add(buttonPanel, BorderLayout.SOUTH);
 		
 		openButtonAction();
 	}
 
-	@Override
+	/**
+	 * Implemented from ActionListener - Buttons actions
+	 */
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 		if (command.equals("exit")) {
@@ -115,6 +136,20 @@ public class GUI extends JPanel implements ActionListener {
 		//Parameters window commands
 		else if(command.equals("changedDryness")){ board.setTrackDryness(Dryness.valueOf((String)drynessCB.getSelectedItem())); }
 		else if(command.equals("changedTires")){ board.changeCarsTires(Tire.valueOf((String)tiresCB.getSelectedItem())); }
+	}
+	
+	/**
+	 * Implemented from ChangeListener - Slider action
+	 * Changed Zoom
+	 * @param e
+	 */
+	public void stateChanged(ChangeEvent e) {
+		switch(zoom.getValue())
+		{
+			case 0: board.setSizeScalePercent(50); break;
+			case 1: board.setSizeScalePercent(100); break;
+			case 2: board.setSizeScalePercent(200); break;
+		}
 	}
 	
 	/**
@@ -157,7 +192,7 @@ public class GUI extends JPanel implements ActionListener {
 			else throw new FileNotFoundException();
 			
 		}
-		catch(Exception exp){JOptionPane.showMessageDialog(this, "Track loading problem!");}
+		catch(Exception exp){JOptionPane.showMessageDialog(this, "Track loading problem!"); }
 	}
 	
 	/**
