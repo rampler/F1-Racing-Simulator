@@ -11,13 +11,14 @@ import Enums.Tire;
 public class Car {
 
 	private final String DRIVER_NAME;
-	private final int POS_START_X, POS_START_Y;
+	private int posX, posY;
 	private final DriverSkill DRIVER_SKILL;
 	private double speed;
 	private double accelerate;
 	private int kersSystemPercent;
 	private Tire tireType;
 	private int laps;
+	private int angle;
 	
 	/**
 	 * Setting up initial parameters
@@ -30,13 +31,14 @@ public class Car {
 	{
 		DRIVER_NAME = driverName;
 		DRIVER_SKILL = driverSkill;
-		POS_START_X  = posStartX;
-		POS_START_Y = posStartY;
+		posX  = posStartX;
+		posY = posStartY;
 		tireType = Tire.DRY;
 		kersSystemPercent = 0;
 		speed = 0;
 		accelerate = 0;
-		laps = 0;		
+		laps = 0;
+		angle = 0;
 	}
 	
 	//Getters
@@ -47,13 +49,17 @@ public class Car {
 	public Tire getTireType(){ return tireType; }
 	public DriverSkill getDriverSkills(){ return DRIVER_SKILL; }
 	public String getDriverName(){ return DRIVER_NAME; }
-	public int getPosStartX(){ return POS_START_X; }
-	public int getPosStartY(){ return POS_START_Y; }
+	public int getPosX(){ return posX; }
+	public int getPosY(){ return posY; }
+	public int getAngle(){ return angle; }
 	
 	//Setters
 	public void setSpeed(double speed){ this.speed = speed; }
 	public void setAccelerate(double accelerate){ this.accelerate = accelerate; }
 	public void setTireType(Tire tireType){ this.tireType = tireType; }
+	public void setPosX(int posX){ this.posX = posX; }
+	public void setPosY(int posY){ this.posY = posY; }
+	public void setAngle(int angle){ this.angle = angle; }
 	
 	/**
 	 * Add percent to KERS System Charging

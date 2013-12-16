@@ -3,6 +3,8 @@ package GUI;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
@@ -119,7 +121,7 @@ public class Board extends JPanel{
 			in.close();
 			
 			//Adding drivers to points
-			for(Car car : cars) points[car.getPosStartX()-1][car.getPosStartY()-1].setCar(car);
+			for(Car car : cars) points[car.getPosX()-1][car.getPosY()-1].setCar(car);
 			
 			//Adding neighborhood
 			for(int x=0; x<points.length; x++)
@@ -145,16 +147,12 @@ public class Board extends JPanel{
 	}
 
 	/**
-	 * Override painting procedure to draw netting
+	 * Override painting procedure to draw netting and cars
 	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(track != null) 
-		{
-			drawNetting(g);
-			if(sizeScalePercent >= 100) drawCars(g);
-		}
+		if(track != null) { drawNetting(g); drawCars(g); }
 	}
 	
 	/**
@@ -177,10 +175,36 @@ public class Board extends JPanel{
 
 	/**
 	 * Draw cars visualization
-	 * @param g
+	 * If zoom is 50% then draw only car center point
+	 * @param g - Graphics
+	 * @param x - Horizontal coordinate of car
+	 * @param y - Vertical coordinate of car
 	 */
 	private void drawCars(Graphics g) {
-		//TODO
+		for(Car car : cars)
+		{
+			int x = car.getPosX();
+			int y = car.getPosY();
+			g.setColor(Color.RED);
+			//car.setAngle(45); //for test only 
+			if(sizeScalePercent < 100) g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
+			else
+			{
+				int translateX = (x * size+horizontalOffset) - size/2;
+				int translateY = (y * size+verticalOffset) - (size/2);
+				
+				Graphics2D g2d = (Graphics2D)g;
+			    Rectangle rect = new Rectangle(-(size - 2)/2, -(2*size - 2)/2, (size - 2), (2*size - 2)); //Create Rectangle with center on (0,0)
+			    g2d.translate(translateX, translateY);
+			    g2d.rotate(Math.toRadians(car.getAngle()));
+			    g2d.draw(rect);
+			    g2d.fill(rect);
+			    
+			    //Reset graphics
+			    g2d.rotate(Math.toRadians(-car.getAngle()));
+			    g2d.translate(-translateX, -translateY);
+			}
+		}
 	}
 	
 	/**
@@ -191,8 +215,7 @@ public class Board extends JPanel{
 		for (int x = 0; x < points.length; ++x) {
 			for (int y = 0; y < points[x].length; ++y) {
 				SurfaceType type = points[x][y].getType();
-				if(points[x][y].isCarCenter()) g.setColor(Color.RED);
-				else if (type == SurfaceType.ROAD) g.setColor(Color.DARK_GRAY);
+				if (type == SurfaceType.ROAD) g.setColor(Color.DARK_GRAY);
 				else if (type == SurfaceType.BARRIER) g.setColor(Color.BLUE);
 				else if (type == SurfaceType.GRASS) g.setColor(Color.GREEN);
 				else if (type == SurfaceType.WORSE_ROAD) g.setColor(Color.LIGHT_GRAY);
