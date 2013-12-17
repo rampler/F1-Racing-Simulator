@@ -19,6 +19,7 @@ public class Car {
 	private Tire tireType;
 	private int laps;
 	private int angle;
+	private int number;
 	
 	/**
 	 * Setting up initial parameters
@@ -27,12 +28,13 @@ public class Car {
 	 * @param posStartX
 	 * @param posStartY
 	 */
-	public Car(String driverName, DriverSkill driverSkill, int posStartX, int posStartY)
+	public Car(String driverName, DriverSkill driverSkill, int posStartX, int posStartY, int number)
 	{
 		DRIVER_NAME = driverName;
 		DRIVER_SKILL = driverSkill;
 		posX  = posStartX;
 		posY = posStartY;
+		this.number = number;
 		tireType = Tire.DRY;
 		kersSystemPercent = 0;
 		speed = 0;
@@ -52,6 +54,7 @@ public class Car {
 	public int getPosX(){ return posX; }
 	public int getPosY(){ return posY; }
 	public int getAngle(){ return angle; }
+	public int getNumber(){ return number; }
 	
 	//Setters
 	public void setSpeed(double speed){ this.speed = speed; }

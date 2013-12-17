@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -55,14 +56,19 @@ public class Board extends JPanel{
 		trackDryness = Dryness.DRY;
 	}
 
+	//Getters
 	public Track getTrack(){ return track; }
 	public int getSizeScalePercent(){ return sizeScalePercent; }
+	public LinkedList<Car> getCars(){ return cars; }
+	
+	//Setters
 	public void setTrack(Track track){ this.track = track; points = track.getPoints(); refreshSimulationSize(); }
 	public void setTrackDryness(Dryness dryness){ trackDryness = dryness; }
 	public void setSizeScalePercent(int sizeScalePercent){ 
 		this.sizeScalePercent = sizeScalePercent; 
-		if(sizeScalePercent == 100) size = 4;
-		else if(sizeScalePercent == 50) size = 2;
+		if(sizeScalePercent == 50) size = 2;
+		else if(sizeScalePercent == 100) size = 4;
+		else if(sizeScalePercent == 150) size = 6;
 		else if(sizeScalePercent == 200) size = 8;
 		refreshSimulationSize();
 		repaint();
@@ -116,7 +122,7 @@ public class Board extends JPanel{
 				in.nextLine();
 				in.findInLine("(\\w+);(\\w+);(\\d+);(\\d+)");
 				result = in.match();
-				cars.add(new Car(result.group(1),DriverSkill.valueOf(result.group(2)),Integer.parseInt(result.group(3)),Integer.parseInt(result.group(4))));
+				cars.add(new Car(result.group(1),DriverSkill.valueOf(result.group(2)),Integer.parseInt(result.group(3)),Integer.parseInt(result.group(4)),x+1));
 			}
 			in.close();
 			
@@ -176,6 +182,7 @@ public class Board extends JPanel{
 	/**
 	 * Draw cars visualization
 	 * If zoom is 50% then draw only car center point
+	 * If zoom is 200% also draw cars numbers
 	 * @param g - Graphics
 	 * @param x - Horizontal coordinate of car
 	 * @param y - Vertical coordinate of car
@@ -193,12 +200,30 @@ public class Board extends JPanel{
 				int translateX = (x * size+horizontalOffset) - size/2;
 				int translateY = (y * size+verticalOffset) - (size/2);
 				
+				//Draw cars rects
 				Graphics2D g2d = (Graphics2D)g;
 			    Rectangle rect = new Rectangle(-(size - 2)/2, -(2*size - 2)/2, (size - 2), (2*size - 2)); //Create Rectangle with center on (0,0)
 			    g2d.translate(translateX, translateY);
 			    g2d.rotate(Math.toRadians(car.getAngle()));
 			    g2d.draw(rect);
 			    g2d.fill(rect);
+			    
+			    //Draw cars numbers
+			    if(sizeScalePercent == 200)
+			    {
+				    g2d.setColor(Color.BLACK);
+				    if(car.getNumber() < 10)
+			    	{
+				    	g2d.setFont(new Font("Verdana", Font.BOLD, size));
+				    	g2d.drawString(car.getNumber()+"", -(size - 2)/2+1, size/4);
+			    	}
+				    else 
+			    	{
+				    	g2d.setFont(new Font("Verdana", Font.BOLD, size-1));
+				    	g2d.drawString(car.getNumber()+"", -(size - 2)/2-2, size/4);
+			    	}
+				    
+			    }
 			    
 			    //Reset graphics
 			    g2d.rotate(Math.toRadians(-car.getAngle()));

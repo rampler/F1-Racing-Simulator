@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -22,12 +23,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Enums.Dryness;
 import Enums.Tire;
 import Exceptions.FileFormatException;
+import POJOs.Car;
 
 /**
  * Program's GUI with all ActionListeners
@@ -37,7 +40,7 @@ import Exceptions.FileFormatException;
 public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
 	private Board board;
-	private JButton exit, open, simulation, start, pause, clear, about;
+	private JButton exit, open, simulation, start, pause, clear, about, drivers;
 	private JComboBox<String> drynessCB, tiresCB;
 	private JScrollPane scrollPane;
 	private JSlider zoom;
@@ -76,31 +79,38 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		open.setActionCommand("open");
 		open.addActionListener(this);
 		
+		drivers = new JButton("Drivers");
+		drivers.setActionCommand("drivers");
+		drivers.addActionListener(this);
+		
 		simulation = new JButton("Simulation Parameters");
 		simulation.setActionCommand("parameters");
 		simulation.addActionListener(this);
         
-        zoom = new JSlider(0,2);
+        zoom = new JSlider(0,3);
         Hashtable<Integer, JLabel> hashtable = new Hashtable<>();
         hashtable.put(0, new JLabel("50%"));
         hashtable.put(1, new JLabel("100%"));
-        hashtable.put(2, new JLabel("200%"));
+        hashtable.put(2, new JLabel("150%"));
+        hashtable.put(3, new JLabel("200%"));
         zoom.setLabelTable(hashtable);
         zoom.setPaintLabels(true);
         zoom.setSnapToTicks(true);
         zoom.addChangeListener(this);
 		
 		
+        buttonPanel.add(drivers);
+        buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(open);
 		buttonPanel.add(simulation);
-		buttonPanel.add(Box.createHorizontalStrut(100));
+		buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(start);
 		buttonPanel.add(pause);
 		buttonPanel.add(clear);
-		buttonPanel.add(Box.createHorizontalStrut(100));
+		buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(about);
 		buttonPanel.add(exit);
-		buttonPanel.add(Box.createHorizontalStrut(100));
+		buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(new JLabel("Zoom:"));
 		buttonPanel.add(zoom);
 		
@@ -132,6 +142,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		else if(command.equals("pause")){ pauseSimulation(); }
 		else if(command.equals("clear")){ clearSimulationWindow(); }
 		else if(command.equals("about")){ aboutButtonAction(); }
+		else if(command.equals("drivers")){ showDriversWindow(); }
 		
 		//Parameters window commands
 		else if(command.equals("changedDryness")){ board.setTrackDryness(Dryness.valueOf((String)drynessCB.getSelectedItem())); }
@@ -148,7 +159,8 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		{
 			case 0: board.setSizeScalePercent(50); break;
 			case 1: board.setSizeScalePercent(100); break;
-			case 2: board.setSizeScalePercent(200); break;
+			case 2: board.setSizeScalePercent(150); break;
+			case 3: board.setSizeScalePercent(200); break;
 		}
 	}
 	
@@ -177,6 +189,47 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		
 		try { openTrack(loadedTrackFile); } 
 		catch(Exception exp){JOptionPane.showMessageDialog(this, "Track loading problem!");}
+	}
+	
+	/**
+	 * Show drivers information window
+	 */
+	private void showDriversWindow()
+	{
+		JFrame param = new JFrame("Drivers");
+		param.setAlwaysOnTop(true);
+		param.setLayout(new BorderLayout());
+		param.setBounds((int)(screenWidth-455)/2, (int)(screenHeight-260)/2, 455, 260);
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		String[] columnNames = {"No. ", "Name", "Skill", "Lap", "Speed", "Accelerate", "KERS %"};
+		LinkedList<Car> cars = board.getCars();
+		Object[][] data = new Object[cars.size()][7];
+		
+		//Load drivers data from cars
+		int i=0;
+		for(Car car : cars)
+		{
+			data[i][0] = car.getNumber();
+			data[i][1] = car.getDriverName();
+			data[i][2] = car.getDriverSkills(); 
+			data[i][3] = car.getLaps();
+			data[i][4] = car.getSpeed();
+			data[i][5] = car.getAccelerate();
+			data[i][6] = car.getKersSystemPercent();
+			i++;
+		}
+		
+		//Create Table
+		JTable table = new JTable(data, columnNames);
+		table.getColumnModel().getColumn(0).setPreferredWidth(27);
+		table.getColumnModel().getColumn(3).setPreferredWidth(27);
+		table.getColumnModel().getColumn(4).setPreferredWidth(35);
+		table.getColumnModel().getColumn(5).setPreferredWidth(50);
+		table.getColumnModel().getColumn(6).setPreferredWidth(35);
+		JScrollPane scroll = new JScrollPane(table);
+		mainPanel.add(scroll, BorderLayout.CENTER);
+		param.add(mainPanel, BorderLayout.CENTER);
+		param.setVisible(true);
 	}
 	
 	/**
