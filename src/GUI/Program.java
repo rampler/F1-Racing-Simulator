@@ -14,7 +14,6 @@ import javax.swing.UIManager;
 public class Program extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private GUI gof;
 
 	public Program() {
 		try { UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceGraphiteLookAndFeel"); }
@@ -28,8 +27,7 @@ public class Program extends JFrame {
 		this.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		gof = new GUI();
-		gof.initialize(this.getContentPane());
+		new GUI(this.getContentPane());
 		this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		
 	}

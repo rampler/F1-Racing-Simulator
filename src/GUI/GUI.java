@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTable;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -47,12 +48,24 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private double screenWidth, screenHeight;
 	private Container parent;
 	private File loadedTrackFile;
+	private Timer timer;
+	private int timerDelay = 100;
 
-	public void initialize(Container container) {
+	/**
+	 * Initialize GUI
+	 * @param container
+	 */
+	public GUI(Container container) {
+		//GUI Layout
 		parent = container;
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		container.setSize(new Dimension(1024, 768));
-
+		
+		//Timer
+		timer = new Timer(timerDelay, this);
+		timer.stop();
+		
+		//Buttons
 		JPanel buttonPanel = new JPanel();
 		
 		start = new JButton("Start");
@@ -87,6 +100,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		simulation.setActionCommand("parameters");
 		simulation.addActionListener(this);
         
+		//Zoom
         zoom = new JSlider(0,3);
         Hashtable<Integer, JLabel> hashtable = new Hashtable<>();
         hashtable.put(0, new JLabel("50%"));
@@ -98,7 +112,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
         zoom.setSnapToTicks(true);
         zoom.addChangeListener(this);
 		
-		
+		//Control Panel
         buttonPanel.add(drivers);
         buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(open);
@@ -114,6 +128,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		buttonPanel.add(new JLabel("Zoom:"));
 		buttonPanel.add(zoom);
 		
+		//Board creating
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		screenWidth = screenSize.getWidth();
 		screenHeight = screenSize.getHeight();
@@ -124,6 +139,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		container.add(scrollPane, BorderLayout.CENTER);
 		container.add(buttonPanel, BorderLayout.SOUTH);
 		
+		//Opening Loading Track Window
 		openButtonAction();
 	}
 
@@ -131,22 +147,26 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	 * Implemented from ActionListener - Buttons actions
 	 */
 	public void actionPerformed(ActionEvent e) {
-		String command = e.getActionCommand();
-		if (command.equals("exit")) {
-			for(Frame frame : Frame.getFrames())
-				frame.dispose();					
+		if (e.getSource().equals(timer)) { board.iteration(); } 
+		else 
+		{
+			String command = e.getActionCommand();
+			if (command.equals("exit")) {
+				for(Frame frame : Frame.getFrames())
+					frame.dispose();					
+			}
+			else if (command.equals("open")) { openButtonAction(); }
+			else if(command.equals("parameters")){ parametersButtonAction(); }
+			else if(command.equals("start")){ if(!timer.isRunning()) timer.start(); }
+			else if(command.equals("pause")){ if(timer.isRunning()) timer.stop(); }
+			else if(command.equals("clear")){ clearSimulationWindow(); }
+			else if(command.equals("about")){ aboutButtonAction(); }
+			else if(command.equals("drivers")){ showDriversWindow(); }
+			
+			//Parameters window commands
+			else if(command.equals("changedDryness")){ board.setTrackDryness(Dryness.valueOf((String)drynessCB.getSelectedItem())); }
+			else if(command.equals("changedTires")){ board.changeCarsTires(Tire.valueOf((String)tiresCB.getSelectedItem())); }
 		}
-		else if (command.equals("open")) { openButtonAction(); }
-		else if(command.equals("parameters")){ parametersButtonAction(); }
-		else if(command.equals("start")){ startSimulation(); }
-		else if(command.equals("pause")){ pauseSimulation(); }
-		else if(command.equals("clear")){ clearSimulationWindow(); }
-		else if(command.equals("about")){ aboutButtonAction(); }
-		else if(command.equals("drivers")){ showDriversWindow(); }
-		
-		//Parameters window commands
-		else if(command.equals("changedDryness")){ board.setTrackDryness(Dryness.valueOf((String)drynessCB.getSelectedItem())); }
-		else if(command.equals("changedTires")){ board.changeCarsTires(Tire.valueOf((String)tiresCB.getSelectedItem())); }
 	}
 	
 	/**
@@ -155,38 +175,25 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	 * @param e
 	 */
 	public void stateChanged(ChangeEvent e) {
-		switch(zoom.getValue())
+		if(e.getSource().equals(zoom))
 		{
-			case 0: board.setSizeScalePercent(50); break;
-			case 1: board.setSizeScalePercent(100); break;
-			case 2: board.setSizeScalePercent(150); break;
-			case 3: board.setSizeScalePercent(200); break;
+			switch(zoom.getValue())
+			{
+				case 0: board.setSizeScalePercent(50); break;
+				case 1: board.setSizeScalePercent(100); break;
+				case 2: board.setSizeScalePercent(150); break;
+				case 3: board.setSizeScalePercent(200); break;
+			}
 		}
 	}
-	
-	/**
-	 * Start simulation
-	 */
-	private void startSimulation()
-	{
-		//TODO
-	}
-	
-	/**
-	 * Pause simulation
-	 */
-	private void pauseSimulation()
-	{
-		//TODO
-	}
+
 	
 	/**
 	 * Clear simulation window
 	 */
 	private void clearSimulationWindow()
 	{
-		//TODO - code below only load same track once again
-		
+		if(timer.isRunning()) timer.stop();
 		try { openTrack(loadedTrackFile); } 
 		catch(Exception exp){JOptionPane.showMessageDialog(this, "Track loading problem!");}
 	}

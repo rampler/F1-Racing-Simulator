@@ -11,7 +11,7 @@ import Enums.Tire;
 public class Car {
 
 	private final String DRIVER_NAME;
-	private int posX, posY;
+	private final int POS_START_X, POS_START_Y;
 	private final DriverSkill DRIVER_SKILL;
 	private double speed;
 	private double accelerate;
@@ -32,8 +32,8 @@ public class Car {
 	{
 		DRIVER_NAME = driverName;
 		DRIVER_SKILL = driverSkill;
-		posX  = posStartX;
-		posY = posStartY;
+		POS_START_X  = posStartX;
+		POS_START_Y = posStartY;
 		this.number = number;
 		tireType = Tire.DRY;
 		kersSystemPercent = 0;
@@ -51,8 +51,8 @@ public class Car {
 	public Tire getTireType(){ return tireType; }
 	public DriverSkill getDriverSkills(){ return DRIVER_SKILL; }
 	public String getDriverName(){ return DRIVER_NAME; }
-	public int getPosX(){ return posX; }
-	public int getPosY(){ return posY; }
+	public int getPosStartX(){ return POS_START_X; }
+	public int getPosStartY(){ return POS_START_Y; }
 	public int getAngle(){ return angle; }
 	public int getNumber(){ return number; }
 	
@@ -60,8 +60,6 @@ public class Car {
 	public void setSpeed(double speed){ this.speed = speed; }
 	public void setAccelerate(double accelerate){ this.accelerate = accelerate; }
 	public void setTireType(Tire tireType){ this.tireType = tireType; }
-	public void setPosX(int posX){ this.posX = posX; }
-	public void setPosY(int posY){ this.posY = posY; }
 	public void setAngle(int angle){ this.angle = angle; }
 	
 	/**

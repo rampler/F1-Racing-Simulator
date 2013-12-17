@@ -75,6 +75,22 @@ public class Board extends JPanel{
 	}
 	
 	/**
+	 * Next iteration of algorithm
+	 */
+	public void iteration()
+	{
+		//Next Iteration
+		for(int x=1; x<points.length-1; x++)
+			for(int y=1; y<points[x].length-1; y++)
+				if(points[x][y].isCarCenter()) points[x][y].nextIteraton(trackDryness);
+		//Unblocking blocked points
+		for(int x=1; x<points.length-1; x++)
+			for(int y=1; y<points[x].length-1; y++)
+				points[x][y].unblock();
+		repaint();
+	}
+	
+	/**
 	 * Changing tires type of all cars
 	 * @param tire
 	 */
@@ -127,25 +143,22 @@ public class Board extends JPanel{
 			in.close();
 			
 			//Adding drivers to points
-			for(Car car : cars) points[car.getPosX()-1][car.getPosY()-1].setCar(car);
+			for(Car car : cars) points[car.getPosStartX()][car.getPosStartY()].setCar(car);
 			
 			//Adding neighborhood
-			for(int x=0; x<points.length; x++)
-				for(int y=0; y<points[x].length; y++)
+			for(int x=1; x<points.length-1; x++)
+				for(int y=1; y<points[x].length-1; y++)
 				{
-					if(x>0 && y>0 && x<points.length-1 && y<points[x].length-1)
-					{
 						Point temp[] = new Point[8];
 						temp[Direction.TOP_LEFT.getNum()] = points[x-1][y-1];
-						temp[Direction.TOP.getNum()] = points[x-1][y];
+						temp[Direction.TOP.getNum()] = points[x][y-1];
 						temp[Direction.TOP_RIGHT.getNum()] = points[x-1][y+1];
-						temp[Direction.LEFT.getNum()] = points[x][y-1];
-						temp[Direction.RIGHT.getNum()] = points[x][y+1];
+						temp[Direction.LEFT.getNum()] = points[x-1][y];
+						temp[Direction.RIGHT.getNum()] = points[x+1][y];
 						temp[Direction.BOTTOM_LEFT.getNum()] = points[x+1][y-1];
-						temp[Direction.BOTTOM.getNum()] = points[x+1][y];
+						temp[Direction.BOTTOM.getNum()] = points[x][y+1];
 						temp[Direction.BOTTOM_RIGHT.getNum()] = points[x+1][y+1];
 						points[x][y].setNeighbors(temp);
-					}
 				}
 			setTrack(new Track(trackName, points));
 		}
@@ -187,49 +200,53 @@ public class Board extends JPanel{
 	 * @param x - Horizontal coordinate of car
 	 * @param y - Vertical coordinate of car
 	 */
-	private void drawCars(Graphics g) {
-		for(Car car : cars)
-		{
-			int x = car.getPosX();
-			int y = car.getPosY();
-			g.setColor(Color.RED);
-			//car.setAngle(45); //for test only 
-			if(sizeScalePercent < 100) g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
-			else
+	private void drawCars(Graphics g) 
+	{
+		for(int x=0; x<points.length; x++)
+			for(int y=0; y<points[x].length; y++)
 			{
-				int translateX = (x * size+horizontalOffset) - size/2;
-				int translateY = (y * size+verticalOffset) - (size/2);
-				
-				//Draw cars rects
-				Graphics2D g2d = (Graphics2D)g;
-			    Rectangle rect = new Rectangle(-(size - 2)/2, -(2*size - 2)/2, (size - 2), (2*size - 2)); //Create Rectangle with center on (0,0)
-			    g2d.translate(translateX, translateY);
-			    g2d.rotate(Math.toRadians(car.getAngle()));
-			    g2d.draw(rect);
-			    g2d.fill(rect);
-			    
-			    //Draw cars numbers
-			    if(sizeScalePercent == 200)
-			    {
-				    g2d.setColor(Color.BLACK);
-				    if(car.getNumber() < 10)
-			    	{
-				    	g2d.setFont(new Font("Verdana", Font.BOLD, size));
-				    	g2d.drawString(car.getNumber()+"", -(size - 2)/2+1, size/4);
-			    	}
-				    else 
-			    	{
-				    	g2d.setFont(new Font("Verdana", Font.BOLD, size-1));
-				    	g2d.drawString(car.getNumber()+"", -(size - 2)/2-2, size/4);
-			    	}
-				    
-			    }
-			    
-			    //Reset graphics
-			    g2d.rotate(Math.toRadians(-car.getAngle()));
-			    g2d.translate(-translateX, -translateY);
+				if(points[x][y].isCarCenter())
+				{
+					Car car = points[x][y].getCar();
+					g.setColor(Color.RED);
+					//car.setAngle(45); //for test only 
+					if(sizeScalePercent < 100) g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
+					else
+					{
+						int translateX = (x * size+horizontalOffset) - size/2;
+						int translateY = (y * size+verticalOffset) - (size/2);
+						
+						//Draw cars rects
+						Graphics2D g2d = (Graphics2D)g;
+					    Rectangle rect = new Rectangle(-(size - 2)/2, -(2*size - 2)/2, (size - 2), (2*size - 2)); //Create Rectangle with center on (0,0)
+					    g2d.translate(translateX, translateY);
+					    g2d.rotate(Math.toRadians(car.getAngle()));
+					    g2d.draw(rect);
+					    g2d.fill(rect);
+					    
+					    //Draw cars numbers
+					    if(sizeScalePercent == 200)
+					    {
+						    g2d.setColor(Color.BLACK);
+						    if(car.getNumber() < 10)
+					    	{
+						    	g2d.setFont(new Font("Verdana", Font.BOLD, size));
+						    	g2d.drawString(car.getNumber()+"", -(size - 2)/2+1, size/4);
+					    	}
+						    else 
+					    	{
+						    	g2d.setFont(new Font("Verdana", Font.BOLD, size-1));
+						    	g2d.drawString(car.getNumber()+"", -(size - 2)/2-2, size/4);
+					    	}
+						    
+					    }
+					    
+					    //Reset graphics
+					    g2d.rotate(Math.toRadians(-car.getAngle()));
+					    g2d.translate(-translateX, -translateY);
+					}
+				}
 			}
-		}
 	}
 	
 	/**
