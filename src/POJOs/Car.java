@@ -20,6 +20,7 @@ public class Car {
 	private int laps;
 	private int angle;
 	private int number;
+	private Point[][] visibility;
 	
 	/**
 	 * Setting up initial parameters
@@ -55,12 +56,14 @@ public class Car {
 	public int getPosStartY(){ return POS_START_Y; }
 	public int getAngle(){ return angle; }
 	public int getNumber(){ return number; }
+	public Point[][] getVisibility(){ return visibility; }
 	
 	//Setters
 	public void setSpeed(double speed){ this.speed = speed; }
 	public void setAccelerate(double accelerate){ this.accelerate = accelerate; }
 	public void setTireType(Tire tireType){ this.tireType = tireType; }
 	public void setAngle(int angle){ this.angle = angle; }
+	public void setVisibility(Point[][] visibility){ this.visibility = visibility; }
 	
 	/**
 	 * Add percent to KERS System Charging

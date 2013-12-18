@@ -3,6 +3,7 @@ package POJOs;
 import Enums.Direction;
 import Enums.Dryness;
 import Enums.SurfaceType;
+import Exceptions.CarsCollisionException;
 
 /**
  * Track point.
@@ -29,15 +30,17 @@ public class Point {
 	
 	/**
 	 * Next iteration of simulation
+	 * @throws CarsCollisionException 
 	 */
-	public void nextIteraton(Dryness trackDryness)
+	public void nextIteraton(Dryness trackDryness) throws CarsCollisionException
 	{
 		//TODO - blocking works fine
 		if(!blocked) 
 		{
+			for(Point neighbor : neighbors) if(neighbor.isCarCenter()) throw new CarsCollisionException(car, neighbor.getCar(), this, neighbor);
 			//Code below for tests only
-			car.setAngle(90);
-			neighbors[Direction.RIGHT.getNum()].setCar(car);
+			//car.setAngle(45);
+			neighbors[Direction.TOP.getNum()].setCar(car);
 			car = null;
 		}
 		else blocked = false;

@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import Enums.Direction;
@@ -19,6 +20,7 @@ import Enums.DriverSkill;
 import Enums.Dryness;
 import Enums.SurfaceType;
 import Enums.Tire;
+import Exceptions.CarsCollisionException;
 import Exceptions.FileFormatException;
 import POJOs.Car;
 import POJOs.Point;
@@ -79,10 +81,18 @@ public class Board extends JPanel{
 	 */
 	public void iteration()
 	{
+		setCarsVisibility(); //Setting cars visibility
 		//Next Iteration
-		for(int x=1; x<points.length-1; x++)
-			for(int y=1; y<points[x].length-1; y++)
-				if(points[x][y].isCarCenter()) points[x][y].nextIteraton(trackDryness);
+			for(int x=1; x<points.length-1; x++)
+				for(int y=1; y<points[x].length-1; y++)
+					if(points[x][y].isCarCenter())
+						try { points[x][y].nextIteraton(trackDryness); } 
+						catch (CarsCollisionException exp) 
+						{
+							JOptionPane.showMessageDialog(this.getParent(), "Collision on track: "+exp.getCar1().getNumber()+". "+exp.getCar1().getDriverName()+" and "+exp.getCar2().getNumber()+". "+exp.getCar2().getDriverName()+"!");
+							cars.remove(exp.getCar1());
+							cars.remove(exp.getCar2());
+						}
 		//Unblocking blocked points
 		for(int x=1; x<points.length-1; x++)
 			for(int y=1; y<points[x].length-1; y++)
@@ -175,7 +185,7 @@ public class Board extends JPanel{
 	}
 	
 	/**
-	 * Refresh values about simulation netting size
+	 * Refresh values about simulation netting size and offsets
 	 */
 	private void refreshSimulationSize()
 	{
@@ -267,5 +277,79 @@ public class Board extends JPanel{
 				g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
 			}
 		}
+	}
+	
+	/**
+	 * Setting cars visibility
+	 * It's triangle with a=11, h=5, alpha=45 if direction is TOP/BOTTOM/LEFT/RIGHT
+	 * if another a=8, h=8, alpha 90
+	 */
+	private void setCarsVisibility()
+	{
+		for(int x=8; x<points.length-8; x++) //max visibility range is 7
+			for(int y=8; y<points[x].length-8; y++)
+				if(points[x][y].isCarCenter())
+				{
+					Car car = points[x][y].getCar();
+					Point[][] visibility = null;
+					if(car.getAngle() >= 343 || car.getAngle() <= 22) //Direction - TOP
+					{
+						visibility = new Point[5][11];
+						for(int i=0; i<5; i++)
+							for(int j=0; j<2*i+3; j++)
+								visibility[i][j] = points[x-((j-1)/2)][y-i];						
+					}
+					else if( car.getAngle() >= 23 && car.getAngle() <= 67) //Direction - TOP-RIGHT
+					{
+						visibility = new Point[7][8];
+						for(int i=1; i<=7; i++)
+							for(int j=0; j<i+1; j++)
+								visibility[i-1][j] = points[x+j][y-i+j];
+					}
+					else if( car.getAngle() >= 68 && car.getAngle() <= 112) //Direction - RIGHT
+					{
+						visibility = new Point[5][11];
+						for(int i=0; i<5; i++)
+							for(int j=0; j<2*i+3; j++)
+								visibility[i][j] = points[x+i][y-((j-1)/2)];	
+					}
+					else if( car.getAngle() >= 113 && car.getAngle() <= 157) //Direction - BOTTOM-RIGHT
+					{
+						visibility = new Point[7][8];
+						for(int i=1; i<=7; i++)
+							for(int j=0; j<i+1; j++)
+								visibility[i-1][j] = points[x+i-j][y+j];
+					}
+					else if( car.getAngle() >= 158 && car.getAngle() <= 202) //Direction - BOTTOM
+					{
+						visibility = new Point[5][11];
+						for(int i=0; i<5; i++)
+							for(int j=0; j<2*i+3; j++)
+								visibility[i][j] = points[x-((j-1)/2)][y+i];
+					}
+					else if( car.getAngle() >= 203 && car.getAngle() <= 247) //Direction - BOTTOM-LEFT
+					{
+						visibility = new Point[7][8];
+						for(int i=1; i<=7; i++)
+							for(int j=0; j<i+1; j++)
+								visibility[i-1][j] = points[x-j][y+i-j];
+					}
+					else if( car.getAngle() >= 248 && car.getAngle() <= 292) //Direction - LEFT
+					{
+						visibility = new Point[5][11];
+						for(int i=0; i<5; i++)
+							for(int j=0; j<2*i+3; j++)
+								visibility[i][j] = points[x-i][y-((j-1)/2)];
+					}
+					else if( car.getAngle() >= 293 && car.getAngle() <= 342) //Direction - TOP-LEFT
+					{
+						visibility = new Point[7][8];
+						for(int i=1; i<=7; i++)
+							for(int j=0; j<i+1; j++)
+								visibility[i-1][j] = points[x-i+j][y-j];
+					}
+						
+					car.setVisibility(visibility);
+				}
 	}
 }

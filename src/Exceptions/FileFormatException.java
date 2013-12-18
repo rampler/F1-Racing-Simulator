@@ -1,7 +1,7 @@
 package Exceptions;
 
 /**
- * File format exception throwed when regex cannot match result.
+ * File format exception thrown when regex cannot match result.
  *
  */
 public class FileFormatException extends Exception {
