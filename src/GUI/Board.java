@@ -45,6 +45,8 @@ public class Board extends JPanel{
 	private int horizontalOffset = 0;
 	private int simulationWidth = 0;
 	private int simulationHeight = 0;
+	
+	private int iteration = 0;
 
 	/**
 	 * Constructor gets screen size and setting background color
@@ -79,25 +81,30 @@ public class Board extends JPanel{
 	/**
 	 * Next iteration of algorithm
 	 */
-	public void iteration()
+	public void iteration(int timerDelay)
 	{
 		setCarsVisibility(); //Setting cars visibility
 		//Next Iteration
 			for(int x=1; x<points.length-1; x++)
 				for(int y=1; y<points[x].length-1; y++)
 					if(points[x][y].isCarCenter())
-						try { points[x][y].nextIteraton(trackDryness); } 
+						try { points[x][y].nextIteraton(trackDryness, timerDelay); } 
 						catch (CarsCollisionException exp) 
 						{
+							repaint();
 							JOptionPane.showMessageDialog(this.getParent(), "Collision on track: "+exp.getCar1().getNumber()+". "+exp.getCar1().getDriverName()+" and "+exp.getCar2().getNumber()+". "+exp.getCar2().getDriverName()+"!");
 							cars.remove(exp.getCar1());
 							cars.remove(exp.getCar2());
+							exp.getPoint1().setCar(null);
+							exp.getPoint2().setCar(null);
 						}
 		//Unblocking blocked points
 		for(int x=1; x<points.length-1; x++)
 			for(int y=1; y<points[x].length-1; y++)
 				points[x][y].unblock();
-		repaint();
+		
+		if(iteration == 7) { repaint(); iteration = 0; }
+		else iteration++;
 	}
 	
 	/**

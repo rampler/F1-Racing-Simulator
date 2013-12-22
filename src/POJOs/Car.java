@@ -21,6 +21,7 @@ public class Car {
 	private int angle;
 	private int number;
 	private Point[][] visibility;
+	private double tempDistance;
 	
 	/**
 	 * Setting up initial parameters
@@ -39,9 +40,10 @@ public class Car {
 		tireType = Tire.DRY;
 		kersSystemPercent = 0;
 		speed = 0;
-		accelerate = 0;
+		accelerate = 16.5;
 		laps = 0;
 		angle = 0;
+		tempDistance = 0;
 	}
 	
 	//Getters
@@ -57,6 +59,7 @@ public class Car {
 	public int getAngle(){ return angle; }
 	public int getNumber(){ return number; }
 	public Point[][] getVisibility(){ return visibility; }
+	public double getTempDistance(){ return tempDistance; }
 	
 	//Setters
 	public void setSpeed(double speed){ this.speed = speed; }
@@ -64,6 +67,7 @@ public class Car {
 	public void setTireType(Tire tireType){ this.tireType = tireType; }
 	public void setAngle(int angle){ this.angle = angle; }
 	public void setVisibility(Point[][] visibility){ this.visibility = visibility; }
+	public void setTempDistance(double tempDistance){ this.tempDistance = tempDistance; }
 	
 	/**
 	 * Add percent to KERS System Charging

@@ -27,6 +27,7 @@ import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
 
 import Enums.Dryness;
 import Enums.Tire;
@@ -45,11 +46,13 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private JComboBox<String> drynessCB, tiresCB;
 	private JScrollPane scrollPane;
 	private JSlider zoom;
+	private JFrame driversWindow;
 	private double screenWidth, screenHeight;
 	private Container parent;
 	private File loadedTrackFile;
-	private Timer timer;
-	private int timerDelay = 100;
+	private Timer timer, timerDrivers;
+	private int timerDelay = 10, timerDriversDelay = 300;
+	private JTable table;
 
 	/**
 	 * Initialize GUI
@@ -61,9 +64,11 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		container.setSize(new Dimension(1024, 768));
 		
-		//Timer
+		//Timers
 		timer = new Timer(timerDelay, this);
 		timer.stop();
+		timerDrivers = new Timer(timerDriversDelay, this);
+		timerDrivers.stop();
 		
 		//Buttons
 		JPanel buttonPanel = new JPanel();
@@ -95,6 +100,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		drivers = new JButton("Drivers");
 		drivers.setActionCommand("drivers");
 		drivers.addActionListener(this);
+		table = new JTable();
 		
 		simulation = new JButton("Simulation Parameters");
 		simulation.setActionCommand("parameters");
@@ -113,8 +119,6 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
         zoom.addChangeListener(this);
 		
 		//Control Panel
-        buttonPanel.add(drivers);
-        buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(open);
 		buttonPanel.add(simulation);
 		buttonPanel.add(Box.createHorizontalStrut(50));
@@ -127,6 +131,9 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(new JLabel("Zoom:"));
 		buttonPanel.add(zoom);
+		buttonPanel.add(Box.createHorizontalStrut(50));
+		buttonPanel.add(drivers);
+	        
 		
 		//Board creating
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -147,7 +154,12 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	 * Implemented from ActionListener - Buttons actions
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(timer)) { board.iteration(); } 
+		if (e.getSource().equals(timer)) { board.iteration(timerDelay); } 
+		else if(e.getSource().equals(timerDrivers))
+		{ 
+			if(driversWindow.isVisible()) refreshDriversTableModel(); 
+			else timerDrivers.stop();
+		}
 		else 
 		{
 			String command = e.getActionCommand();
@@ -203,40 +215,53 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	 */
 	private void showDriversWindow()
 	{
-		JFrame param = new JFrame("Drivers");
-		param.setAlwaysOnTop(true);
-		param.setLayout(new BorderLayout());
-		param.setBounds((int)(screenWidth-455)/2, (int)(screenHeight-260)/2, 455, 260);
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		String[] columnNames = {"No. ", "Name", "Skill", "Lap", "Speed", "Accelerate", "KERS %"};
+		if(driversWindow == null)
+		{
+			driversWindow = new JFrame("Drivers");
+			driversWindow.setUndecorated(true);
+			driversWindow.setAlwaysOnTop(true);
+			driversWindow.setLayout(new BorderLayout());
+			driversWindow.setBounds((int)(screenWidth-455-19), (int)(screenHeight-218-68), 455, 218);
+			JPanel mainPanel = new JPanel(new BorderLayout());
+			timerDrivers.start();
+			
+			//Add Table
+			JScrollPane scroll = new JScrollPane(table);
+			mainPanel.add(scroll, BorderLayout.CENTER);
+			driversWindow.add(mainPanel, BorderLayout.CENTER);
+			driversWindow.setVisible(true);
+		}
+		else if(!driversWindow.isVisible()){ driversWindow.setVisible(true); timerDrivers.start(); }
+		else {driversWindow.setVisible(false); }
+	}
+	
+	/**
+	 * Refresh Drivers Table Model
+	 * @return Table Model
+	 */
+	private void refreshDriversTableModel()
+	{
+		DefaultTableModel defmodel = new DefaultTableModel(null, new String[] {"No. ", "Name", "Skill", "Lap", "Speed", "Accelerate", "KERS %"}); 
 		LinkedList<Car> cars = board.getCars();
-		Object[][] data = new Object[cars.size()][7];
-		
-		//Load drivers data from cars
-		int i=0;
 		for(Car car : cars)
 		{
-			data[i][0] = car.getNumber();
-			data[i][1] = car.getDriverName();
-			data[i][2] = car.getDriverSkills(); 
-			data[i][3] = car.getLaps();
-			data[i][4] = car.getSpeed();
-			data[i][5] = car.getAccelerate();
-			data[i][6] = car.getKersSystemPercent();
-			i++;
+			Object[] data = new Object[7];
+			data[0] = car.getNumber();
+			data[1] = car.getDriverName();
+			data[2] = car.getDriverSkills(); 
+			data[3] = car.getLaps();
+			data[4] = car.getSpeed();
+			data[5] = car.getAccelerate();
+			data[6] = car.getKersSystemPercent();
+			defmodel.addRow(data);
 		}
-		
-		//Create Table
-		JTable table = new JTable(data, columnNames);
-		table.getColumnModel().getColumn(0).setPreferredWidth(27);
+        table.setModel(defmodel);
+        table.getColumnModel().getColumn(0).setPreferredWidth(27);
 		table.getColumnModel().getColumn(3).setPreferredWidth(27);
 		table.getColumnModel().getColumn(4).setPreferredWidth(35);
 		table.getColumnModel().getColumn(5).setPreferredWidth(50);
 		table.getColumnModel().getColumn(6).setPreferredWidth(35);
-		JScrollPane scroll = new JScrollPane(table);
-		mainPanel.add(scroll, BorderLayout.CENTER);
-		param.add(mainPanel, BorderLayout.CENTER);
-		param.setVisible(true);
+		table.repaint();
 	}
 	
 	/**
