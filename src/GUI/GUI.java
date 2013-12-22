@@ -1,5 +1,6 @@
 package GUI;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -12,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -45,8 +47,9 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private JButton exit, open, simulation, start, pause, clear, about, drivers;
 	private JComboBox<String> drynessCB, tiresCB;
 	private JScrollPane scrollPane;
+	private JPanel buttonPanel;
 	private JSlider zoom;
-	private JFrame driversWindow;
+	private JFrame driversWindow, paramWindow;
 	private double screenWidth, screenHeight;
 	private Container parent;
 	private File loadedTrackFile;
@@ -71,7 +74,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		timerDrivers.stop();
 		
 		//Buttons
-		JPanel buttonPanel = new JPanel();
+		buttonPanel = new JPanel();
 		
 		start = new JButton("Start");
 		start.setActionCommand("start");
@@ -143,6 +146,8 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		
 		scrollPane = new JScrollPane(board);
 		scrollPane.setPreferredSize(new Dimension(1363,729));
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		container.add(scrollPane, BorderLayout.CENTER);
 		container.add(buttonPanel, BorderLayout.SOUTH);
 		
@@ -164,8 +169,10 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		{
 			String command = e.getActionCommand();
 			if (command.equals("exit")) {
+				timer.stop();
+				timerDrivers.stop();
 				for(Frame frame : Frame.getFrames())
-					frame.dispose();					
+					frame.dispose();		
 			}
 			else if (command.equals("open")) { openButtonAction(); }
 			else if(command.equals("parameters")){ parametersButtonAction(); }
@@ -221,7 +228,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			driversWindow.setUndecorated(true);
 			driversWindow.setAlwaysOnTop(true);
 			driversWindow.setLayout(new BorderLayout());
-			driversWindow.setBounds((int)(screenWidth-455-19), (int)(screenHeight-218-68), 455, 218);
+			driversWindow.setBounds((int)(screenWidth-455-19), (int)(screenHeight-218-(buttonPanel.getHeight()+19)), 455, 218);
 			JPanel mainPanel = new JPanel(new BorderLayout());
 			timerDrivers.start();
 			
@@ -313,44 +320,52 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	 */
 	private void parametersButtonAction()
 	{
-		JFrame param = new JFrame("Simulation Parameters");
-		param.setLayout(new BorderLayout());
-		param.setBounds((int)(screenWidth-300)/2, (int)(screenHeight-100)/2, 300, 100);
-		JPanel optionsPanel = new JPanel();
-		optionsPanel.setLayout(new GridLayout(2,2));
-		
-		//Track dryness
-		JLabel drynessLbl = new JLabel("Track dryness: ");
-		optionsPanel.add(drynessLbl);
-		
-		String[] list = new String[2];
-		int i=0;
-		for(Dryness value : Dryness.values())
+		if(paramWindow == null)
 		{
-			list[i] = value.toString();
-			i++;
+			paramWindow = new JFrame("Simulation Parameters");
+			paramWindow.setUndecorated(true);
+			paramWindow.setAlwaysOnTop(true);
+			paramWindow.setLayout(new BorderLayout());
+			paramWindow.setBounds(0, (int)(screenHeight-70-(buttonPanel.getHeight()+19)), 300, 70);
+			JPanel optionsPanel = new JPanel();
+			optionsPanel.setBorder(BorderFactory.createLineBorder(new Color(50,50,50)));
+			optionsPanel.setLayout(new GridLayout(2,2));
+			
+			//Track dryness
+			JLabel drynessLbl = new JLabel("Track dryness: ");
+			optionsPanel.add(drynessLbl);
+			
+			String[] list = new String[2];
+			int i=0;
+			for(Dryness value : Dryness.values())
+			{
+				list[i] = value.toString();
+				i++;
+			}
+			drynessCB = new JComboBox<String>(list);
+			drynessCB.setActionCommand("changedDryness");
+			drynessCB.addActionListener(this);
+			optionsPanel.add(drynessCB);
+			
+			//Tires equipped
+			JLabel tiresLbl = new JLabel("Tires equipped: ");
+			optionsPanel.add(tiresLbl);
+			list = new String[2];
+			i=0;
+			for(Tire value : Tire.values())
+			{
+				list[i] = value.toString();
+				i++;
+			}
+			tiresCB = new JComboBox<String>(list);
+			tiresCB.setActionCommand("changedTires");
+			tiresCB.addActionListener(this);
+			optionsPanel.add(tiresCB);
+			
+			paramWindow.add(optionsPanel, BorderLayout.CENTER);
+			paramWindow.setVisible(true);
 		}
-		drynessCB = new JComboBox<String>(list);
-		drynessCB.setActionCommand("changedDryness");
-		drynessCB.addActionListener(this);
-		optionsPanel.add(drynessCB);
-		
-		//Tires equipped
-		JLabel tiresLbl = new JLabel("Tires equipped: ");
-		optionsPanel.add(tiresLbl);
-		list = new String[2];
-		i=0;
-		for(Tire value : Tire.values())
-		{
-			list[i] = value.toString();
-			i++;
-		}
-		tiresCB = new JComboBox<String>(list);
-		tiresCB.setActionCommand("changedTires");
-		tiresCB.addActionListener(this);
-		optionsPanel.add(tiresCB);
-		
-		param.add(optionsPanel, BorderLayout.CENTER);
-		param.setVisible(true);
+		else if(!paramWindow.isVisible()) paramWindow.setVisible(true);
+		else paramWindow.setVisible(false);
 	}
 }
