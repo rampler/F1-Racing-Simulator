@@ -38,6 +38,7 @@ public class Board extends JPanel{
 	private int size = 4;
 	private final int SCREEN_WIDTH, SCREEN_HEIGHT;
 	private Dryness trackDryness;
+	private double[][] accelerationTable;
 	private LinkedList<Car> cars;
 	
 	private int sizeScalePercent = 100;
@@ -58,16 +59,20 @@ public class Board extends JPanel{
 		this.SCREEN_WIDTH = screenWidth;
 		setBackground(Color.DARK_GRAY);
 		trackDryness = Dryness.DRY;
+		accelerationTable = defaultAccelerationTable();
 	}
 
 	//Getters
 	public Track getTrack(){ return track; }
 	public int getSizeScalePercent(){ return sizeScalePercent; }
 	public LinkedList<Car> getCars(){ return cars; }
+	public double[][] getAccelerationTable(){ return accelerationTable; }
+	public double[][] getDefaultAccelerationTable(){ return defaultAccelerationTable(); }
 	
 	//Setters
 	public void setTrack(Track track){ this.track = track; points = track.getPoints(); refreshSimulationSize(); }
 	public void setTrackDryness(Dryness dryness){ trackDryness = dryness; }
+	public void setAccelerationTable(double[][] accelerationTable){ this.accelerationTable = accelerationTable; }
 	public void setSizeScalePercent(int sizeScalePercent){ 
 		this.sizeScalePercent = sizeScalePercent; 
 		if(sizeScalePercent == 50) size = 2;
@@ -88,7 +93,7 @@ public class Board extends JPanel{
 			for(int x=1; x<points.length-1; x++)
 				for(int y=1; y<points[x].length-1; y++)
 					if(points[x][y].isCarCenter())
-						try { points[x][y].nextIteraton(trackDryness, timerDelay); } 
+						try { points[x][y].nextIteraton(trackDryness, timerDelay, accelerationTable); } 
 						catch (CarsCollisionException exp) 
 						{
 							repaint();
@@ -155,7 +160,7 @@ public class Board extends JPanel{
 				in.nextLine();
 				in.findInLine("(\\w+);(\\w+);(\\d+);(\\d+)");
 				result = in.match();
-				cars.add(new Car(result.group(1),DriverSkill.valueOf(result.group(2)),Integer.parseInt(result.group(3)),Integer.parseInt(result.group(4)),x+1));
+				cars.add(new Car(result.group(1),DriverSkill.valueOf(result.group(2)),Integer.parseInt(result.group(3)),Integer.parseInt(result.group(4)),x+1,accelerationTable[0][0]));
 			}
 			in.close();
 			
@@ -358,5 +363,30 @@ public class Board extends JPanel{
 						
 					car.setVisibility(visibility);
 				}
+	}
+	
+	/**
+	 * Returning table of default accelerations values
+	 * In first row is reaction to gas
+	 * In second - break
+	 * In last - without gas or break
+	 * @return
+	 */
+	private double[][] defaultAccelerationTable()
+	{
+		double [][] table = new double[3][3];
+		//gas
+		table[0][0] = 16.5; //0-100
+		table[0][1] = 14.7; //100-200
+		table[0][2] = 9.76; //200-300
+		//break
+		table[1][0] = -24; //0-100
+		table[1][1] = -21; //100-200
+		table[1][2] = -17.3; //200-300		
+		//none
+		table[2][0] = -2; //0-100
+		table[2][1] = -2.3; //100-200
+		table[2][2] = -2.7; //200-300
+		return table;
 	}
 }

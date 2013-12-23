@@ -14,7 +14,7 @@ public class Car {
 	private final int POS_START_X, POS_START_Y;
 	private final DriverSkill DRIVER_SKILL;
 	private double speed;
-	private double accelerate;
+	private double acceleration;
 	private int kersSystemPercent;
 	private Tire tireType;
 	private int laps;
@@ -30,7 +30,7 @@ public class Car {
 	 * @param posStartX
 	 * @param posStartY
 	 */
-	public Car(String driverName, DriverSkill driverSkill, int posStartX, int posStartY, int number)
+	public Car(String driverName, DriverSkill driverSkill, int posStartX, int posStartY, int number, double acceleration)
 	{
 		DRIVER_NAME = driverName;
 		DRIVER_SKILL = driverSkill;
@@ -40,7 +40,7 @@ public class Car {
 		tireType = Tire.DRY;
 		kersSystemPercent = 0;
 		speed = 0;
-		accelerate = 16.5;
+		this.acceleration = acceleration;
 		laps = 0;
 		angle = 0;
 		tempDistance = 0;
@@ -48,7 +48,7 @@ public class Car {
 	
 	//Getters
 	public double getSpeed(){ return speed; }
-	public double getAccelerate(){ return accelerate; }
+	public double getAcceleration(){ return acceleration; }
 	public int getKersSystemPercent(){ return kersSystemPercent; }
 	public int getLaps(){ return laps; }
 	public Tire getTireType(){ return tireType; }
@@ -63,7 +63,7 @@ public class Car {
 	
 	//Setters
 	public void setSpeed(double speed){ this.speed = speed; }
-	public void setAccelerate(double accelerate){ this.accelerate = accelerate; }
+	public void setAcceleration(double acceleration){ this.acceleration = acceleration; }
 	public void setTireType(Tire tireType){ this.tireType = tireType; }
 	public void setAngle(int angle){ this.angle = angle; }
 	public void setVisibility(Point[][] visibility){ this.visibility = visibility; }

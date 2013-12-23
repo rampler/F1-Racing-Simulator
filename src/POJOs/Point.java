@@ -32,26 +32,23 @@ public class Point {
 	 * Next iteration of simulation
 	 * @throws CarsCollisionException 
 	 */
-	public void nextIteraton(Dryness trackDryness, int timerDelay) throws CarsCollisionException
+	public void nextIteraton(Dryness trackDryness, int timerDelay, double[][] accelerationTable) throws CarsCollisionException
 	{
-		//TODO - blocking works fine
 		if(!blocked) 
 		{
-			for(Point neighbor : neighbors) if(neighbor.isCarCenter()) throw new CarsCollisionException(car, neighbor.getCar(), this, neighbor);
-			
-			//Add lap
-			if(type == SurfaceType.START_LINE) car.addLap();
+			for(Point neighbor : neighbors) if(neighbor.isCarCenter() && neighbor.getCar().getAngle() != car.getAngle()) throw new CarsCollisionException(car, neighbor.getCar(), this, neighbor);
 			
 			//Calculating distance and speed in m/s
 			double speed_m_s = car.getSpeed()*10/36;
 			double distance = car.getTempDistance()+speed_m_s/(1000/timerDelay);
-			double acc = car.getAccelerate();
+			double acc = car.getAcceleration();
 			
 			//Setting random mistake
 			double random = (Math.random()*car.getDriverSkills().getRandomMistakeParameter());
 			
 			//Calculating new speed - mistake included
 			speed_m_s += acc/(1000/timerDelay);
+			if(speed_m_s < 0) speed_m_s = 0; 
 			double speed_km_h = speed_m_s*36/10;
 			if(speed_km_h  <= 300) car.setSpeed(speed_km_h);
 			else car.setSpeed(300-random);
@@ -62,21 +59,46 @@ public class Point {
 				distance -= 2.6;
 				car.setTempDistance(distance);
 				
-			//Calculating new decision
-				//Calculating new acceleration - gas - mistake included
-				if(car.getSpeed() <= 100) car.setAccelerate(16.5-random);
-				else if(car.getSpeed() <= 200) car.setAccelerate(14.7-random);
-				else if(car.getSpeed() <= 300) car.setAccelerate(9.73-random);
+				//Add lap
+				if(type == SurfaceType.START_LINE) car.addLap();
 				
-				//Calculating new acceleration - brake - mistake included
-//				if(car.getSpeed() <= 100) car.setAccelerate(-24+random);
-//				else if(car.getSpeed() <= 200) car.setAccelerate(-21+random);
-//				else if(car.getSpeed() <= 300) car.setAccelerate(-17.3+random);
+			//Calculating new decision
+				Direction carActualDirection = Direction.getDirectionFromAngle(car.getAngle());
+				Direction nextDirection = carActualDirection;
+				//TODO Calculating Next Direction
+				
+				if(nextDirection == Direction.getDirectionFromAngle(car.getAngle()))
+				{
+					//Calculating new acceleration - gas - mistake included
+					if(car.getSpeed() <= 100) car.setAcceleration(accelerationTable[0][0]-random);
+					else if(car.getSpeed() <= 200) car.setAcceleration(accelerationTable[0][1]-random);
+					else if(car.getSpeed() <= 300) car.setAcceleration(accelerationTable[0][2]-random);
+				}
+				else if(nextDirection.getNum() - carActualDirection.getNum() == 1)
+				{
+					//Calculating new acceleration - none - mistake included
+					if(car.getSpeed() <= 100) car.setAcceleration(accelerationTable[2][0]+random);
+					else if(car.getSpeed() <= 200) car.setAcceleration(accelerationTable[2][1]+random);
+					else if(car.getSpeed() <= 300) car.setAcceleration(accelerationTable[2][2]+random);
+				}
+				else
+				{
+					//Calculating new acceleration - brake - mistake included
+					if(car.getSpeed() <= 100) car.setAcceleration(accelerationTable[1][0]+random);
+					else if(car.getSpeed() <= 200) car.setAcceleration(accelerationTable[1][1]+random);
+					else if(car.getSpeed() <= 300) car.setAcceleration(accelerationTable[1][2]+random);
+				}
+				
+
 				
 				//Code below for tests only
 				car.setAngle(45);
-				neighbors[Direction.RIGHT.getNum()].setCar(car);
-				car = null;
+				if(neighbors[Direction.RIGHT.getNum()].getCar() == null)
+				{
+						neighbors[Direction.RIGHT.getNum()].setCar(car);
+						car = null;
+				}
+				else throw new CarsCollisionException(this.car, neighbors[Direction.RIGHT.getNum()].getCar(), this, neighbors[Direction.RIGHT.getNum()]);
 			}
 			else car.setTempDistance(distance);
 		}

@@ -25,7 +25,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -44,18 +46,22 @@ import POJOs.Car;
 public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
 	private Board board;
-	private JButton exit, open, simulation, start, pause, clear, about, drivers;
+	
+	private JButton exit, open, simulation, start, clear, about, drivers;
 	private JComboBox<String> drynessCB, tiresCB;
 	private JScrollPane scrollPane;
 	private JPanel buttonPanel;
 	private JSlider zoom;
 	private JFrame driversWindow, paramWindow;
+	private JSpinner g100, g200, g300, b100, b200, b300, n100, n200, n300;
+	
 	private double screenWidth, screenHeight;
 	private Container parent;
 	private File loadedTrackFile;
 	private Timer timer, timerDrivers;
 	private int timerDelay = 10, timerDriversDelay = 300;
 	private JTable table;
+	private boolean notStarted = true;
 
 	/**
 	 * Initialize GUI
@@ -79,10 +85,6 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		start = new JButton("Start");
 		start.setActionCommand("start");
 		start.addActionListener(this);
-		
-		pause = new JButton("Pause");
-		pause.setActionCommand("pause");
-		pause.addActionListener(this);
 		
 		clear = new JButton("Clear");
 		clear.setActionCommand("clear");
@@ -126,7 +128,6 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		buttonPanel.add(simulation);
 		buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(start);
-		buttonPanel.add(pause);
 		buttonPanel.add(clear);
 		buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(about);
@@ -176,8 +177,16 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			}
 			else if (command.equals("open")) { openButtonAction(); }
 			else if(command.equals("parameters")){ parametersButtonAction(); }
-			else if(command.equals("start")){ if(!timer.isRunning()) timer.start(); }
-			else if(command.equals("pause")){ if(timer.isRunning()) timer.stop(); }
+			else if(command.equals("start"))
+			{ 
+				if(!timer.isRunning()) 
+				{ 
+					timer.start();  
+					notStarted = false; 
+					start.setText("Pause");
+				}
+				else{ timer.stop(); start.setText("Start"); }
+			}
 			else if(command.equals("clear")){ clearSimulationWindow(); }
 			else if(command.equals("about")){ aboutButtonAction(); }
 			else if(command.equals("drivers")){ showDriversWindow(); }
@@ -185,11 +194,12 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			//Parameters window commands
 			else if(command.equals("changedDryness")){ board.setTrackDryness(Dryness.valueOf((String)drynessCB.getSelectedItem())); }
 			else if(command.equals("changedTires")){ board.changeCarsTires(Tire.valueOf((String)tiresCB.getSelectedItem())); }
+			else if(command.equals("restoreDefaultParameters")){ restoreDefaultParameters(); }
 		}
 	}
 	
 	/**
-	 * Implemented from ChangeListener - Slider action
+	 * Implemented from ChangeListener - Slider and Spinners actions
 	 * Changed Zoom
 	 * @param e
 	 */
@@ -204,6 +214,21 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 				case 3: board.setSizeScalePercent(200); break;
 			}
 		}
+		else if(e.getSource().equals(g100))
+		{ 
+			board.getAccelerationTable()[0][0] = (double) g100.getValue(); 
+			if(notStarted) //If not simulation Started then change start acceleration
+				for(Car car : board.getCars())
+					car.setAcceleration((double) g100.getValue());
+		}
+		else if(e.getSource().equals(g200)){ board.getAccelerationTable()[0][1] = (double) g200.getValue(); }
+		else if(e.getSource().equals(g300)){ board.getAccelerationTable()[0][2] = (double) g300.getValue(); }
+		else if(e.getSource().equals(b100)){ board.getAccelerationTable()[1][0] = (double) b100.getValue(); }
+		else if(e.getSource().equals(b200)){ board.getAccelerationTable()[1][1] = (double) b200.getValue(); }
+		else if(e.getSource().equals(b300)){ board.getAccelerationTable()[1][2] = (double) b300.getValue(); }
+		else if(e.getSource().equals(n100)){ board.getAccelerationTable()[2][0] = (double) n100.getValue(); }
+		else if(e.getSource().equals(n200)){ board.getAccelerationTable()[2][1] = (double) n200.getValue(); }
+		else if(e.getSource().equals(n300)){ board.getAccelerationTable()[2][2] = (double) n300.getValue(); }
 	}
 
 	
@@ -215,6 +240,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		if(timer.isRunning()) timer.stop();
 		try { openTrack(loadedTrackFile); } 
 		catch(Exception exp){JOptionPane.showMessageDialog(this, "Track loading problem!");}
+		notStarted = true;
 	}
 	
 	/**
@@ -240,35 +266,6 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		}
 		else if(!driversWindow.isVisible()){ driversWindow.setVisible(true); timerDrivers.start(); }
 		else {driversWindow.setVisible(false); }
-	}
-	
-	/**
-	 * Refresh Drivers Table Model
-	 * @return Table Model
-	 */
-	private void refreshDriversTableModel()
-	{
-		DefaultTableModel defmodel = new DefaultTableModel(null, new String[] {"No. ", "Name", "Skill", "Lap", "Speed", "Accelerate", "KERS %"}); 
-		LinkedList<Car> cars = board.getCars();
-		for(Car car : cars)
-		{
-			Object[] data = new Object[7];
-			data[0] = car.getNumber();
-			data[1] = car.getDriverName();
-			data[2] = car.getDriverSkills(); 
-			data[3] = car.getLaps();
-			data[4] = car.getSpeed();
-			data[5] = car.getAccelerate();
-			data[6] = car.getKersSystemPercent();
-			defmodel.addRow(data);
-		}
-        table.setModel(defmodel);
-        table.getColumnModel().getColumn(0).setPreferredWidth(27);
-		table.getColumnModel().getColumn(3).setPreferredWidth(27);
-		table.getColumnModel().getColumn(4).setPreferredWidth(35);
-		table.getColumnModel().getColumn(5).setPreferredWidth(50);
-		table.getColumnModel().getColumn(6).setPreferredWidth(35);
-		table.repaint();
 	}
 	
 	/**
@@ -325,16 +322,14 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			paramWindow = new JFrame("Simulation Parameters");
 			paramWindow.setUndecorated(true);
 			paramWindow.setAlwaysOnTop(true);
-			paramWindow.setLayout(new BorderLayout());
-			paramWindow.setBounds(0, (int)(screenHeight-70-(buttonPanel.getHeight()+19)), 300, 70);
+			paramWindow.setBounds(0, (int)(screenHeight-150-(buttonPanel.getHeight()+19)), 350, 150);
+			JPanel contentPanel = new JPanel(new BorderLayout());
+			contentPanel.setBorder(BorderFactory.createLineBorder(new Color(50,50,50)));
+			
 			JPanel optionsPanel = new JPanel();
-			optionsPanel.setBorder(BorderFactory.createLineBorder(new Color(50,50,50)));
-			optionsPanel.setLayout(new GridLayout(2,2));
+			optionsPanel.setLayout(new GridLayout(3,2));
 			
-			//Track dryness
-			JLabel drynessLbl = new JLabel("Track dryness: ");
-			optionsPanel.add(drynessLbl);
-			
+			//Track dryness	
 			String[] list = new String[2];
 			int i=0;
 			for(Dryness value : Dryness.values())
@@ -344,12 +339,9 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			}
 			drynessCB = new JComboBox<String>(list);
 			drynessCB.setActionCommand("changedDryness");
-			drynessCB.addActionListener(this);
-			optionsPanel.add(drynessCB);
+			drynessCB.addActionListener(this);		
 			
-			//Tires equipped
-			JLabel tiresLbl = new JLabel("Tires equipped: ");
-			optionsPanel.add(tiresLbl);
+			//Tires equipped			
 			list = new String[2];
 			i=0;
 			for(Tire value : Tire.values())
@@ -360,12 +352,135 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			tiresCB = new JComboBox<String>(list);
 			tiresCB.setActionCommand("changedTires");
 			tiresCB.addActionListener(this);
+			
+			optionsPanel.add(new JLabel("Track dryness: "));
+			optionsPanel.add(drynessCB);
+			optionsPanel.add(new JLabel("Tires equipped: "));
 			optionsPanel.add(tiresCB);
 			
-			paramWindow.add(optionsPanel, BorderLayout.CENTER);
+			optionsPanel.add(new JLabel("Acceleration(m/s^2): "));
+			optionsPanel.add(new JLabel(""));
+			
+			//Accelerations
+			JPanel accPanel = new JPanel();
+			accPanel.setLayout(new GridLayout(5,5));
+			
+			JButton restore = new JButton("Default");
+			restore.setActionCommand("restoreDefaultParameters");
+			restore.addActionListener(this);
+			
+			g100 = new JSpinner(new SpinnerNumberModel(16.50, 0.00, 100.00, 0.01));
+			g200 = new JSpinner(new SpinnerNumberModel(14.70, 0.00, 100.00, 0.01));
+			g300 = new JSpinner(new SpinnerNumberModel(9.76, 0.00, 100.00, 0.01));
+			
+			b100 = new JSpinner(new SpinnerNumberModel(-24.00, -100.00, 0.00, 0.01));
+			b200 = new JSpinner(new SpinnerNumberModel(-21.00, -100.00, 0.00, 0.01));
+			b300 = new JSpinner(new SpinnerNumberModel(-17.30, -100.00, 0.00, 0.01));
+			
+			n100 = new JSpinner(new SpinnerNumberModel(-2.00, -100.00, 0.00, 0.01));
+			n200 = new JSpinner(new SpinnerNumberModel(-2.30, -100.00, 0.00, 0.01));
+			n300 = new JSpinner(new SpinnerNumberModel(-2.70, -100.00, 0.00, 0.01));
+			
+			g100.addChangeListener(this);
+			g200.addChangeListener(this);
+			g300.addChangeListener(this);
+			b100.addChangeListener(this);
+			b200.addChangeListener(this);
+			b300.addChangeListener(this);
+			n100.addChangeListener(this);
+			n200.addChangeListener(this);
+			n300.addChangeListener(this);
+			
+			accPanel.add(new JLabel(""));
+			accPanel.add(new JLabel(""));
+			accPanel.add(new JLabel("0-100 km/h:"));
+			accPanel.add(new JLabel("100-200 km/h:"));
+			accPanel.add(new JLabel("200-300 km/h:"));
+			
+			accPanel.add(new JLabel(""));
+			accPanel.add(new JLabel("Gas"));
+			accPanel.add(g100);
+			accPanel.add(g200);
+			accPanel.add(g300);
+			
+			accPanel.add(new JLabel(""));
+			accPanel.add(new JLabel("Break"));
+			accPanel.add(b100);
+			accPanel.add(b200);
+			accPanel.add(b300);
+			
+			accPanel.add(new JLabel(""));
+			accPanel.add(new JLabel("None"));
+			accPanel.add(n100);
+			accPanel.add(n200);
+			accPanel.add(n300);
+			
+			accPanel.add(restore);
+			accPanel.add(new JLabel(""));
+			accPanel.add(new JLabel(""));
+			accPanel.add(new JLabel(""));
+			accPanel.add(new JLabel(""));
+			
+			contentPanel.add(optionsPanel, BorderLayout.NORTH);
+			contentPanel.add(accPanel, BorderLayout.CENTER);
+			paramWindow.add(contentPanel);
 			paramWindow.setVisible(true);
 		}
 		else if(!paramWindow.isVisible()) paramWindow.setVisible(true);
 		else paramWindow.setVisible(false);
+	}
+	
+	/**
+	 * Restore default simulation parameters
+	 */
+	private void restoreDefaultParameters()
+	{ 
+		//Table of accelerations
+		double[][] table = board.getDefaultAccelerationTable();
+		board.setAccelerationTable(table);
+		g100.setValue(table[0][0]);
+		g200.setValue(table[0][1]);
+		g300.setValue(table[0][2]);
+		b100.setValue(table[1][0]);
+		b200.setValue(table[1][1]);
+		b300.setValue(table[1][2]);
+		n100.setValue(table[2][0]);
+		n200.setValue(table[2][1]);
+		n300.setValue(table[2][2]);
+		
+		//Track dryness and tires
+		board.setTrackDryness(Dryness.DRY);
+		board.changeCarsTires(Tire.DRY);
+		tiresCB.setSelectedIndex(0);
+		drynessCB.setSelectedIndex(0);
+	}
+	
+	/**
+	 * Refresh Drivers Table Model
+	 * @return Table Model
+	 */
+	private void refreshDriversTableModel()
+	{
+		DefaultTableModel defmodel = new DefaultTableModel(null, new String[] {"No. ", "Name", "Skill", "Lap", "Speed", "Accelerate", "KERS %"}); 
+		LinkedList<Car> cars = board.getCars();
+		for(Car car : cars)
+		{
+			Object[] data = new Object[7];
+			data[0] = car.getNumber();
+			data[1] = car.getDriverName();
+			data[2] = car.getDriverSkills(); 
+			data[3] = car.getLaps();
+			data[4] = Math.round(car.getSpeed())+" km/h";
+			data[5] = ((double)(Math.round(car.getAcceleration()*1000))/1000)+" m/s2";
+			data[6] = car.getKersSystemPercent()+" %";
+			defmodel.addRow(data);
+		}
+        table.setModel(defmodel);
+        table.getColumnModel().getColumn(0).setPreferredWidth(27);
+		table.getColumnModel().getColumn(3).setPreferredWidth(27);
+		table.getColumnModel().getColumn(4).setPreferredWidth(40);
+		table.getColumnModel().getColumn(5).setPreferredWidth(55);
+		table.getColumnModel().getColumn(6).setPreferredWidth(35);
+		table.repaint();
 	}
 }
