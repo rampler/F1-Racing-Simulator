@@ -16,6 +16,7 @@ public class Car {
 	private double speed;
 	private double acceleration;
 	private int kersSystemPercent;
+	private int kersIterations = 0;
 	private Tire tireType;
 	private int laps;
 	private int angle;
@@ -61,6 +62,9 @@ public class Car {
 	public Point[][] getVisibility(){ return visibility; }
 	public double getTempDistance(){ return tempDistance; }
 	
+	//Is's
+	public boolean isKersActivated(){ if(kersIterations > 0) return true; return false; }
+	
 	//Setters
 	public void setSpeed(double speed){ this.speed = speed; }
 	public void setAcceleration(double acceleration){ this.acceleration = acceleration; }
@@ -74,8 +78,10 @@ public class Car {
 	 * @param percent
 	 */
 	public void addKersSystemPercent(int percent){ 
-		if(this.kersSystemPercent+percent < 100) this.kersSystemPercent += percent; 
+		if(this.kersSystemPercent+percent < 100 && percent >= 0) this.kersSystemPercent += percent; 
 		else this.kersSystemPercent = 100;
 	}
 	public void addLap(){ this.laps++; }
+	public void activateKers(){ kersIterations = 670; kersSystemPercent = 0; }
+	public void nextKersIteration(){ if(kersIterations > 0) kersIterations--; }
 }

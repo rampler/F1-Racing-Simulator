@@ -157,7 +157,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	}
 
 	/**
-	 * Implemented from ActionListener - Buttons actions
+	 * Implemented from ActionListener - Buttons and timers actions
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(timer)) { board.iteration(timerDelay); } 
@@ -292,6 +292,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	 */
 	private void openTrack(File file) throws FileNotFoundException, FileFormatException
 	{
+		if(timer.isRunning()) { timer.stop(); start.setText("Start"); }
 		loadedTrackFile = file;
 		board.loadTrack(loadedTrackFile);
 		board.repaint();

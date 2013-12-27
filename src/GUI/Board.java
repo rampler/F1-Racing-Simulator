@@ -20,6 +20,8 @@ import Enums.DriverSkill;
 import Enums.Dryness;
 import Enums.SurfaceType;
 import Enums.Tire;
+import Exceptions.BarrierCrashException;
+import Exceptions.CarStackException;
 import Exceptions.CarsCollisionException;
 import Exceptions.FileFormatException;
 import POJOs.Car;
@@ -94,7 +96,7 @@ public class Board extends JPanel{
 				for(int y=1; y<points[x].length-1; y++)
 					if(points[x][y].isCarCenter())
 						try { points[x][y].nextIteraton(trackDryness, timerDelay, accelerationTable); } 
-						catch (CarsCollisionException exp) 
+						catch(CarsCollisionException exp) 
 						{
 							repaint();
 							JOptionPane.showMessageDialog(this.getParent(), "Collision on track: "+exp.getCar1().getNumber()+". "+exp.getCar1().getDriverName()+" and "+exp.getCar2().getNumber()+". "+exp.getCar2().getDriverName()+"!");
@@ -102,6 +104,20 @@ public class Board extends JPanel{
 							cars.remove(exp.getCar2());
 							exp.getPoint1().setCar(null);
 							exp.getPoint2().setCar(null);
+						}
+						catch(CarStackException exp)
+						{
+							repaint();
+							JOptionPane.showMessageDialog(this.getParent(), "Car stack on track: "+exp.getCar().getNumber()+". "+exp.getCar().getDriverName()+"!");
+							cars.remove(exp.getCar());
+							exp.getPoint().setCar(null);
+						}
+						catch(BarrierCrashException exp)
+						{
+							repaint();
+							JOptionPane.showMessageDialog(this.getParent(), "Car hits barrier: "+exp.getCar().getNumber()+". "+exp.getCar().getDriverName()+"!");
+							cars.remove(exp.getCar());
+							exp.getPoint().setCar(null);
 						}
 		//Unblocking blocked points
 		for(int x=1; x<points.length-1; x++)
@@ -293,7 +309,7 @@ public class Board extends JPanel{
 	
 	/**
 	 * Setting cars visibility
-	 * It's triangle with a=11, h=5, alpha=45 if direction is TOP/BOTTOM/LEFT/RIGHT
+	 * It's triangle with a=11, h=6, alpha=45 if direction is TOP/BOTTOM/LEFT/RIGHT
 	 * if another a=8, h=8, alpha 90
 	 */
 	private void setCarsVisibility()
