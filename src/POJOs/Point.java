@@ -23,6 +23,7 @@ public class Point {
 	private int state;
 	private boolean blocked;
 	private final int MAX_SPEED = 302;
+	private final double KERS_POWER_PARAMETER = 1.1;
 	
 	//Constructors
 	public Point() {
@@ -50,6 +51,10 @@ public class Point {
 			double speed_m_s = car.getSpeed()*10/36;
 			double distance = car.getTempDistance()+speed_m_s/(1000/timerDelay);
 			double acc = car.getAcceleration();
+			if(car.isKersActivated()) acc *= KERS_POWER_PARAMETER;
+			
+			//Decrease KERS iterations - if not activated nothing happens
+			car.nextKersIteration();
 			
 			//Setting random mistake
 			double random = (Math.random()*car.getDriverSkills().getRandomMistakeParameter());
@@ -64,9 +69,6 @@ public class Point {
 			//Stack Exception
 			if(car.getSpeed() == 0 && car.getAcceleration() < 0) throw new CarStackException(this.car, this);
 			
-			//Decrease KERS iterations - if not activated nothing happens
-			car.nextKersIteration();
-			
 			//If distance is > 2.6 then send car to next point
 			if(distance >= 2.6) 
 			{
@@ -77,7 +79,7 @@ public class Point {
 				if(type == SurfaceType.START_LINE) car.addLap();
 				if(car.getAcceleration() < 0) car.addKersSystemPercent((int) (-1*car.getAcceleration())/10);
 				
-				//Calculating new decision
+				//Calculating new decision - TODO TEST
 				Direction carActualDirection = Direction.getDirectionFromAngle(car.getAngle());
 				Direction nextDirection = carActualDirection;
 				
@@ -124,6 +126,28 @@ public class Point {
 					if(car.getSpeed() <= 100) newAcceleration = accelerationTable[0][0]-random;
 					else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[0][1]-random;
 					else newAcceleration = accelerationTable[0][2]-random;
+					
+					//Activating KERS - //TODO - TEST
+					if(car.getKersSystemPercent() == 100)
+					{
+						boolean roadAhead = true;
+						int i=0;
+						if(car.getVisibility().length == 5){
+							int j=5;
+							while(roadAhead && i<j){
+								if(car.getVisibility()[i][i+1].getType() != SurfaceType.ROAD) roadAhead = false;
+								i++;
+							}
+						}
+						else{
+							int j=3;
+							while(roadAhead && i<j){
+								if(car.getVisibility()[2*i+1][i+1].getType() != SurfaceType.ROAD) roadAhead = false;
+								i++;
+							}
+						}
+						if(roadAhead) car.activateKers();
+					}
 				}
 				else if(Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 1 || Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 7)
 				{
@@ -143,7 +167,7 @@ public class Point {
 				else newAcceleration *= car.getTireType().getAdhensionOnSame();
 				car.setAcceleration(newAcceleration*trackDryness.getAdhension()-type.getFriction());
 				
-				//If speed is too high car can't change direction fast
+				//If speed is too high car can't change direction fast - TODO - TEST
 				if(!(Math.abs(nextDirection.getNum() - carActualDirection.getNum()) <= 1 || Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 7))
 				{
 					if(car.getSpeed() > 200) nextDirection = carActualDirection; 
