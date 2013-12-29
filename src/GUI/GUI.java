@@ -49,17 +49,18 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private JComboBox<String> drynessCB, tiresCB;
 	private JScrollPane scrollPane;
 	private JPanel buttonPanel;
-	private JSlider zoom;
+	private JSlider zoom, simSpeed;
 	private JFrame driversWindow, paramWindow, resultWindow;
-	private JSpinner g100, g200, g300, b100, b200, b300, n100, n200, n300;
+	private JSpinner g100, g200, g300, b100, b200, b300, n100, n200, n300, itDelay, refDelay;
 	private JTable table, tableResult;
 	private Container parent;
 	
 	private double screenWidth, screenHeight;
 	private File loadedTrackFile;
 	private Timer timer, timerDrivers;
-	private int timerDelay = 10, timerDriversDelay = 300;
+	private int timerDelay = 20, timerDriversDelay = 300;
 	private boolean notStarted = true;
+	private double simulationSpeed = 1;
 
 	/**
 	 * Initialize GUI
@@ -72,7 +73,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		container.setSize(new Dimension(1024, 768));
 		
 		//Timers
-		timer = new Timer(timerDelay, this);
+		timer = new Timer((int)(timerDelay/simulationSpeed), this);
 		timer.stop();
 		timerDrivers = new Timer(timerDriversDelay, this);
 		timerDrivers.stop();
@@ -221,6 +222,19 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 				case 3: board.setSizeScalePercent(200); break;
 			}
 		}
+		else if(e.getSource().equals(simSpeed))
+		{
+			switch(simSpeed.getValue())
+			{
+				case 0: simulationSpeed = 0.5; break;
+				case 1: simulationSpeed = 1; break;
+				case 2: simulationSpeed = 1.5; break;
+				case 3: simulationSpeed = 2; break;
+				case 4: simulationSpeed = 3; break;
+				case 5: simulationSpeed = 5; break;
+			}
+			timer.setDelay((int)(timerDelay/simulationSpeed));
+		}
 		else if(e.getSource().equals(g100))
 		{ 
 			board.getAccelerationTable()[0][0] = (double) g100.getValue(); 
@@ -236,6 +250,16 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		else if(e.getSource().equals(n100)){ board.getAccelerationTable()[2][0] = (double) n100.getValue(); }
 		else if(e.getSource().equals(n200)){ board.getAccelerationTable()[2][1] = (double) n200.getValue(); }
 		else if(e.getSource().equals(n300)){ board.getAccelerationTable()[2][2] = (double) n300.getValue(); }
+		else if(e.getSource().equals(itDelay))
+		{
+			timerDelay = ((Number) itDelay.getValue()).intValue();
+			timer.setDelay((int)(timerDelay/simulationSpeed));
+		}
+		else if(e.getSource().equals(refDelay))
+		{
+			timerDriversDelay = ((Number) refDelay.getValue()).intValue();
+			timerDrivers.setDelay(timerDriversDelay);
+		}
 	}
 
 	
@@ -357,12 +381,12 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			paramWindow = new JFrame("Simulation Parameters");
 			paramWindow.setUndecorated(true);
 			paramWindow.setAlwaysOnTop(true);
-			paramWindow.setBounds(0, (int)(screenHeight-150-(buttonPanel.getHeight()+19)), 350, 150);
+			paramWindow.setBounds(0, (int)(screenHeight-260-(buttonPanel.getHeight()+19)), 350, 260);
 			JPanel contentPanel = new JPanel(new BorderLayout());
 			contentPanel.setBorder(BorderFactory.createLineBorder(new Color(50,50,50)));
 			
 			JPanel optionsPanel = new JPanel();
-			optionsPanel.setLayout(new GridLayout(3,2));
+			optionsPanel.setLayout(new GridLayout(5,2));
 			
 			//Track dryness	
 			String[] list = new String[2];
@@ -387,13 +411,23 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			tiresCB = new JComboBox<String>(list);
 			tiresCB.setActionCommand("changedTires");
 			tiresCB.addActionListener(this);
+	        
+	        //TimersDelays
+	        itDelay = new JSpinner(new SpinnerNumberModel(20, 1, 1000, 1));
+	        refDelay = new JSpinner(new SpinnerNumberModel(300, 1, 5000, 1));
+	        itDelay.addChangeListener(this);
+	        refDelay.addChangeListener(this);
 			
-			optionsPanel.add(new JLabel("Track dryness: "));
+			optionsPanel.add(new JLabel(" Track dryness: "));
 			optionsPanel.add(drynessCB);
-			optionsPanel.add(new JLabel("Tires equipped: "));
+			optionsPanel.add(new JLabel(" Tires equipped: "));
 			optionsPanel.add(tiresCB);
+			optionsPanel.add(new JLabel(" Iteration delay(10-30ms):"));
+			optionsPanel.add(itDelay);
+			optionsPanel.add(new JLabel(" Results refreshing(100-500ms):"));
+			optionsPanel.add(refDelay);
 			
-			optionsPanel.add(new JLabel("Acceleration(m/s^2): "));
+			optionsPanel.add(new JLabel(" Acceleration(m/s^2): "));
 			optionsPanel.add(new JLabel(""));
 			
 			//Accelerations
@@ -456,8 +490,29 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			accPanel.add(new JLabel(""));
 			accPanel.add(new JLabel(""));
 			
-			contentPanel.add(optionsPanel, BorderLayout.NORTH);
-			contentPanel.add(accPanel, BorderLayout.CENTER);
+			JPanel headerPanel = new JPanel(new GridLayout(1,2));
+			
+			//Simulation Speed
+	        simSpeed = new JSlider(0,5);
+	        Hashtable<Integer, JLabel> hashtable = new Hashtable<>();
+	        hashtable.put(0, new JLabel("0.5x"));
+	        hashtable.put(1, new JLabel("1x"));
+	        hashtable.put(2, new JLabel("1.5x"));
+	        hashtable.put(3, new JLabel("2x"));
+	        hashtable.put(4, new JLabel("3x"));
+	        hashtable.put(5, new JLabel("5x"));
+	        simSpeed.setLabelTable(hashtable);
+	        simSpeed.setValue(1);
+	        simSpeed.setPaintLabels(true);
+	        simSpeed.setSnapToTicks(true);
+	        simSpeed.addChangeListener(this);
+	        
+	        headerPanel.add(new JLabel(" Simulation speed:"));
+	        headerPanel.add(simSpeed);
+			
+			contentPanel.add(optionsPanel, BorderLayout.CENTER);
+			contentPanel.add(accPanel, BorderLayout.SOUTH);
+			contentPanel.add(headerPanel, BorderLayout.NORTH);
 			paramWindow.add(contentPanel);
 			paramWindow.setVisible(true);
 		}
@@ -488,5 +543,10 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		board.changeCarsTires(Tire.DRY);
 		tiresCB.setSelectedIndex(0);
 		drynessCB.setSelectedIndex(0);
+		
+		//Simulation Speed and Delays
+		simSpeed.setValue(1);
+		itDelay.setModel(new SpinnerNumberModel(20, 1, 1000, 1));
+		refDelay.setModel(new SpinnerNumberModel(300, 1, 5000, 1));
 	}
 }
