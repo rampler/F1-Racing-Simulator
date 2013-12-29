@@ -13,16 +13,18 @@ public class Car {
 	private final String DRIVER_NAME;
 	private final int POS_START_X, POS_START_Y;
 	private final DriverSkill DRIVER_SKILL;
-	private double speed;
-	private double acceleration;
+	private final int NUMBER;
+	private int angle;
 	private int kersSystemPercent;
 	private int kersIterations = 0;
-	private Tire tireType;
 	private int laps;
-	private int angle;
-	private int number;
-	private Point[][] visibility;
+	private long actualLapTime;
+	private long bestLapTime;
+	private double acceleration;
+	private double speed;
 	private double tempDistance;
+	private Tire tireType;
+	private Point[][] visibility;
 	
 	/**
 	 * Setting up initial parameters
@@ -37,7 +39,7 @@ public class Car {
 		DRIVER_SKILL = driverSkill;
 		POS_START_X  = posStartX;
 		POS_START_Y = posStartY;
-		this.number = number;
+		NUMBER = number;
 		tireType = Tire.DRY;
 		kersSystemPercent = 0;
 		speed = 0;
@@ -45,22 +47,26 @@ public class Car {
 		laps = 0;
 		angle = 0;
 		tempDistance = 0;
+		actualLapTime = 0;
+		bestLapTime = 1000000;
 	}
 	
 	//Getters
-	public double getSpeed(){ return speed; }
-	public double getAcceleration(){ return acceleration; }
 	public int getKersSystemPercent(){ return kersSystemPercent; }
 	public int getLaps(){ return laps; }
-	public Tire getTireType(){ return tireType; }
-	public DriverSkill getDriverSkills(){ return DRIVER_SKILL; }
-	public String getDriverName(){ return DRIVER_NAME; }
 	public int getPosStartX(){ return POS_START_X; }
 	public int getPosStartY(){ return POS_START_Y; }
 	public int getAngle(){ return angle; }
-	public int getNumber(){ return number; }
-	public Point[][] getVisibility(){ return visibility; }
+	public int getNumber(){ return NUMBER; }
+	public long getActualLapTime(){ return actualLapTime; }
+	public long getBestLapTime(){ return bestLapTime; }
+	public double getAcceleration(){ return acceleration; }
+	public double getSpeed(){ return speed; }
 	public double getTempDistance(){ return tempDistance; }
+	public String getDriverName(){ return DRIVER_NAME; }
+	public Tire getTireType(){ return tireType; }
+	public DriverSkill getDriverSkills(){ return DRIVER_SKILL; }
+	public Point[][] getVisibility(){ return visibility; }
 	
 	//Is's
 	public boolean isKersActivated(){ if(kersIterations > 0) return true; return false; }
@@ -74,14 +80,36 @@ public class Car {
 	public void setTempDistance(double tempDistance){ this.tempDistance = tempDistance; }
 	
 	/**
-	 * Add percent to KERS System Charging
+	 * Add percent to KERS Progress
 	 * @param percent
 	 */
 	public void addKersSystemPercent(int percent){ 
 		if(this.kersSystemPercent+percent < 100 && percent >= 0) this.kersSystemPercent += percent; 
 		else this.kersSystemPercent = 100;
 	}
-	public void addLap(){ this.laps++; }
-	public void activateKers(){ kersIterations = 670; kersSystemPercent = 0; }
-	public void nextKersIteration(){ if(kersIterations > 0) kersIterations--; }
+	
+	/**
+	 * If car starts new lap, add lap and check bestLapTime
+	 */
+	public void addLap()
+	{ 
+		this.laps++; 
+		if(actualLapTime < bestLapTime) bestLapTime = actualLapTime;
+		actualLapTime = 0;
+	}
+	
+	/**
+	 * Activate KERS for 6,7s
+	 * KERS Percent Progress change from 100% to 0%
+	 */
+	public void activateKers(int timerDelay){ kersIterations = 6700/timerDelay; kersSystemPercent = 0; }
+	
+	/**
+	 * Decrease KERS iterations and actualize Lap Time
+	 */
+	public void nextIteration(int timerDelay)
+	{ 
+		if(kersIterations > 0) kersIterations--;
+		actualLapTime += timerDelay;
+	}
 }

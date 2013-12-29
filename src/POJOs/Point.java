@@ -53,8 +53,9 @@ public class Point {
 			double acc = car.getAcceleration();
 			if(car.isKersActivated()) acc *= KERS_POWER_PARAMETER;
 			
-			//Decrease KERS iterations - if not activated nothing happens
-			car.nextKersIteration();
+			/*Decrease KERS iterations - if not activated nothing happens
+			  and actualize lap time*/
+			car.nextIteration(timerDelay);
 			
 			//Setting random mistake
 			double random = (Math.random()*car.getDriverSkills().getRandomMistakeParameter());
@@ -146,7 +147,7 @@ public class Point {
 								i++;
 							}
 						}
-						if(roadAhead) car.activateKers();
+						if(roadAhead) car.activateKers(timerDelay);
 					}
 				}
 				else if(Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 1 || Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 7)

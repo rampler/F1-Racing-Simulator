@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Hashtable;
-import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -31,7 +30,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.DefaultTableModel;
 
 import Enums.Dryness;
 import Enums.Tire;
@@ -47,20 +45,20 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
 	private Board board;
 	
-	private JButton exit, open, simulation, start, clear, about, drivers;
+	private JButton exit, open, simulation, start, clear, about, drivers, result;
 	private JComboBox<String> drynessCB, tiresCB;
 	private JScrollPane scrollPane;
 	private JPanel buttonPanel;
 	private JSlider zoom;
-	private JFrame driversWindow, paramWindow;
+	private JFrame driversWindow, paramWindow, resultWindow;
 	private JSpinner g100, g200, g300, b100, b200, b300, n100, n200, n300;
+	private JTable table, tableResult;
+	private Container parent;
 	
 	private double screenWidth, screenHeight;
-	private Container parent;
 	private File loadedTrackFile;
 	private Timer timer, timerDrivers;
 	private int timerDelay = 10, timerDriversDelay = 300;
-	private JTable table;
 	private boolean notStarted = true;
 
 	/**
@@ -107,6 +105,11 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		drivers.addActionListener(this);
 		table = new JTable();
 		
+		result = new JButton("Result");
+		result.setActionCommand("result");
+		result.addActionListener(this);
+		tableResult = new JTable();
+		
 		simulation = new JButton("Simulation Parameters");
 		simulation.setActionCommand("parameters");
 		simulation.addActionListener(this);
@@ -137,6 +140,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		buttonPanel.add(zoom);
 		buttonPanel.add(Box.createHorizontalStrut(50));
 		buttonPanel.add(drivers);
+		buttonPanel.add(result);
 	        
 		
 		//Board creating
@@ -163,8 +167,10 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		if (e.getSource().equals(timer)) { board.iteration(timerDelay); } 
 		else if(e.getSource().equals(timerDrivers))
 		{ 
-			if(driversWindow.isVisible()) refreshDriversTableModel(); 
-			else timerDrivers.stop();
+			boolean none = true;
+			if(driversWindow != null && driversWindow.isVisible()) { TablesRefresher.refreshDriversTableModel(board, table); none = false; }
+			if(resultWindow != null && resultWindow.isVisible()) { TablesRefresher.refreshResultTableModel(board, tableResult); none = false; }
+			if(none) timerDrivers.stop();
 		}
 		else 
 		{
@@ -190,6 +196,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			else if(command.equals("clear")){ clearSimulationWindow(); }
 			else if(command.equals("about")){ aboutButtonAction(); }
 			else if(command.equals("drivers")){ showDriversWindow(); }
+			else if(command.equals("result")){ showResultWindow(); }
 			
 			//Parameters window commands
 			else if(command.equals("changedDryness")){ board.setTrackDryness(Dryness.valueOf((String)drynessCB.getSelectedItem())); }
@@ -237,10 +244,11 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	 */
 	private void clearSimulationWindow()
 	{
-		if(timer.isRunning()) timer.stop();
+		if(timer.isRunning()) { timer.stop(); start.setText("Start"); }
 		try { openTrack(loadedTrackFile); } 
 		catch(Exception exp){JOptionPane.showMessageDialog(this, "Track loading problem!");}
 		notStarted = true;
+		TablesRefresher.createResultTableModel(board, tableResult);
 	}
 	
 	/**
@@ -266,6 +274,31 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		}
 		else if(!driversWindow.isVisible()){ driversWindow.setVisible(true); timerDrivers.start(); }
 		else {driversWindow.setVisible(false); }
+	}
+	
+	/**
+	 * Show results window
+	 */
+	private void showResultWindow()
+	{
+		if(resultWindow == null)
+		{
+			resultWindow = new JFrame("Results");
+			resultWindow.setUndecorated(true);
+			resultWindow.setAlwaysOnTop(true);
+			resultWindow.setLayout(new BorderLayout());
+			resultWindow.setBounds(0, 0, 455, 218);
+			JPanel mainPanel = new JPanel(new BorderLayout());
+			timerDrivers.start();
+			
+			//Add Table
+			JScrollPane scroll = new JScrollPane(tableResult);
+			mainPanel.add(scroll, BorderLayout.CENTER);
+			resultWindow.add(mainPanel, BorderLayout.CENTER);
+			resultWindow.setVisible(true);
+		}
+		else if(!resultWindow.isVisible()){ resultWindow.setVisible(true); timerDrivers.start(); }
+		else {resultWindow.setVisible(false); }
 	}
 	
 	/**
@@ -298,6 +331,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		board.repaint();
 		this.repaint();
 		parent.repaint();
+		TablesRefresher.refreshResultTableModel(board, tableResult);
 	}
 	
 	/**
@@ -454,34 +488,5 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		board.changeCarsTires(Tire.DRY);
 		tiresCB.setSelectedIndex(0);
 		drynessCB.setSelectedIndex(0);
-	}
-	
-	/**
-	 * Refresh Drivers Table Model
-	 * @return Table Model
-	 */
-	private void refreshDriversTableModel()
-	{
-		DefaultTableModel defmodel = new DefaultTableModel(null, new String[] {"No. ", "Name", "Skill", "Lap", "Speed", "Accelerate", "KERS %"}); 
-		LinkedList<Car> cars = board.getCars();
-		for(Car car : cars)
-		{
-			Object[] data = new Object[7];
-			data[0] = car.getNumber();
-			data[1] = car.getDriverName();
-			data[2] = car.getDriverSkills(); 
-			data[3] = car.getLaps();
-			data[4] = Math.round(car.getSpeed())+" km/h";
-			data[5] = ((double)(Math.round(car.getAcceleration()*1000))/1000)+" m/s2";
-			data[6] = car.getKersSystemPercent()+" %";
-			defmodel.addRow(data);
-		}
-        table.setModel(defmodel);
-        table.getColumnModel().getColumn(0).setPreferredWidth(27);
-		table.getColumnModel().getColumn(3).setPreferredWidth(27);
-		table.getColumnModel().getColumn(4).setPreferredWidth(40);
-		table.getColumnModel().getColumn(5).setPreferredWidth(55);
-		table.getColumnModel().getColumn(6).setPreferredWidth(35);
-		table.repaint();
 	}
 }
