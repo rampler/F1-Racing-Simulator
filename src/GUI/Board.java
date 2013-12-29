@@ -235,8 +235,6 @@ public class Board extends JPanel{
 	 * If zoom is 50% then draw only car center point
 	 * If zoom is 200% also draw cars numbers
 	 * @param g - Graphics
-	 * @param x - Horizontal coordinate of car
-	 * @param y - Vertical coordinate of car
 	 */
 	private void drawCars(Graphics g) 
 	{
@@ -386,7 +384,7 @@ public class Board extends JPanel{
 	 * In first row is reaction to gas
 	 * In second - break
 	 * In last - without gas or break
-	 * @return
+	 * @return - default acceleration table
 	 */
 	private double[][] defaultAccelerationTable()
 	{
