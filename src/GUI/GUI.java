@@ -3,26 +3,28 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
-import java.util.regex.MatchResult;
+import java.util.Hashtable;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Enums.Direction;
-import Enums.DriverSkill;
 import Enums.SurfaceType;
 
 public class GUI extends JPanel implements ActionListener, ChangeListener {
@@ -31,11 +33,14 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private JButton exit, save, open;
 	private JComboBox<String> typeBox, directionBox;
 	private JCheckBox directionShowed;
+	private Container parent;
+	private JSlider zoom;
+	
+	private double screenWidth, screenHeight;
 
-	public GUI() {
-	}
+	public GUI(Container container) {
+		parent = container;
 
-	public void initialize(Container container) {
 		container.setLayout(new BorderLayout());
 		container.setSize(new Dimension(1024, 768));
 
@@ -81,16 +86,48 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		directionBox.addActionListener(this);
 		directionBox.setActionCommand("directionBox");
 		
+		//Zoom
+        zoom = new JSlider(0,3);
+        Hashtable<Integer, JLabel> hashtable = new Hashtable<>();
+        hashtable.put(0, new JLabel("50%"));
+        hashtable.put(1, new JLabel("100%"));
+        hashtable.put(2, new JLabel("150%"));
+        hashtable.put(3, new JLabel("200%"));
+        zoom.setLabelTable(hashtable);
+        zoom.setPaintLabels(true);
+        zoom.setSnapToTicks(true);
+        zoom.addChangeListener(this);
+		
 		buttonPanel.add(exit);
 		buttonPanel.add(save);
 		buttonPanel.add(open);
 		buttonPanel.add(typeBox);
 		buttonPanel.add(directionBox);
 		buttonPanel.add(directionShowed);
+		buttonPanel.add(zoom);
 
-		board = new Board(1024, 768 - buttonPanel.getHeight());
-		container.add(board, BorderLayout.CENTER);
+		//Board creating
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		screenWidth = screenSize.getWidth();
+		screenHeight = screenSize.getHeight();
+		board = new Board((int)screenWidth, (int)screenHeight);
+		
+		JScrollPane spane = new JScrollPane(board);
+		container.add(spane, BorderLayout.CENTER);
 		container.add(buttonPanel, BorderLayout.SOUTH);
+	}
+	
+	public void stateChanged(ChangeEvent e) {
+		if(e.getSource().equals(zoom))
+		{
+			switch(zoom.getValue())
+			{
+				case 0: board.setSizeScalePercent(50); break;
+				case 1: board.setSizeScalePercent(100); break;
+				case 2: board.setSizeScalePercent(150); break;
+				case 3: board.setSizeScalePercent(200); break;
+			}
+		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -113,10 +150,12 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 				JFileChooser fc = new JFileChooser();
 				fc.showOpenDialog(this);
 				File file = fc.getSelectedFile();
-				board.setTrack(loadTrack(file));
+				board.loadTrack(file);
 				board.repaint();
+				this.repaint();
+				parent.repaint();
 			}
-			catch(IOException exp){JOptionPane.showMessageDialog(this, "Track loading problem!");};
+			catch(Exception exp){JOptionPane.showMessageDialog(this, "Track loading problem!");};
 		}
 		else if(command.equals("typeBox")){
 			board.type = SurfaceType.valueOf((String)typeBox.getSelectedItem());
@@ -129,53 +168,17 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			board.repaint();
 		}
 	}
-
-	public void stateChanged(ChangeEvent e) {
-	}
 	
 	private void saveTrack(File file, Track track) throws FileNotFoundException
 	{
 		Point[][] points = track.getPoints();
 		PrintWriter out = new PrintWriter(file);
-		out.write(track.getName()+";"+points.length+";"+points[0].length+";1"+"\n");
+		out.write(track.getName()+";"+points.length+";"+points[0].length+";"+board.getCars().size()+"\n");
 		for(int i=0; i<points.length; i++)
 			for(int j=0; j<points[i].length; j++)
-			{
-				out.write(points[i][j].getType()+";"+points[i][j].getDirection()+";"+points[i][j].getState()+";"+points[i][j].getAngle()+";"+points[i][j].isCarCenter()+"\n");
-			}
-		out.write("Sebastian Vettel;EXPERT;200;200\n");
-		//TODO Kierowcy
+				out.write(points[i][j].getType()+";"+points[i][j].getDirection()+"\n");
+		for(Car car : board.getCars())
+			out.write(car.getDriverName()+";"+car.getDriverSkills()+";"+car.getPosStartX()+";"+car.getPosStartY()+"\n");
 		out.close();
-	}
-	
-	private Track loadTrack(File file) throws FileNotFoundException
-	{
-		Scanner in = new Scanner(file);
-		in.findInLine("(\\w+);(\\d+);(\\d+);(\\d+)");
-		MatchResult result = in.match();
-		Point[][] points = new Point[Integer.parseInt(result.group(2))][Integer.parseInt(result.group(3))];
-		String trackName = result.group(1);
-		int driversCount = Integer.parseInt(result.group(4));
-		for(int x=0; x<points.length; x++)
-			for(int y=0; y<points[x].length; y++)
-			{
-				in.nextLine();
-				in.findInLine("(\\w+);(\\w+)");
-				result = in.match();
-				
-				points[x][y] = new Point();
-				points[x][y].setType(result.group(1));
-				points[x][y].setDirection(result.group(2));
-				
-			}
-		for(int x=0; x<driversCount; x++)
-        {
-                in.nextLine();
-                in.findInLine("(\\w+);(\\w+);(\\d+);(\\d+)");
-                result = in.match();
-                //cars.add(new Car(result.group(1),DriverSkill.valueOf(result.group(2)),Integer.parseInt(result.group(3)),Integer.parseInt(result.group(4))));
-        }
-		in.close();
-		return new Track(trackName, points);
 	}
 }
