@@ -51,7 +51,7 @@ public class Point {
 			double speed_m_s = car.getSpeed()*10/36;
 			double distance = car.getTempDistance()+speed_m_s/(1000/timerDelay);
 			double acc = car.getAcceleration();
-			if(car.isKersActivated()) acc *= KERS_POWER_PARAMETER;
+			if(car.isKersActivated() && acc > 0) acc *= KERS_POWER_PARAMETER;
 			
 			/*Decrease KERS iterations - if not activated nothing happens
 			  and actualize lap time*/
