@@ -85,39 +85,43 @@ public class Point {
 				Direction nextDirection = carActualDirection;
 				
 				Point[][] visibility = car.getVisibility();
-				if(visibility.length == 5) //TOP,LEFT,RIGHT,BOTTOM
-				{
-					double[] medianTable = new double[5];
-					for(int i=0; i<5; i++)
-					{
-						int[] table = new int[2*i+3];
-						for(int j=0; j<2*i+3; j++) table[j] = visibility[i][j].getDirection().getNum();
-						Arrays.sort(table);
-						int k=0;
-						while(k<table.length/2 && table[table.length/2] == -1) k++;
-						medianTable[i] = table[(table.length/2+k+table.length-1)/2]*((5-i)/5);
-					}
-					double num = 0;
-					for(int i=0; i<5; i++) num += medianTable[i];
-					nextDirection = Direction.getDirectionFromNum((int) num);
-				}
-				else //TOP_LEFT,TOP_RIGHT,BOTTOM_LEFT,BOTTOM_RIGHT
-				{
-					double[] medianTable = new double[7];
-					for(int i=0; i<7; i++)
-					{
-						int[] table = new int[i+2];
-						for(int j=0; j<i+2; j++) table[j] = visibility[i][j].getDirection().getNum();
-						Arrays.sort(table);
-						int k=0;
-						while(k<table.length/2 && table[table.length/2] == -1) k++;
-						medianTable[i] = table[(table.length/2+k+table.length-1)/2]*((7-i)/7);
-					}
-					double num = 0;
-					for(int i=0; i<7; i++) num += medianTable[i];
-					nextDirection = Direction.getDirectionFromNum((int) num);
-				}
-				if(nextDirection == Direction.NONE) nextDirection = carActualDirection; //If none then direction is the same as before
+//				if(visibility.length == 5) //TOP,LEFT,RIGHT,BOTTOM
+//				{
+//					double[] medianTable = new double[5];
+//					for(int i=0; i<5; i++)
+//					{
+//						int[] table = new int[2*i+3];
+//						for(int j=0; j<2*i+3; j++) table[j] = visibility[i][j].getDirection().getNum();
+//						Arrays.sort(table);
+//						int k=0;
+//						while(k<table.length/2 && table[table.length/2] == -1) k++;
+//						medianTable[i] = table[(table.length/2+k+table.length-1)/2]*((5-i)/5);
+//					}
+//					double num = 0;
+//					for(int i=0; i<5; i++) num += medianTable[i];
+//					if((int) num == 0) num = direction.getNum();
+//					nextDirection = Direction.getDirectionFromNum((int) num);
+//				}
+//				else //TOP_LEFT,TOP_RIGHT,BOTTOM_LEFT,BOTTOM_RIGHT
+//				{
+//					double[] medianTable = new double[7];
+//					for(int i=0; i<7; i++)
+//					{
+//						int[] table = new int[i+2];
+//						for(int j=0; j<i+2; j++) table[j] = visibility[i][j].getDirection().getNum();
+//						Arrays.sort(table);
+//						int k=0;
+//						while(k<table.length/2 && table[table.length/2] == -1) k++;
+//						medianTable[i] = table[(table.length/2+k+table.length-1)/2]*((7-i)/7);
+//					}
+//					double num = 0;
+//					for(int i=0; i<7; i++) num += medianTable[i];
+//					nextDirection = Direction.getDirectionFromNum((int) num/7);
+//				}
+				nextDirection = direction;
+				//System.out.println(nextDirection.toString());
+				//if(nextDirection == Direction.NONE) nextDirection = direction; //If none then direction is the same as before
+				if(nextDirection == Direction.NONE) nextDirection = carActualDirection;
 				
 				//Calculating acceleration
 				double newAcceleration;
@@ -168,17 +172,17 @@ public class Point {
 				else newAcceleration *= car.getTireType().getAdhensionOnSame();
 				car.setAcceleration(newAcceleration*trackDryness.getAdhension()-type.getFriction());
 				
-				//If speed is too high car can't change direction fast - TODO - TEST
-				if(!(Math.abs(nextDirection.getNum() - carActualDirection.getNum()) <= 1 || Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 7))
-				{
-					if(car.getSpeed() > 200) nextDirection = carActualDirection; 
-					else if(car.getSpeed() > 100)
-					{
-						if(nextDirection.getNum() < carActualDirection.getNum()) nextDirection = Direction.getDirectionFromNum(carActualDirection.getNum()-1);
-						else if(carActualDirection.getNum() == 0 && nextDirection.getNum() > 5) nextDirection = Direction.getDirectionFromNum(7);
-						else nextDirection = Direction.getDirectionFromNum(carActualDirection.getNum()+1);
-					}
-				}
+//				//If speed is too high car can't change direction fast - TODO - TEST
+//				if(!(Math.abs(nextDirection.getNum() - carActualDirection.getNum()) <= 1 || Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 7))
+//				{
+//					if(car.getSpeed() > 200) nextDirection = carActualDirection; 
+//					else if(car.getSpeed() > 100)
+//					{
+//						if(nextDirection.getNum() < carActualDirection.getNum()) nextDirection = Direction.getDirectionFromNum(carActualDirection.getNum()-1);
+//						else if(carActualDirection.getNum() == 0 && nextDirection.getNum() > 5) nextDirection = Direction.getDirectionFromNum(7);
+//						else nextDirection = Direction.getDirectionFromNum(carActualDirection.getNum()+1);
+//					}
+//				}
 				
 				//Sending car to next point
 				if(neighbors[nextDirection.getNum()].getType() == SurfaceType.BARRIER) throw new BarrierCrashException(this.car, this);

@@ -190,10 +190,10 @@ public class Board extends JPanel{
 						Point temp[] = new Point[8];
 						temp[Direction.TOP_LEFT.getNum()] = points[x-1][y-1];
 						temp[Direction.TOP.getNum()] = points[x][y-1];
-						temp[Direction.TOP_RIGHT.getNum()] = points[x-1][y+1];
+						temp[Direction.TOP_RIGHT.getNum()] = points[x+1][y-1];
 						temp[Direction.LEFT.getNum()] = points[x-1][y];
 						temp[Direction.RIGHT.getNum()] = points[x+1][y];
-						temp[Direction.BOTTOM_LEFT.getNum()] = points[x+1][y-1];
+						temp[Direction.BOTTOM_LEFT.getNum()] = points[x-1][y+1];
 						temp[Direction.BOTTOM.getNum()] = points[x][y+1];
 						temp[Direction.BOTTOM_RIGHT.getNum()] = points[x+1][y+1];
 						points[x][y].setNeighbors(temp);
@@ -244,13 +244,13 @@ public class Board extends JPanel{
 				if(points[x][y].isCarCenter())
 				{
 					Car car = points[x][y].getCar();
-					g.setColor(Color.RED);
+					g.setColor(Color.GREEN);
 					//car.setAngle(45); //for test only 
 					if(sizeScalePercent < 100) g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
 					else
 					{
-						int translateX = (x * size+horizontalOffset) - size/2;
-						int translateY = (y * size+verticalOffset) - (size/2);
+						int translateX = ((x+1) * size+horizontalOffset) - size/2;
+						int translateY = ((y+1) * size+verticalOffset) - (size/2);
 						
 						//Draw cars rects
 						Graphics2D g2d = (Graphics2D)g;
@@ -292,13 +292,24 @@ public class Board extends JPanel{
 	private void drawNetting(Graphics g) {
 		for (int x = 0; x < points.length; ++x) {
 			for (int y = 0; y < points[x].length; ++y) {
-				SurfaceType type = points[x][y].getType();
-				if (type == SurfaceType.ROAD) g.setColor(Color.DARK_GRAY);
-				else if (type == SurfaceType.BARRIER) g.setColor(Color.BLUE);
-				else if (type == SurfaceType.GRASS) g.setColor(Color.GREEN);
-				else if (type == SurfaceType.WORSE_ROAD) g.setColor(Color.LIGHT_GRAY);
-				else if (type == SurfaceType.START_LINE) g.setColor(Color.WHITE);
-				else if (type == SurfaceType.SAND) g.setColor(Color.YELLOW);
+//				SurfaceType type = points[x][y].getType();
+//				if (type == SurfaceType.ROAD) g.setColor(Color.DARK_GRAY);
+//				else if (type == SurfaceType.BARRIER) g.setColor(Color.BLUE);
+//				else if (type == SurfaceType.GRASS) g.setColor(Color.GREEN);
+//				else if (type == SurfaceType.WORSE_ROAD) g.setColor(Color.LIGHT_GRAY);
+//				else if (type == SurfaceType.START_LINE) g.setColor(Color.WHITE);
+//				else if (type == SurfaceType.SAND) g.setColor(Color.YELLOW);
+				
+				Direction direction = points[x][y].getDirection();
+				if (direction == Direction.NONE) g.setColor(Color.WHITE);
+				else if (direction == Direction.TOP) g.setColor(Color.RED);
+				else if (direction == Direction.BOTTOM) g.setColor(Color.BLACK);
+				else if (direction == Direction.LEFT) g.setColor(Color.BLUE);
+				else if (direction == Direction.RIGHT) g.setColor(Color.MAGENTA);
+				else if (direction == Direction.TOP_LEFT) g.setColor(Color.CYAN);
+				else if (direction == Direction.TOP_RIGHT) g.setColor(Color.PINK);
+				else if (direction == Direction.BOTTOM_LEFT) g.setColor(Color.YELLOW);
+				else if (direction == Direction.BOTTOM_RIGHT) g.setColor(Color.ORANGE);
 				
 				g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
 			}
