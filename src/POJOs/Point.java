@@ -61,14 +61,17 @@ public class Point {
 			double random = (Math.random()*car.getDriverSkills().getRandomMistakeParameter());
 			
 			//Calculating new speed - mistake included
-			speed_m_s += acc/(1000/timerDelay);
-			if(speed_m_s < 0) speed_m_s = 0; 
-			double speed_km_h = speed_m_s*36/10;
-			if(speed_km_h  <= MAX_SPEED) car.setSpeed(speed_km_h);
-			else car.setSpeed(MAX_SPEED-random);
+			if(acc >= 0 || car.getSpeed() >= 30)
+			{
+				speed_m_s += acc/(1000/timerDelay);
+				if(speed_m_s < 0) speed_m_s = 0; 
+				double speed_km_h = speed_m_s*36/10;
+				if(speed_km_h  <= MAX_SPEED) car.setSpeed(speed_km_h);
+				else car.setSpeed(MAX_SPEED-random);
+			}
 			
 			//Stack Exception
-			if(car.getSpeed() == 0 && car.getAcceleration() < 0) throw new CarStackException(this.car, this);
+			if(car.getSpeed() < 30 && car.getAcceleration() < 0 && direction == Direction.NONE) throw new CarStackException(this.car, this);
 			
 			//If distance is > 2.6 then send car to next point
 			if(distance >= 2.6) 
@@ -80,52 +83,49 @@ public class Point {
 				if(type == SurfaceType.START_LINE) car.addLap();
 				if(car.getAcceleration() < 0) car.addKersSystemPercent((int) (-1*car.getAcceleration())/10);
 				
-				//Calculating new decision - TODO TEST
+				//Calculating new decision of acceleration
 				Direction carActualDirection = Direction.getDirectionFromAngle(car.getAngle());
-				Direction nextDirection = carActualDirection;
+				Direction nextDirection = direction;
+				if(nextDirection == Direction.NONE) nextDirection = carActualDirection;
+				Direction visibilityDirection = carActualDirection;
 				
 				Point[][] visibility = car.getVisibility();
-//				if(visibility.length == 5) //TOP,LEFT,RIGHT,BOTTOM
-//				{
-//					double[] medianTable = new double[5];
-//					for(int i=0; i<5; i++)
-//					{
-//						int[] table = new int[2*i+3];
-//						for(int j=0; j<2*i+3; j++) table[j] = visibility[i][j].getDirection().getNum();
-//						Arrays.sort(table);
-//						int k=0;
-//						while(k<table.length/2 && table[table.length/2] == -1) k++;
-//						medianTable[i] = table[(table.length/2+k+table.length-1)/2]*((5-i)/5);
-//					}
-//					double num = 0;
-//					for(int i=0; i<5; i++) num += medianTable[i];
-//					if((int) num == 0) num = direction.getNum();
-//					nextDirection = Direction.getDirectionFromNum((int) num);
-//				}
-//				else //TOP_LEFT,TOP_RIGHT,BOTTOM_LEFT,BOTTOM_RIGHT
-//				{
-//					double[] medianTable = new double[7];
-//					for(int i=0; i<7; i++)
-//					{
-//						int[] table = new int[i+2];
-//						for(int j=0; j<i+2; j++) table[j] = visibility[i][j].getDirection().getNum();
-//						Arrays.sort(table);
-//						int k=0;
-//						while(k<table.length/2 && table[table.length/2] == -1) k++;
-//						medianTable[i] = table[(table.length/2+k+table.length-1)/2]*((7-i)/7);
-//					}
-//					double num = 0;
-//					for(int i=0; i<7; i++) num += medianTable[i];
-//					nextDirection = Direction.getDirectionFromNum((int) num/7);
-//				}
-				nextDirection = direction;
-				//System.out.println(nextDirection.toString());
-				//if(nextDirection == Direction.NONE) nextDirection = direction; //If none then direction is the same as before
-				if(nextDirection == Direction.NONE) nextDirection = carActualDirection;
+				if(visibility.length == 5) //TOP,LEFT,RIGHT,BOTTOM
+				{
+					double[] medianTable = new double[5];
+					for(int i=0; i<5; i++)
+					{
+						int[] table = new int[2*i+3];
+						for(int j=0; j<2*i+3; j++) table[j] = visibility[i][j].getDirection().getNum();
+						Arrays.sort(table);
+						int k=0;
+						while(k<table.length/2 && table[table.length/2] == -1) k++;
+						medianTable[i] = table[(table.length/2+k+table.length-1)/2];//*((5-i)/5);
+					}
+					double num = 0;
+					for(int i=0; i<5; i++) num += medianTable[i];
+					visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/5));
+				}
+				else //TOP_LEFT,TOP_RIGHT,BOTTOM_LEFT,BOTTOM_RIGHT
+				{
+					double[] medianTable = new double[7];
+					for(int i=0; i<7; i++)
+					{
+						int[] table = new int[i+2];
+						for(int j=0; j<i+2; j++) table[j] = visibility[i][j].getDirection().getNum();
+						Arrays.sort(table);
+						int k=0;
+						while(k<table.length/2 && table[table.length/2] == -1) k++;
+						medianTable[i] = table[(table.length/2+k+table.length-1)/2];//*((7-i)/7);
+					}
+					double num = 0;
+					for(int i=0; i<7; i++) num += medianTable[i];
+					visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/7));
+				}
 				
 				//Calculating acceleration
 				double newAcceleration;
-				if(nextDirection == Direction.getDirectionFromAngle(car.getAngle()))
+				if(visibilityDirection == Direction.getDirectionFromAngle(car.getAngle()))
 				{
 					//Calculating new acceleration - gas - mistake included
 					if(car.getSpeed() <= 100) newAcceleration = accelerationTable[0][0]-random;
@@ -154,7 +154,7 @@ public class Point {
 						if(roadAhead) car.activateKers(timerDelay);
 					}
 				}
-				else if(Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 1 || Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 7)
+				else if(car.getSpeed() < 200 && (Math.abs(visibilityDirection.getNum() - carActualDirection.getNum()) == 1 || Math.abs(visibilityDirection.getNum() - carActualDirection.getNum()) == 7))
 				{
 					//Calculating new acceleration - none - mistake included
 					if(car.getSpeed() <= 100) newAcceleration = accelerationTable[2][0]+random;
@@ -172,17 +172,17 @@ public class Point {
 				else newAcceleration *= car.getTireType().getAdhensionOnSame();
 				car.setAcceleration(newAcceleration*trackDryness.getAdhension()-type.getFriction());
 				
-//				//If speed is too high car can't change direction fast - TODO - TEST
-//				if(!(Math.abs(nextDirection.getNum() - carActualDirection.getNum()) <= 1 || Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 7))
-//				{
-//					if(car.getSpeed() > 200) nextDirection = carActualDirection; 
-//					else if(car.getSpeed() > 100)
-//					{
-//						if(nextDirection.getNum() < carActualDirection.getNum()) nextDirection = Direction.getDirectionFromNum(carActualDirection.getNum()-1);
-//						else if(carActualDirection.getNum() == 0 && nextDirection.getNum() > 5) nextDirection = Direction.getDirectionFromNum(7);
-//						else nextDirection = Direction.getDirectionFromNum(carActualDirection.getNum()+1);
-//					}
-//				}
+				//If speed is too high car can't change direction fast
+				if(!(Math.abs(nextDirection.getNum() - carActualDirection.getNum()) <= 1 || Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 7))
+				{
+					if(car.getSpeed() > 200) nextDirection = carActualDirection; 
+					else if(car.getSpeed() > 100)
+					{
+						if(nextDirection.getNum() < carActualDirection.getNum()) nextDirection = Direction.getDirectionFromNum(carActualDirection.getNum()-1);
+						else if(carActualDirection.getNum() == 0 && nextDirection.getNum() > 5) nextDirection = Direction.getDirectionFromNum(7);
+						else nextDirection = Direction.getDirectionFromNum(carActualDirection.getNum()+1);
+					}
+				}
 				
 				//Sending car to next point
 				if(neighbors[nextDirection.getNum()].getType() == SurfaceType.BARRIER) throw new BarrierCrashException(this.car, this);

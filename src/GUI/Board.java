@@ -244,7 +244,7 @@ public class Board extends JPanel{
 				if(points[x][y].isCarCenter())
 				{
 					Car car = points[x][y].getCar();
-					g.setColor(Color.GREEN);
+					g.setColor(Color.GREEN); //TODO - change to red
 					//car.setAngle(45); //for test only 
 					if(sizeScalePercent < 100) g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
 					else
@@ -292,7 +292,7 @@ public class Board extends JPanel{
 	private void drawNetting(Graphics g) {
 		for (int x = 0; x < points.length; ++x) {
 			for (int y = 0; y < points[x].length; ++y) {
-//				SurfaceType type = points[x][y].getType();
+//				SurfaceType type = points[x][y].getType(); //TODO -uncomment
 //				if (type == SurfaceType.ROAD) g.setColor(Color.DARK_GRAY);
 //				else if (type == SurfaceType.BARRIER) g.setColor(Color.BLUE);
 //				else if (type == SurfaceType.GRASS) g.setColor(Color.GREEN);

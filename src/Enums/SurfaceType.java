@@ -6,7 +6,7 @@ package Enums;
  *
  */
 public enum SurfaceType {
-	ROAD(0), GRASS(5), WORSE_ROAD(0.5), BARRIER(100), START_LINE(0), SAND(18);
+	ROAD(0), GRASS(15), WORSE_ROAD(0.5), BARRIER(100), START_LINE(0), SAND(45);
 	
 	private double friction; //Decreased from acceleration
 	SurfaceType(double friction){ this.friction = friction; }
