@@ -9,13 +9,13 @@ import POJOs.Point;
  * @author Sabina Rydzek, Kacper Furmañski, Mateusz Kotlarz
  *
  */
-public class CarStackException extends Exception {
+public class CarStuckException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 	private Car car;
 	private Point point;
 	
-	public CarStackException(Car car, Point point) { 
+	public CarStuckException(Car car, Point point) { 
 		this.car = car;
 		this.point = point;
 	}

@@ -6,7 +6,7 @@ import Enums.Direction;
 import Enums.Dryness;
 import Enums.SurfaceType;
 import Exceptions.BarrierCrashException;
-import Exceptions.CarStackException;
+import Exceptions.CarStuckException;
 import Exceptions.CarsCollisionException;
 
 /**
@@ -37,10 +37,10 @@ public class Point {
 	/**
 	 * Next iteration of simulation
 	 * @throws CarsCollisionException - collision on track between two cars
-	 * @throws CarStackException - car stack on track
+	 * @throws CarStuckException - car stack on track
 	 * @throws BarrierCrashException - car hits barrier
 	 */
-	public void nextIteraton(Dryness trackDryness, int timerDelay, double[][] accelerationTable) throws CarsCollisionException, CarStackException, BarrierCrashException
+	public void nextIteraton(Dryness trackDryness, int timerDelay, double[][] accelerationTable) throws CarsCollisionException, CarStuckException, BarrierCrashException
 	{
 		if(!blocked) 
 		{
@@ -71,9 +71,9 @@ public class Point {
 			}
 			
 			//Stack Exception
-			if(car.getSpeed() < 30 && car.getAcceleration() < 0 && direction == Direction.NONE) throw new CarStackException(this.car, this);
+			if(car.getSpeed() < 30 && car.getAcceleration() < 0 && direction == Direction.NONE) throw new CarStuckException(this.car, this);
 			
-			//If distance is > 2.6 then send car to next point
+			//If distance is > 2.6m(point size in reality) then send car to next point
 			if(distance >= 2.6) 
 			{
 				distance -= 2.6;
@@ -83,11 +83,12 @@ public class Point {
 				if(type == SurfaceType.START_LINE) car.addLap();
 				if(car.getAcceleration() < 0) car.addKersSystemPercent((int) (-1*car.getAcceleration())/10);
 				
-				//Calculating new decision of acceleration
+				//Checking next turn and rivals ahead - from driver visibility
 				Direction carActualDirection = Direction.getDirectionFromAngle(car.getAngle());
 				Direction nextDirection = direction;
 				if(nextDirection == Direction.NONE) nextDirection = carActualDirection;
 				Direction visibilityDirection = carActualDirection;
+				int rivalAheadDistance = 8, rivalAheadOffset = 8;
 				
 				Point[][] visibility = car.getVisibility();
 				if(visibility.length == 5) //TOP,LEFT,RIGHT,BOTTOM
@@ -96,7 +97,15 @@ public class Point {
 					for(int i=0; i<5; i++)
 					{
 						int[] table = new int[2*i+3];
-						for(int j=0; j<2*i+3; j++) table[j] = visibility[i][j].getDirection().getNum();
+						for(int j=0; j<2*i+3; j++) 
+						{
+							table[j] = visibility[i][j].getDirection().getNum();
+							if(visibility[i][j].isCarCenter() && (rivalAheadDistance > i)) 
+							{
+								rivalAheadDistance = i;
+								rivalAheadOffset = j-(i+1);
+							}
+						}
 						Arrays.sort(table);
 						int k=0;
 						while(k<table.length/2 && table[table.length/2] == -1) k++;
@@ -112,7 +121,15 @@ public class Point {
 					for(int i=0; i<7; i++)
 					{
 						int[] table = new int[i+2];
-						for(int j=0; j<i+2; j++) table[j] = visibility[i][j].getDirection().getNum();
+						for(int j=0; j<i+2; j++)
+						{
+							table[j] = visibility[i][j].getDirection().getNum();
+							if(visibility[i][j].isCarCenter() && (rivalAheadDistance > i)) 
+							{
+								rivalAheadDistance = i;
+								rivalAheadOffset = Math.round(j-((i+1)*0.5f));
+							}
+						}
 						Arrays.sort(table);
 						int k=0;
 						while(k<table.length/2 && table[table.length/2] == -1) k++;
@@ -125,41 +142,61 @@ public class Point {
 				
 				//Calculating acceleration
 				double newAcceleration;
-				if(visibilityDirection == Direction.getDirectionFromAngle(car.getAngle()))
+				if((nextDirection.getNum()%2 == 0) //Rival on nextDirection
+						&& ((nextDirection.getNum() == 0 && (neighbors[0].isCarCenter() || neighbors[7].isCarCenter() || neighbors[6].isCarCenter())) 
+								|| (nextDirection.getNum() != 0 && (neighbors[nextDirection.getNum()].isCarCenter() || neighbors[nextDirection.getNum()-1].isCarCenter() || neighbors[nextDirection.getNum()-2].isCarCenter()))))
 				{
-					//Calculating new acceleration - gas - mistake included
-					if(car.getSpeed() <= 100) newAcceleration = accelerationTable[0][0]-random;
-					else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[0][1]-random;
-					else newAcceleration = accelerationTable[0][2]-random;
-					
-					//Activating KERS - //TODO - TEST
-					if(car.getKersSystemPercent() == 100)
-					{
-						boolean roadAhead = true;
-						int i=0;
-						if(car.getVisibility().length == 5){
-							int j=5;
-							while(roadAhead && i<j){
-								if(car.getVisibility()[i][i+1].getType() != SurfaceType.ROAD) roadAhead = false;
-								i++;
-							}
-						}
-						else{
-							int j=3;
-							while(roadAhead && i<j){
-								if(car.getVisibility()[2*i+1][i+1].getType() != SurfaceType.ROAD) roadAhead = false;
-								i++;
-							}
-						}
-						if(roadAhead) car.activateKers(timerDelay);
-					}
+					nextDirection = carActualDirection;
+					//Calculating new acceleration - brake - mistake included
+					if(car.getSpeed() <= 100) newAcceleration = accelerationTable[1][0]+random;
+					else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[1][1]+random;
+					else newAcceleration = accelerationTable[1][2]+random;
 				}
-				else if(car.getSpeed() < 200 && (Math.abs(visibilityDirection.getNum() - carActualDirection.getNum()) == 1 || Math.abs(visibilityDirection.getNum() - carActualDirection.getNum()) == 7))
+				else if(rivalAheadOffset != 0 || (rivalAheadOffset == 0 && rivalAheadDistance > 3))
 				{
-					//Calculating new acceleration - none - mistake included
-					if(car.getSpeed() <= 100) newAcceleration = accelerationTable[2][0]+random;
-					else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[2][1]+random;
-					else newAcceleration = accelerationTable[2][2]+random;
+					if(visibilityDirection == Direction.getDirectionFromAngle(car.getAngle()))
+					{
+						//Calculating new acceleration - gas - mistake included
+						if(car.getSpeed() <= 100) newAcceleration = accelerationTable[0][0]-random;
+						else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[0][1]-random;
+						else newAcceleration = accelerationTable[0][2]-random;
+						
+						//Activating KERS - //TODO - TEST
+						if(car.getKersSystemPercent() == 100)
+						{
+							boolean roadAhead = true;
+							int i=0;
+							if(car.getVisibility().length == 5){
+								int j=5;
+								while(roadAhead && i<j){
+									if(car.getVisibility()[i][i+1].getType() != SurfaceType.ROAD) roadAhead = false;
+									i++;
+								}
+							}
+							else{
+								int j=3;
+								while(roadAhead && i<j){
+									if(car.getVisibility()[2*i+1][i+1].getType() != SurfaceType.ROAD) roadAhead = false;
+									i++;
+								}
+							}
+							if(roadAhead) car.activateKers(timerDelay);
+						}
+					}
+					else if(car.getSpeed() < 200 && (Math.abs(visibilityDirection.getNum() - carActualDirection.getNum()) == 1 || Math.abs(visibilityDirection.getNum() - carActualDirection.getNum()) == 7))
+					{
+						//Calculating new acceleration - none - mistake included
+						if(car.getSpeed() <= 100) newAcceleration = accelerationTable[2][0]+random;
+						else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[2][1]+random;
+						else newAcceleration = accelerationTable[2][2]+random;
+					}
+					else
+					{
+						//Calculating new acceleration - brake - mistake included
+						if(car.getSpeed() <= 100) newAcceleration = accelerationTable[1][0]+random;
+						else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[1][1]+random;
+						else newAcceleration = accelerationTable[1][2]+random;
+					}
 				}
 				else
 				{

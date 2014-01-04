@@ -14,14 +14,14 @@ import java.util.regex.MatchResult;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import Enums.Direction;
 import Enums.DriverSkill;
 import Enums.Dryness;
-import Enums.SurfaceType;
 import Enums.Tire;
 import Exceptions.BarrierCrashException;
-import Exceptions.CarStackException;
+import Exceptions.CarStuckException;
 import Exceptions.CarsCollisionException;
 import Exceptions.FileFormatException;
 import POJOs.Car;
@@ -105,10 +105,10 @@ public class Board extends JPanel{
 							exp.getPoint1().setCar(null);
 							exp.getPoint2().setCar(null);
 						}
-						catch(CarStackException exp)
+						catch(CarStuckException exp)
 						{
 							repaint();
-							JOptionPane.showMessageDialog(this.getParent(), "Car stack on track: "+exp.getCar().getNumber()+". "+exp.getCar().getDriverName()+"!");
+							JOptionPane.showMessageDialog(this.getParent(), "Car stuck on track: "+exp.getCar().getNumber()+". "+exp.getCar().getDriverName()+"!");
 							cars.remove(exp.getCar());
 							exp.getPoint().setCar(null);
 						}
@@ -334,7 +334,7 @@ public class Board extends JPanel{
 						visibility = new Point[5][11];
 						for(int i=0; i<5; i++)
 							for(int j=0; j<2*i+3; j++)
-								visibility[i][j] = points[x-((j-1)/2)][y-i];						
+								visibility[i][j] = points[x+(j-(i+1))][y-i-1];						
 					}
 					else if( car.getAngle() >= 23 && car.getAngle() <= 67) //Direction - TOP-RIGHT
 					{
@@ -348,7 +348,7 @@ public class Board extends JPanel{
 						visibility = new Point[5][11];
 						for(int i=0; i<5; i++)
 							for(int j=0; j<2*i+3; j++)
-								visibility[i][j] = points[x+i][y-((j-1)/2)];	
+								visibility[i][j] = points[x+i+1][y+(j-(i+1))];	
 					}
 					else if( car.getAngle() >= 113 && car.getAngle() <= 157) //Direction - BOTTOM-RIGHT
 					{
@@ -362,7 +362,7 @@ public class Board extends JPanel{
 						visibility = new Point[5][11];
 						for(int i=0; i<5; i++)
 							for(int j=0; j<2*i+3; j++)
-								visibility[i][j] = points[x-((j-1)/2)][y+i];
+								visibility[i][j] = points[x+(j-(i+1))][y+i+1];
 					}
 					else if( car.getAngle() >= 203 && car.getAngle() <= 247) //Direction - BOTTOM-LEFT
 					{
@@ -376,7 +376,7 @@ public class Board extends JPanel{
 						visibility = new Point[5][11];
 						for(int i=0; i<5; i++)
 							for(int j=0; j<2*i+3; j++)
-								visibility[i][j] = points[x-i][y-((j-1)/2)];
+								visibility[i][j] = points[x-i-1][y+(j-(i+1))];
 					}
 					else if( car.getAngle() >= 293 && car.getAngle() <= 342) //Direction - TOP-LEFT
 					{

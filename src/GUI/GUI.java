@@ -214,13 +214,17 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	public void stateChanged(ChangeEvent e) {
 		if(e.getSource().equals(zoom))
 		{
+			int x = scrollPane.getHorizontalScrollBar().getValue()/(2*(board.getSizeScalePercent()/50));
+			int y = scrollPane.getVerticalScrollBar().getValue()/(2*(board.getSizeScalePercent()/50));
 			switch(zoom.getValue())
 			{
 				case 0: board.setSizeScalePercent(50); break;
 				case 1: board.setSizeScalePercent(100); break;
 				case 2: board.setSizeScalePercent(150); break;
-				case 3: board.setSizeScalePercent(200); break;
+				case 3: board.setSizeScalePercent(200);	break;
 			}
+			scrollPane.getHorizontalScrollBar().setValue(x*(2*(board.getSizeScalePercent()/50)));
+			scrollPane.getVerticalScrollBar().setValue(y*(2*(board.getSizeScalePercent()/50)));
 		}
 		else if(e.getSource().equals(simSpeed))
 		{
