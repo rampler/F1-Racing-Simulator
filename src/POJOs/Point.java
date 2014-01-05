@@ -112,8 +112,15 @@ public class Point {
 						medianTable[i] = table[(table.length/2+k+table.length-1)/2];//*((5-i)/5);
 					}
 					double num = 0;
-					for(int i=0; i<5; i++) num += medianTable[i];
-					visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/5));
+					int howManyZero = 0, howManyNone = 0;
+					for(int i=0; i<5; i++) 
+					{
+						num += medianTable[i];
+						if(medianTable[i] == -1) howManyNone++;
+						else if(medianTable[i] == 0) howManyZero++;
+					}
+					if(howManyZero < (7-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/5));
+					else visibilityDirection = Direction.TOP_LEFT;
 				}
 				else //TOP_LEFT,TOP_RIGHT,BOTTOM_LEFT,BOTTOM_RIGHT
 				{
@@ -136,9 +143,22 @@ public class Point {
 						medianTable[i] = table[(table.length/2+k+table.length-1)/2];//*((7-i)/7);
 					}
 					double num = 0;
-					for(int i=0; i<7; i++) num += medianTable[i];
-					visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/7));
+					int howManyZero = 0, howManyNone = 0;
+					for(int i=0; i<7; i++) 	
+					{
+						num += medianTable[i];
+						if(medianTable[i] == -1) howManyNone++;
+						else if(medianTable[i] == 0) howManyZero++;
+					}
+					if(howManyZero < (7-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/7));
+					else visibilityDirection = Direction.TOP_LEFT;
 				}
+				
+				
+				//If rival on left or right then change direction to make some space
+				for(int i=0; i<neighbors.length; i++)
+					if(neighbors[i].isCarCenter()) nextDirection = Direction.getAvoidingDirection(i, nextDirection);
+				
 				
 				//Calculating acceleration
 				double newAcceleration;
@@ -152,7 +172,7 @@ public class Point {
 					else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[1][1]+random;
 					else newAcceleration = accelerationTable[1][2]+random;
 				}
-				else if(rivalAheadOffset != 0 || (rivalAheadOffset == 0 && rivalAheadDistance > 3))
+				else if(rivalAheadOffset > 1 || (rivalAheadOffset == 0 && rivalAheadDistance > 4))
 				{
 					if(visibilityDirection == Direction.getDirectionFromAngle(car.getAngle()))
 					{
