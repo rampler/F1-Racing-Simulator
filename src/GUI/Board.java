@@ -14,11 +14,11 @@ import java.util.regex.MatchResult;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import Enums.Direction;
 import Enums.DriverSkill;
 import Enums.Dryness;
+import Enums.SurfaceType;
 import Enums.Tire;
 import Exceptions.BarrierCrashException;
 import Exceptions.CarStuckException;
@@ -318,70 +318,70 @@ public class Board extends JPanel{
 	
 	/**
 	 * Setting cars visibility
-	 * It's triangle with a=11, h=6, alpha=45 if direction is TOP/BOTTOM/LEFT/RIGHT
+	 * It's triangle with a=11, h=6, alpha=45 if direction is TOP/BOTTOM/LEFT/RIGHT //TODO - edit triangle
 	 * if another a=8, h=8, alpha 90
 	 */
 	private void setCarsVisibility()
 	{
-		for(int x=8; x<points.length-8; x++) //max visibility range is 7
-			for(int y=8; y<points[x].length-8; y++)
+		for(int x=12; x<points.length-12; x++) //max visibility range is 7
+			for(int y=12; y<points[x].length-12; y++)
 				if(points[x][y].isCarCenter())
 				{
 					Car car = points[x][y].getCar();
 					Point[][] visibility = null;
 					if(car.getAngle() >= 343 || car.getAngle() <= 22) //Direction - TOP
 					{
-						visibility = new Point[5][11];
-						for(int i=0; i<5; i++)
+						visibility = new Point[10][21];
+						for(int i=0; i<10; i++)
 							for(int j=0; j<2*i+3; j++)
 								visibility[i][j] = points[x+(j-(i+1))][y-i-1];						
 					}
 					else if( car.getAngle() >= 23 && car.getAngle() <= 67) //Direction - TOP-RIGHT
 					{
-						visibility = new Point[7][8];
-						for(int i=1; i<=7; i++)
+						visibility = new Point[12][13];
+						for(int i=1; i<=12; i++)
 							for(int j=0; j<i+1; j++)
 								visibility[i-1][j] = points[x+j][y-i+j];
 					}
 					else if( car.getAngle() >= 68 && car.getAngle() <= 112) //Direction - RIGHT
 					{
-						visibility = new Point[5][11];
-						for(int i=0; i<5; i++)
+						visibility = new Point[10][21];
+						for(int i=0; i<10; i++)
 							for(int j=0; j<2*i+3; j++)
 								visibility[i][j] = points[x+i+1][y+(j-(i+1))];	
 					}
 					else if( car.getAngle() >= 113 && car.getAngle() <= 157) //Direction - BOTTOM-RIGHT
 					{
-						visibility = new Point[7][8];
-						for(int i=1; i<=7; i++)
+						visibility = new Point[12][13];
+						for(int i=1; i<=12; i++)
 							for(int j=0; j<i+1; j++)
 								visibility[i-1][j] = points[x+i-j][y+j];
 					}
 					else if( car.getAngle() >= 158 && car.getAngle() <= 202) //Direction - BOTTOM
 					{
-						visibility = new Point[5][11];
-						for(int i=0; i<5; i++)
+						visibility = new Point[10][21];
+						for(int i=0; i<10; i++)
 							for(int j=0; j<2*i+3; j++)
 								visibility[i][j] = points[x+(j-(i+1))][y+i+1];
 					}
 					else if( car.getAngle() >= 203 && car.getAngle() <= 247) //Direction - BOTTOM-LEFT
 					{
-						visibility = new Point[7][8];
-						for(int i=1; i<=7; i++)
+						visibility = new Point[12][13];
+						for(int i=1; i<=12; i++)
 							for(int j=0; j<i+1; j++)
 								visibility[i-1][j] = points[x-j][y+i-j];
 					}
 					else if( car.getAngle() >= 248 && car.getAngle() <= 292) //Direction - LEFT
 					{
-						visibility = new Point[5][11];
-						for(int i=0; i<5; i++)
+						visibility = new Point[10][21];
+						for(int i=0; i<10; i++)
 							for(int j=0; j<2*i+3; j++)
 								visibility[i][j] = points[x-i-1][y+(j-(i+1))];
 					}
 					else if( car.getAngle() >= 293 && car.getAngle() <= 342) //Direction - TOP-LEFT
 					{
-						visibility = new Point[7][8];
-						for(int i=1; i<=7; i++)
+						visibility = new Point[12][13];
+						for(int i=1; i<=12; i++)
 							for(int j=0; j<i+1; j++)
 								visibility[i-1][j] = points[x-i+j][y-j];
 					}

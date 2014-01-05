@@ -15,7 +15,7 @@ public class Car {
 	private final DriverSkill DRIVER_SKILL;
 	private final int NUMBER;
 	private int angle;
-	private int kersSystemPercent;
+	private double kersSystemPercent;
 	private int kersIterations = 0;
 	private int laps;
 	private long actualLapTime;
@@ -52,7 +52,7 @@ public class Car {
 	}
 	
 	//Getters
-	public int getKersSystemPercent(){ return kersSystemPercent; }
+	public int getKersSystemPercent(){ return (int) kersSystemPercent; }
 	public int getLaps(){ return laps; }
 	public int getPosStartX(){ return POS_START_X; }
 	public int getPosStartY(){ return POS_START_Y; }
@@ -83,7 +83,7 @@ public class Car {
 	 * Add percent to KERS Progress
 	 * @param percent
 	 */
-	public void addKersSystemPercent(int percent){ 
+	public void addKersSystemPercent(double percent){ 
 		if(this.kersSystemPercent+percent < 100 && percent >= 0) this.kersSystemPercent += percent; 
 		else this.kersSystemPercent = 100;
 	}
@@ -94,7 +94,7 @@ public class Car {
 	public void addLap()
 	{ 
 		this.laps++; 
-		if(actualLapTime < bestLapTime) bestLapTime = actualLapTime;
+		if(actualLapTime < bestLapTime && laps != 1) bestLapTime = actualLapTime;
 		actualLapTime = 0;
 	}
 	

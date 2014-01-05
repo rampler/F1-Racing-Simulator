@@ -61,7 +61,7 @@ public class Point {
 			double random = (Math.random()*car.getDriverSkills().getRandomMistakeParameter());
 			
 			//Calculating new speed - mistake included
-			if(acc >= 0 || car.getSpeed() >= 30)
+			if(acc >= 0 || car.getSpeed() >= 50)
 			{
 				speed_m_s += acc/(1000/timerDelay);
 				if(speed_m_s < 0) speed_m_s = 0; 
@@ -71,7 +71,7 @@ public class Point {
 			}
 			
 			//Stack Exception
-			if(car.getSpeed() < 30 && car.getAcceleration() < 0 && direction == Direction.NONE) throw new CarStuckException(this.car, this);
+			if(car.getSpeed() < 50 && car.getAcceleration() < 0 && direction == Direction.NONE) throw new CarStuckException(this.car, this);
 			
 			//If distance is > 2.6m(point size in reality) then send car to next point
 			if(distance >= 2.6) 
@@ -81,7 +81,7 @@ public class Point {
 				
 				//Add lap and KERS Percent
 				if(type == SurfaceType.START_LINE) car.addLap();
-				if(car.getAcceleration() < 0) car.addKersSystemPercent((int) (-1*car.getAcceleration())/10);
+				if(car.getAcceleration() < 0) car.addKersSystemPercent((-1*car.getAcceleration())/75);
 				
 				//Checking next turn and rivals ahead - from driver visibility
 				Direction carActualDirection = Direction.getDirectionFromAngle(car.getAngle());
@@ -91,10 +91,10 @@ public class Point {
 				int rivalAheadDistance = 8, rivalAheadOffset = 8;
 				
 				Point[][] visibility = car.getVisibility();
-				if(visibility.length == 5) //TOP,LEFT,RIGHT,BOTTOM
+				if(visibility.length == 10) //TOP,LEFT,RIGHT,BOTTOM
 				{
-					double[] medianTable = new double[5];
-					for(int i=0; i<5; i++)
+					double[] medianTable = new double[10];
+					for(int i=0; i<10; i++)
 					{
 						int[] table = new int[2*i+3];
 						for(int j=0; j<2*i+3; j++) 
@@ -108,24 +108,24 @@ public class Point {
 						}
 						Arrays.sort(table);
 						int k=0;
-						while(k<table.length/2 && table[table.length/2] == -1) k++;
-						medianTable[i] = table[(table.length/2+k+table.length-1)/2];//*((5-i)/5);
+						while(k < table.length-1 && table[k] == -1) k++;
+						medianTable[i] = table[(k+table.length)/2];//*((5-i)/5);
 					}
 					double num = 0;
 					int howManyZero = 0, howManyNone = 0;
-					for(int i=0; i<5; i++) 
+					for(int i=0; i<10; i++) 
 					{
-						num += medianTable[i];
 						if(medianTable[i] == -1) howManyNone++;
 						else if(medianTable[i] == 0) howManyZero++;
+						else num += medianTable[i];
 					}
-					if(howManyZero < (7-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/5));
+					if(howManyZero < (10-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/(10-howManyNone)));
 					else visibilityDirection = Direction.TOP_LEFT;
 				}
 				else //TOP_LEFT,TOP_RIGHT,BOTTOM_LEFT,BOTTOM_RIGHT
 				{
-					double[] medianTable = new double[7];
-					for(int i=0; i<7; i++)
+					double[] medianTable = new double[12];
+					for(int i=0; i<12; i++)
 					{
 						int[] table = new int[i+2];
 						for(int j=0; j<i+2; j++)
@@ -139,18 +139,18 @@ public class Point {
 						}
 						Arrays.sort(table);
 						int k=0;
-						while(k<table.length/2 && table[table.length/2] == -1) k++;
-						medianTable[i] = table[(table.length/2+k+table.length-1)/2];//*((7-i)/7);
+						while(k < table.length-1 && table[k] == -1) k++;
+						medianTable[i] = table[(k+table.length)/2];//*((7-i)/7);
 					}
 					double num = 0;
 					int howManyZero = 0, howManyNone = 0;
-					for(int i=0; i<7; i++) 	
+					for(int i=0; i<12; i++) 	
 					{
-						num += medianTable[i];
 						if(medianTable[i] == -1) howManyNone++;
 						else if(medianTable[i] == 0) howManyZero++;
+						else num += medianTable[i];
 					}
-					if(howManyZero < (7-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/7));
+					if(howManyZero < (12-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/(12-howManyNone)));
 					else visibilityDirection = Direction.TOP_LEFT;
 				}
 				
@@ -158,7 +158,6 @@ public class Point {
 				//If rival on left or right then change direction to make some space
 				for(int i=0; i<neighbors.length; i++)
 					if(neighbors[i].isCarCenter()) nextDirection = Direction.getAvoidingDirection(i, nextDirection);
-				
 				
 				//Calculating acceleration
 				double newAcceleration;
@@ -172,7 +171,7 @@ public class Point {
 					else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[1][1]+random;
 					else newAcceleration = accelerationTable[1][2]+random;
 				}
-				else if(rivalAheadOffset > 1 || (rivalAheadOffset == 0 && rivalAheadDistance > 4))
+				else if(rivalAheadOffset > 2 || (rivalAheadOffset == 0 && rivalAheadDistance > 5))
 				{
 					if(visibilityDirection == Direction.getDirectionFromAngle(car.getAngle()))
 					{
@@ -233,7 +232,7 @@ public class Point {
 				if(!(Math.abs(nextDirection.getNum() - carActualDirection.getNum()) <= 1 || Math.abs(nextDirection.getNum() - carActualDirection.getNum()) == 7))
 				{
 					if(car.getSpeed() > 200) nextDirection = carActualDirection; 
-					else if(car.getSpeed() > 100)
+					if(car.getSpeed() > 100)
 					{
 						if(nextDirection.getNum() < carActualDirection.getNum()) nextDirection = Direction.getDirectionFromNum(carActualDirection.getNum()-1);
 						else if(carActualDirection.getNum() == 0 && nextDirection.getNum() > 5) nextDirection = Direction.getDirectionFromNum(7);
