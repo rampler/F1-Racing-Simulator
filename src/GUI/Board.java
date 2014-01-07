@@ -14,6 +14,7 @@ import java.util.regex.MatchResult;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import Enums.Direction;
 import Enums.DriverSkill;
@@ -42,6 +43,7 @@ public class Board extends JPanel{
 	private Dryness trackDryness;
 	private double[][] accelerationTable;
 	private LinkedList<Car> cars;
+	private JScrollPane parent;
 	
 	private int sizeScalePercent = 100;
 	private int verticalOffset = 0;
@@ -50,15 +52,18 @@ public class Board extends JPanel{
 	private int simulationHeight = 0;
 	
 	private int iteration = 0;
+	private boolean autoscroll = false;
+	private int autoscrollCarNumber = 1;
 
 	/**
 	 * Constructor gets screen size and setting background color
 	 * @param screenWidth
 	 * @param screenHeight
 	 */
-	public Board(int screenWidth, int screenHeight) {
+	public Board(int screenWidth, int screenHeight, JScrollPane parent) {
 		this.SCREEN_HEIGHT = screenHeight;
 		this.SCREEN_WIDTH = screenWidth;
+		this.parent = parent;
 		setBackground(Color.DARK_GRAY);
 		trackDryness = Dryness.DRY;
 		accelerationTable = defaultAccelerationTable();
@@ -84,6 +89,8 @@ public class Board extends JPanel{
 		refreshSimulationSize();
 		repaint();
 	}
+	public void setAutoscroll(boolean autoscroll){ this.autoscroll = autoscroll; }
+	public void setAutoscrollCarNumber(int carNumber){ autoscrollCarNumber = carNumber; }
 	
 	/**
 	 * Next iteration of algorithm
@@ -99,6 +106,8 @@ public class Board extends JPanel{
 						catch(CarsCollisionException exp) 
 						{
 							repaint();
+							parent.getHorizontalScrollBar().setValue((x-parent.getWidth()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
+					    	parent.getVerticalScrollBar().setValue((y-parent.getHeight()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
 							JOptionPane.showMessageDialog(this.getParent(), "Collision on track: "+exp.getCar1().getNumber()+". "+exp.getCar1().getDriverName()+" and "+exp.getCar2().getNumber()+". "+exp.getCar2().getDriverName()+"!");
 							cars.remove(exp.getCar1());
 							cars.remove(exp.getCar2());
@@ -108,13 +117,17 @@ public class Board extends JPanel{
 						catch(CarStuckException exp)
 						{
 							repaint();
-							JOptionPane.showMessageDialog(this.getParent(), "Car stuck on track: "+exp.getCar().getNumber()+". "+exp.getCar().getDriverName()+"!");
+							parent.getHorizontalScrollBar().setValue((x-parent.getWidth()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
+					    	parent.getVerticalScrollBar().setValue((y-parent.getHeight()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
+							JOptionPane.showMessageDialog(this.getParent(), "Car stuck off the track: "+exp.getCar().getNumber()+". "+exp.getCar().getDriverName()+"!");
 							cars.remove(exp.getCar());
 							exp.getPoint().setCar(null);
 						}
 						catch(BarrierCrashException exp)
 						{
 							repaint();
+							parent.getHorizontalScrollBar().setValue((x-parent.getWidth()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
+					    	parent.getVerticalScrollBar().setValue((y-parent.getHeight()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
 							JOptionPane.showMessageDialog(this.getParent(), "Car hits barrier: "+exp.getCar().getNumber()+". "+exp.getCar().getDriverName()+"!");
 							cars.remove(exp.getCar());
 							exp.getPoint().setCar(null);
@@ -227,7 +240,7 @@ public class Board extends JPanel{
 		else horizontalOffset = 0;
 		
 		this.setPreferredSize(new Dimension(simulationWidth, simulationHeight-35));
-		this.getParent().revalidate(); //Revalidate ScrollPane
+		this.getParent().revalidate(); //Revalidates ScrollPane
 	}
 
 	/**
@@ -244,8 +257,7 @@ public class Board extends JPanel{
 				if(points[x][y].isCarCenter())
 				{
 					Car car = points[x][y].getCar();
-					g.setColor(Color.GREEN); //TODO - change to red
-					//car.setAngle(45); //for test only 
+					g.setColor(Color.RED);
 					if(sizeScalePercent < 100) g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
 					else
 					{
@@ -280,6 +292,12 @@ public class Board extends JPanel{
 					    //Reset graphics
 					    g2d.rotate(Math.toRadians(-car.getAngle()));
 					    g2d.translate(-translateX, -translateY);
+					    
+					    if(autoscroll && car.getNumber() == autoscrollCarNumber)
+					    {
+					    	parent.getHorizontalScrollBar().setValue((x-parent.getWidth()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
+					    	parent.getVerticalScrollBar().setValue((y-parent.getHeight()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
+					    }
 					}
 				}
 			}
@@ -292,24 +310,24 @@ public class Board extends JPanel{
 	private void drawNetting(Graphics g) {
 		for (int x = 0; x < points.length; ++x) {
 			for (int y = 0; y < points[x].length; ++y) {
-//				SurfaceType type = points[x][y].getType(); //TODO -uncomment
-//				if (type == SurfaceType.ROAD) g.setColor(Color.DARK_GRAY);
-//				else if (type == SurfaceType.BARRIER) g.setColor(Color.BLUE);
-//				else if (type == SurfaceType.GRASS) g.setColor(Color.GREEN);
-//				else if (type == SurfaceType.WORSE_ROAD) g.setColor(Color.LIGHT_GRAY);
-//				else if (type == SurfaceType.START_LINE) g.setColor(Color.WHITE);
-//				else if (type == SurfaceType.SAND) g.setColor(Color.YELLOW);
+				SurfaceType type = points[x][y].getType();
+				if (type == SurfaceType.ROAD) g.setColor(Color.DARK_GRAY);
+				else if (type == SurfaceType.BARRIER) g.setColor(Color.BLUE);
+				else if (type == SurfaceType.GRASS) g.setColor(Color.GREEN);
+				else if (type == SurfaceType.WORSE_ROAD) g.setColor(Color.LIGHT_GRAY);
+				else if (type == SurfaceType.START_LINE) g.setColor(Color.WHITE);
+				else if (type == SurfaceType.SAND) g.setColor(Color.YELLOW);
 				
-				Direction direction = points[x][y].getDirection();
-				if (direction == Direction.NONE) g.setColor(Color.WHITE);
-				else if (direction == Direction.TOP) g.setColor(Color.RED);
-				else if (direction == Direction.BOTTOM) g.setColor(Color.BLACK);
-				else if (direction == Direction.LEFT) g.setColor(Color.BLUE);
-				else if (direction == Direction.RIGHT) g.setColor(Color.MAGENTA);
-				else if (direction == Direction.TOP_LEFT) g.setColor(Color.CYAN);
-				else if (direction == Direction.TOP_RIGHT) g.setColor(Color.PINK);
-				else if (direction == Direction.BOTTOM_LEFT) g.setColor(Color.YELLOW);
-				else if (direction == Direction.BOTTOM_RIGHT) g.setColor(Color.ORANGE);
+//				Direction direction = points[x][y].getDirection();
+//				if (direction == Direction.NONE) g.setColor(Color.WHITE);
+//				else if (direction == Direction.TOP) g.setColor(Color.RED);
+//				else if (direction == Direction.BOTTOM) g.setColor(Color.BLACK);
+//				else if (direction == Direction.LEFT) g.setColor(Color.BLUE);
+//				else if (direction == Direction.RIGHT) g.setColor(Color.MAGENTA);
+//				else if (direction == Direction.TOP_LEFT) g.setColor(Color.CYAN);
+//				else if (direction == Direction.TOP_RIGHT) g.setColor(Color.PINK);
+//				else if (direction == Direction.BOTTOM_LEFT) g.setColor(Color.YELLOW);
+//				else if (direction == Direction.BOTTOM_RIGHT) g.setColor(Color.ORANGE);
 				
 				g.fillRect((x * size+horizontalOffset) + 1, (y * size+verticalOffset) + 1, (size - 1), (size - 1));
 			}
@@ -318,12 +336,12 @@ public class Board extends JPanel{
 	
 	/**
 	 * Setting cars visibility
-	 * It's triangle with a=11, h=6, alpha=45 if direction is TOP/BOTTOM/LEFT/RIGHT //TODO - edit triangle
-	 * if another a=8, h=8, alpha 90
+	 * It's triangle with a=21, h=11, alpha=45 if direction is TOP/BOTTOM/LEFT/RIGHT
+	 * if another a=13, h=13, alpha 90
 	 */
 	private void setCarsVisibility()
 	{
-		for(int x=12; x<points.length-12; x++) //max visibility range is 7
+		for(int x=12; x<points.length-12; x++) //max visibility range is 12
 			for(int y=12; y<points[x].length-12; y++)
 				if(points[x][y].isCarCenter())
 				{

@@ -11,11 +11,13 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -45,7 +47,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
 	private Board board;
 	
-	private JButton exit, open, simulation, start, clear, about, drivers, result;
+	private JButton exit, open, simulation, start, clear, about, drivers, result, autoscrollBtn;
 	private JComboBox<String> drynessCB, tiresCB;
 	private JScrollPane scrollPane;
 	private JPanel buttonPanel;
@@ -53,6 +55,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	private JFrame driversWindow, paramWindow, resultWindow;
 	private JSpinner g100, g200, g300, b100, b200, b300, n100, n200, n300, itDelay, refDelay;
 	private JTable table, tableResult;
+	private JCheckBox autoscroll;
 	private Container parent;
 	
 	private double screenWidth, screenHeight;
@@ -114,6 +117,17 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		simulation = new JButton("Simulation Parameters");
 		simulation.setActionCommand("parameters");
 		simulation.addActionListener(this);
+		
+		//Autoscroll
+		autoscroll = new JCheckBox();
+		autoscroll.setActionCommand("autoscroll");
+		autoscroll.addActionListener(this);
+		
+		autoscrollBtn = new JButton("1");
+		autoscrollBtn.setSize(30, 100);
+		autoscrollBtn.setEnabled(false);
+		autoscrollBtn.setActionCommand("autoscrollBtn");
+		autoscrollBtn.addActionListener(this);
         
 		//Zoom
         zoom = new JSlider(0,3);
@@ -137,6 +151,9 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		buttonPanel.add(about);
 		buttonPanel.add(exit);
 		buttonPanel.add(Box.createHorizontalStrut(50));
+		buttonPanel.add(new JLabel("Autoscroll:"));
+		buttonPanel.add(autoscroll);
+		buttonPanel.add(autoscrollBtn);
 		buttonPanel.add(new JLabel("Zoom:"));
 		buttonPanel.add(zoom);
 		buttonPanel.add(Box.createHorizontalStrut(50));
@@ -145,15 +162,17 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	        
 		
 		//Board creating
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		screenWidth = screenSize.getWidth();
-		screenHeight = screenSize.getHeight();
-		board = new Board((int)screenWidth, (int)screenHeight);
-		
-		scrollPane = new JScrollPane(board);
+		scrollPane = new JScrollPane();
 		scrollPane.setPreferredSize(new Dimension(1363,729));
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		screenWidth = screenSize.getWidth();
+		screenHeight = screenSize.getHeight();
+		board = new Board((int)screenWidth, (int)screenHeight, scrollPane);
+		scrollPane.getViewport().add(board);
+		
 		container.add(scrollPane, BorderLayout.CENTER);
 		container.add(buttonPanel, BorderLayout.SOUTH);
 		
@@ -198,6 +217,32 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 			else if(command.equals("about")){ aboutButtonAction(); }
 			else if(command.equals("drivers")){ showDriversWindow(); }
 			else if(command.equals("result")){ showResultWindow(); }
+			else if(command.equals("autoscroll"))
+			{ 
+				if(autoscroll.isSelected()) { board.setAutoscroll(true); autoscrollBtn.setEnabled(true); }
+				else { board.setAutoscroll(false); autoscrollBtn.setEnabled(false); }
+			}
+			else if(command.equals("autoscrollBtn"))
+			{ 
+				int next = Integer.parseInt(autoscrollBtn.getText());
+				LinkedList<Car> cars = board.getCars();
+				if(cars.size() == 0) autoscroll.setSelected(false);
+				else
+				{
+					int i=0, j=1;
+					boolean end = false;
+					while(j< 10 && !end)
+					{
+						while(i< cars.size() && cars.get(i).getNumber() != next+j) i++;
+						if(i != cars.size()) end = true;
+						else j++;
+					}
+					if(j==10) next = cars.get(0).getNumber();
+					else next = next+j;
+					autoscrollBtn.setText(next+"");
+					board.setAutoscrollCarNumber(next);
+				}
+			}
 			
 			//Parameters window commands
 			else if(command.equals("changedDryness")){ board.setTrackDryness(Dryness.valueOf((String)drynessCB.getSelectedItem())); }
@@ -214,8 +259,8 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 	public void stateChanged(ChangeEvent e) {
 		if(e.getSource().equals(zoom))
 		{
-			int x = scrollPane.getHorizontalScrollBar().getValue()/(2*(board.getSizeScalePercent()/50));
-			int y = scrollPane.getVerticalScrollBar().getValue()/(2*(board.getSizeScalePercent()/50));
+			int x = scrollPane.getHorizontalScrollBar().getValue()/(2*(board.getSizeScalePercent()/50)) + scrollPane.getWidth()/(2*(board.getSizeScalePercent()/50))/2;
+			int y = scrollPane.getVerticalScrollBar().getValue()/(2*(board.getSizeScalePercent()/50)) + scrollPane.getHeight()/(2*(board.getSizeScalePercent()/50))/2;
 			switch(zoom.getValue())
 			{
 				case 0: board.setSizeScalePercent(50); break;
@@ -223,8 +268,8 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 				case 2: board.setSizeScalePercent(150); break;
 				case 3: board.setSizeScalePercent(200);	break;
 			}
-			scrollPane.getHorizontalScrollBar().setValue(x*(2*(board.getSizeScalePercent()/50)));
-			scrollPane.getVerticalScrollBar().setValue(y*(2*(board.getSizeScalePercent()/50)));
+			scrollPane.getHorizontalScrollBar().setValue((x-scrollPane.getWidth()/(2*(board.getSizeScalePercent()/50))/2)*(2*(board.getSizeScalePercent()/50)));
+			scrollPane.getVerticalScrollBar().setValue((y-scrollPane.getHeight()/(2*(board.getSizeScalePercent()/50))/2)*(2*(board.getSizeScalePercent()/50)));
 		}
 		else if(e.getSource().equals(simSpeed))
 		{

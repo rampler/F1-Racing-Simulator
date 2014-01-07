@@ -58,7 +58,87 @@ public class Point {
 			car.nextIteration(timerDelay);
 			
 			//Setting random mistake
-			double random = (Math.random()*car.getDriverSkills().getRandomMistakeParameter());
+			double random = (Math.random()*car.getDriverSkills().getRandomMistakeParameter())/2;
+			
+			//Checking next turn and rivals ahead - from driver visibility
+			Direction carActualDirection = Direction.getDirectionFromAngle(car.getAngle());
+			Direction nextDirection = direction;
+			if(nextDirection == Direction.NONE) nextDirection = carActualDirection;
+			Direction visibilityDirection = carActualDirection;
+			int rivalAheadDistance = 8, rivalAheadOffset = 8;
+			
+			Point[][] visibility = car.getVisibility();
+			if(visibility.length == 10) //TOP,LEFT,RIGHT,BOTTOM
+			{
+				double[] medianTable = new double[10];
+				for(int i=0; i<10; i++)
+				{
+					int[] table = new int[2*i+3];
+					for(int j=0; j<2*i+3; j++) 
+					{
+						table[j] = visibility[i][j].getDirection().getNum();
+						if(visibility[i][j].isCarCenter() && (rivalAheadDistance > i)) 
+						{
+							rivalAheadDistance = i;
+							rivalAheadOffset = j-(i+1);
+						}
+					}
+					Arrays.sort(table);
+					int k=0;
+					while(k < table.length-1 && table[k] == -1) k++;
+					medianTable[i] = table[(k+table.length)/2];//*((5-i)/5);
+				}
+				double num = 0;
+				int howManyZero = 0, howManyNone = 0;
+				for(int i=0; i<10; i++) 
+				{
+					if(medianTable[i] == -1) howManyNone++;
+					else if(medianTable[i] == 0) howManyZero++;
+					else num += medianTable[i];
+				}
+				if(howManyZero < (10-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/(10-howManyNone)));
+				else visibilityDirection = Direction.TOP_LEFT;
+			}
+			else //TOP_LEFT,TOP_RIGHT,BOTTOM_LEFT,BOTTOM_RIGHT
+			{
+				double[] medianTable = new double[12];
+				for(int i=0; i<12; i++)
+				{
+					int[] table = new int[i+2];
+					for(int j=0; j<i+2; j++)
+					{
+						table[j] = visibility[i][j].getDirection().getNum();
+						if(visibility[i][j].isCarCenter() && (rivalAheadDistance > i)) 
+						{
+							rivalAheadDistance = i;
+							rivalAheadOffset = Math.round(j-((i+1)*0.5f));
+						}
+					}
+					Arrays.sort(table);
+					int k=0;
+					while(k < table.length-1 && table[k] == -1) k++;
+					medianTable[i] = table[(k+table.length)/2];//*((7-i)/7);
+				}
+				double num = 0;
+				int howManyZero = 0, howManyNone = 0;
+				for(int i=0; i<12; i++) 	
+				{
+					if(medianTable[i] == -1) howManyNone++;
+					else if(medianTable[i] == 0) howManyZero++;
+					else num += medianTable[i];
+				}
+				if(howManyZero < (12-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/(12-howManyNone)));
+				else visibilityDirection = Direction.TOP_LEFT;
+			}
+			
+			//If rival ahead then break
+			if(car.getSpeed() >=50 && !(rivalAheadOffset > 2 || (rivalAheadOffset == 0 && rivalAheadDistance > 7)))
+			{
+				//Calculating new acceleration - brake - mistake included
+				if(car.getSpeed() <= 100) acc = accelerationTable[1][0];
+				else if(car.getSpeed() <= 200) acc = accelerationTable[1][1];
+				else acc = accelerationTable[1][2];
+			}
 			
 			//Calculating new speed - mistake included
 			if(acc >= 0 || car.getSpeed() >= 50)
@@ -71,7 +151,7 @@ public class Point {
 			}
 			
 			//Stack Exception
-			if(car.getSpeed() < 50 && car.getAcceleration() < 0 && direction == Direction.NONE) throw new CarStuckException(this.car, this);
+			if(car.getSpeed() < 50 && car.getAcceleration() < 0 && direction == Direction.NONE && (type == SurfaceType.GRASS || type == SurfaceType.SAND)) throw new CarStuckException(this.car, this);
 			
 			//If distance is > 2.6m(point size in reality) then send car to next point
 			if(distance >= 2.6) 
@@ -83,76 +163,7 @@ public class Point {
 				if(type == SurfaceType.START_LINE) car.addLap();
 				if(car.getAcceleration() < 0) car.addKersSystemPercent((-1*car.getAcceleration())/75);
 				
-				//Checking next turn and rivals ahead - from driver visibility
-				Direction carActualDirection = Direction.getDirectionFromAngle(car.getAngle());
-				Direction nextDirection = direction;
-				if(nextDirection == Direction.NONE) nextDirection = carActualDirection;
-				Direction visibilityDirection = carActualDirection;
-				int rivalAheadDistance = 8, rivalAheadOffset = 8;
-				
-				Point[][] visibility = car.getVisibility();
-				if(visibility.length == 10) //TOP,LEFT,RIGHT,BOTTOM
-				{
-					double[] medianTable = new double[10];
-					for(int i=0; i<10; i++)
-					{
-						int[] table = new int[2*i+3];
-						for(int j=0; j<2*i+3; j++) 
-						{
-							table[j] = visibility[i][j].getDirection().getNum();
-							if(visibility[i][j].isCarCenter() && (rivalAheadDistance > i)) 
-							{
-								rivalAheadDistance = i;
-								rivalAheadOffset = j-(i+1);
-							}
-						}
-						Arrays.sort(table);
-						int k=0;
-						while(k < table.length-1 && table[k] == -1) k++;
-						medianTable[i] = table[(k+table.length)/2];//*((5-i)/5);
-					}
-					double num = 0;
-					int howManyZero = 0, howManyNone = 0;
-					for(int i=0; i<10; i++) 
-					{
-						if(medianTable[i] == -1) howManyNone++;
-						else if(medianTable[i] == 0) howManyZero++;
-						else num += medianTable[i];
-					}
-					if(howManyZero < (10-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/(10-howManyNone)));
-					else visibilityDirection = Direction.TOP_LEFT;
-				}
-				else //TOP_LEFT,TOP_RIGHT,BOTTOM_LEFT,BOTTOM_RIGHT
-				{
-					double[] medianTable = new double[12];
-					for(int i=0; i<12; i++)
-					{
-						int[] table = new int[i+2];
-						for(int j=0; j<i+2; j++)
-						{
-							table[j] = visibility[i][j].getDirection().getNum();
-							if(visibility[i][j].isCarCenter() && (rivalAheadDistance > i)) 
-							{
-								rivalAheadDistance = i;
-								rivalAheadOffset = Math.round(j-((i+1)*0.5f));
-							}
-						}
-						Arrays.sort(table);
-						int k=0;
-						while(k < table.length-1 && table[k] == -1) k++;
-						medianTable[i] = table[(k+table.length)/2];//*((7-i)/7);
-					}
-					double num = 0;
-					int howManyZero = 0, howManyNone = 0;
-					for(int i=0; i<12; i++) 	
-					{
-						if(medianTable[i] == -1) howManyNone++;
-						else if(medianTable[i] == 0) howManyZero++;
-						else num += medianTable[i];
-					}
-					if(howManyZero < (12-howManyNone)/2) visibilityDirection = Direction.getDirectionFromNum((int) Math.round(num/(12-howManyNone)));
-					else visibilityDirection = Direction.TOP_LEFT;
-				}
+				//TODO
 				
 				
 				//If rival on left or right then change direction to make some space
@@ -171,7 +182,7 @@ public class Point {
 					else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[1][1]+random;
 					else newAcceleration = accelerationTable[1][2]+random;
 				}
-				else if(rivalAheadOffset > 2 || (rivalAheadOffset == 0 && rivalAheadDistance > 5))
+				else
 				{
 					if(visibilityDirection == Direction.getDirectionFromAngle(car.getAngle()))
 					{
@@ -204,26 +215,20 @@ public class Point {
 					}
 					else if(car.getSpeed() < 200 && (Math.abs(visibilityDirection.getNum() - carActualDirection.getNum()) == 1 || Math.abs(visibilityDirection.getNum() - carActualDirection.getNum()) == 7))
 					{
-						//Calculating new acceleration - none - mistake included
-						if(car.getSpeed() <= 100) newAcceleration = accelerationTable[2][0]+random;
-						else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[2][1]+random;
-						else newAcceleration = accelerationTable[2][2]+random;
+						//Calculating new acceleration - none
+						if(car.getSpeed() <= 100) newAcceleration = accelerationTable[2][0];
+						else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[2][1];
+						else newAcceleration = accelerationTable[2][2];
 					}
 					else
 					{
 						//Calculating new acceleration - brake - mistake included
-						if(car.getSpeed() <= 100) newAcceleration = accelerationTable[1][0]+random;
-						else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[1][1]+random;
-						else newAcceleration = accelerationTable[1][2]+random;
+						if(car.getSpeed() <= 100) newAcceleration = accelerationTable[1][0];
+						else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[1][1];
+						else newAcceleration = accelerationTable[1][2];
 					}
 				}
-				else
-				{
-					//Calculating new acceleration - brake - mistake included
-					if(car.getSpeed() <= 100) newAcceleration = accelerationTable[1][0]+random;
-					else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[1][1]+random;
-					else newAcceleration = accelerationTable[1][2]+random;
-				}
+				
 				if(!trackDryness.toString().equals(car.getTireType().toString())) newAcceleration *= car.getTireType().getAdhensionOnElse();
 				else newAcceleration *= car.getTireType().getAdhensionOnSame();
 				car.setAcceleration(newAcceleration*trackDryness.getAdhension()-type.getFriction());
