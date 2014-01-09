@@ -163,10 +163,7 @@ public class Point {
 				if(type == SurfaceType.START_LINE) car.addLap();
 				if(car.getAcceleration() < 0) car.addKersSystemPercent((-1*car.getAcceleration())/75);
 				
-				//TODO
-				
-				
-				//If rival on left or right then change direction to make some space
+				//If rival on left or right then change direction to make some free space
 				for(int i=0; i<neighbors.length; i++)
 					if(neighbors[i].isCarCenter()) nextDirection = Direction.getAvoidingDirection(i, nextDirection);
 				
@@ -191,7 +188,7 @@ public class Point {
 						else if(car.getSpeed() <= 200) newAcceleration = accelerationTable[0][1]-random;
 						else newAcceleration = accelerationTable[0][2]-random;
 						
-						//Activating KERS - //TODO - TEST
+						//Activating KERS
 						if(car.getKersSystemPercent() == 100)
 						{
 							boolean roadAhead = true;
@@ -229,8 +226,8 @@ public class Point {
 					}
 				}
 				
-				if(!trackDryness.toString().equals(car.getTireType().toString())) newAcceleration *= car.getTireType().getAdhensionOnElse();
-				else newAcceleration *= car.getTireType().getAdhensionOnSame();
+				if(!trackDryness.toString().equals(car.getTireType().toString()) && newAcceleration > 0) newAcceleration *= car.getTireType().getAdhensionOnElse();
+				else if(newAcceleration > 0) newAcceleration *= car.getTireType().getAdhensionOnSame();
 				car.setAcceleration(newAcceleration*trackDryness.getAdhension()-type.getFriction());
 				
 				//If speed is too high car can't change direction fast

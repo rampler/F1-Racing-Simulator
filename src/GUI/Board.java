@@ -105,32 +105,42 @@ public class Board extends JPanel{
 						try { points[x][y].nextIteraton(trackDryness, timerDelay, accelerationTable); } 
 						catch(CarsCollisionException exp) 
 						{
+							boolean wasAutoscroll = false;
+							if(autoscroll) { wasAutoscroll = true; autoscroll = false; }
 							repaint();
 							parent.getHorizontalScrollBar().setValue((x-parent.getWidth()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
 					    	parent.getVerticalScrollBar().setValue((y-parent.getHeight()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
-							JOptionPane.showMessageDialog(this.getParent(), "Collision on track: "+exp.getCar1().getNumber()+". "+exp.getCar1().getDriverName()+" and "+exp.getCar2().getNumber()+". "+exp.getCar2().getDriverName()+"!");
+							
+					    	JOptionPane.showMessageDialog(this.getParent(), "Collision on track: "+exp.getCar1().getNumber()+". "+exp.getCar1().getDriverName()+" and "+exp.getCar2().getNumber()+". "+exp.getCar2().getDriverName()+"!");
 							cars.remove(exp.getCar1());
 							cars.remove(exp.getCar2());
 							exp.getPoint1().setCar(null);
 							exp.getPoint2().setCar(null);
+							if(wasAutoscroll) autoscroll = true;
 						}
 						catch(CarStuckException exp)
 						{
+							boolean wasAutoscroll = false;
+							if(autoscroll) { wasAutoscroll = true; autoscroll = false; }
 							repaint();
 							parent.getHorizontalScrollBar().setValue((x-parent.getWidth()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
 					    	parent.getVerticalScrollBar().setValue((y-parent.getHeight()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
 							JOptionPane.showMessageDialog(this.getParent(), "Car stuck off the track: "+exp.getCar().getNumber()+". "+exp.getCar().getDriverName()+"!");
 							cars.remove(exp.getCar());
 							exp.getPoint().setCar(null);
+							if(wasAutoscroll) autoscroll = true;
 						}
 						catch(BarrierCrashException exp)
 						{
+							boolean wasAutoscroll = false;
+							if(autoscroll) { wasAutoscroll = true; autoscroll = false; }
 							repaint();
 							parent.getHorizontalScrollBar().setValue((x-parent.getWidth()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
 					    	parent.getVerticalScrollBar().setValue((y-parent.getHeight()/(2*(sizeScalePercent/50))/2)*(2*(sizeScalePercent/50)));
 							JOptionPane.showMessageDialog(this.getParent(), "Car hits barrier: "+exp.getCar().getNumber()+". "+exp.getCar().getDriverName()+"!");
 							cars.remove(exp.getCar());
 							exp.getPoint().setCar(null);
+							if(wasAutoscroll) autoscroll = true;
 						}
 		//Unblocking blocked points
 		for(int x=1; x<points.length-1; x++)

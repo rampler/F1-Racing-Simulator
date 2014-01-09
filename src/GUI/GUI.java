@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JViewport;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
@@ -166,6 +167,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 		scrollPane.setPreferredSize(new Dimension(1363,729));
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		screenWidth = screenSize.getWidth();
@@ -235,7 +237,7 @@ public class GUI extends JPanel implements ActionListener, ChangeListener {
 					{
 						while(i< cars.size() && cars.get(i).getNumber() != next+j) i++;
 						if(i != cars.size()) end = true;
-						else j++;
+						else {j++; i=0; }
 					}
 					if(j==10) next = cars.get(0).getNumber();
 					else next = next+j;

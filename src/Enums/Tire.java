@@ -6,7 +6,7 @@ package Enums;
  *
  */
 public enum Tire {
-	DRY(1,0.7), WET(0.9,0.8);
+	DRY(0.9,0.7), WET(0.85,0.8);
 	
 	private double adhesionOnSame, adhensionOnElse;
 	Tire(double adhesionOnSame, double adhensionOnElse)
