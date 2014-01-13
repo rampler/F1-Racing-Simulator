@@ -20,7 +20,6 @@ public class Point {
 	private Direction direction;
 	private SurfaceType type;
 	private Car car;
-	private int state;
 	private boolean blocked;
 	private final int MAX_SPEED = 302;
 	private final double KERS_POWER_PARAMETER = 1.1;
@@ -29,7 +28,6 @@ public class Point {
 	public Point() {
 		direction = Direction.NONE;
 		type = SurfaceType.GRASS;
-		state = 1000;
 		car = null;
 		blocked = false;
 	}
@@ -242,7 +240,7 @@ public class Point {
 					}
 				}
 				
-				//Sending car to next point
+				//Sending car to the next point
 				if(neighbors[nextDirection.getNum()].getType() == SurfaceType.BARRIER) throw new BarrierCrashException(this.car, this);
 				if(neighbors[nextDirection.getNum()].getCar() == null)
 				{
@@ -260,7 +258,6 @@ public class Point {
 	//Getters
 	public SurfaceType getType(){ return type; }
 	public Direction getDirection(){ return direction; }
-	public int getState(){ return state; }
 	public Point[] getNeighbors(){ return neighbors; }
 	public Car getCar(){ return car; }
 	
@@ -269,7 +266,6 @@ public class Point {
 	
 	//Setters
 	public void setNeighbors(Point[] neighbors){ this.neighbors = neighbors; }
-	public void setState(int state){ this.state = state; }
 	
 	/**
 	 * Set Car and block point

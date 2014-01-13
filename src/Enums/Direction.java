@@ -52,7 +52,7 @@ public enum Direction {
 	 * Get avoiding rival car Direction
 	 * @param neighborNum
 	 * @param nextDirection
-	 * @return
+	 * @return Direction
 	 */
 	public static Direction getAvoidingDirection(int neighborNum, Direction nextDirection)
 	{
