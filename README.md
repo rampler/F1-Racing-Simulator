@@ -7,9 +7,9 @@ Topic:
 	"Modeling Formula 1 competition."
 
 Supervisor:
-	dr in¿. Jaros³aw W¹s
+	dr inÅ¼. JarosÅ‚aw WÄ…s
 
 Authors:
 	Sabina Rydzek
-	Kacper Furmañski
+	Kacper FurmaÅ„ski
 	Mateusz Kotlarz
