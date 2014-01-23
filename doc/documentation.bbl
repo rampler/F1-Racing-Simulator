@@ -1,9 +1,16 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{particleSimulation}
 Carter Chamberlain.
 \newblock Particle simulation with cellular automaton.
 \newblock 2009.
+
+\bibitem{fanatic}
+Christian Danner.
+\newblock Silverstone circuit tracj map.
+\newblock
+  \url{http://www.f1fanatic.co.uk/f1-information/going-to-a-race/silverstone-circuit-information/}.
+\newblock Accessed: 23-01-2013.
 
 \bibitem{cellularAutomata}
 Jacopo~Tagliabue Francesco~Berto.
@@ -11,12 +18,27 @@ Jacopo~Tagliabue Francesco~Berto.
 \newblock \url{http://plato.stanford.edu/entries/cellular-automata}.
 \newblock Accessed: 04-12-2013.
 
+\bibitem{gca}
+Rolf Hoffmann.
+\newblock Gca-w algorithms for traffic simulation.
+\newblock 2011.
+
+\bibitem{kulak}
+Krzysztof Kułakowski.
+\newblock {\em Automaty komórkowe}.
+\newblock Akademia Górniczo-Hutnicza im. St. Staszica w Krakowie, 2000.
+
 \bibitem{track}
 Formula One World~Championship Limited.
-\newblock Hungaroring circuit.
-\newblock
-  \url{http://www.formula1.com/races/in_detail/hungary_903/circuit_diagram.html}.
-\newblock Accessed: 07-12-2013.
+\newblock Silverstone.
+\newblock \url{http://www.formula1.com/races/in_detail/great_britain_924/}.
+\newblock Accessed: 10-01-2013.
+
+\bibitem{race}
+DATAS Ltd.
+\newblock Racesim.
+\newblock \url{http://www.datas-ltd.com/RaceSim.htm}.
+\newblock Accessed: 10-01-2013.
 
 \bibitem{nature}
 Daniel Shiffman.
@@ -28,5 +50,11 @@ Daniel Shiffman.
 Matuszyk~PJ Was~J., Gudowski~B.
 \newblock Social distances model of pedestrian dynamics.
 \newblock 2006.
+
+\bibitem{woolley}
+Robert Woolley.
+\newblock Simulation in f1.
+\newblock \url{http://www-formula1.eng.cam.ac.uk/student-proj/simulation}.
+\newblock Accessed: 10-01-2013.
 
 \end{thebibliography}

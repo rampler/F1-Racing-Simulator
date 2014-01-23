@@ -1,9 +1,7 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.11.13)  13 DEC 2013 10:47
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.11.13)  23 JAN 2014 22:15
 entering extended mode
 **documentation.tex
-
-("C:\Users\Sabina Rydzek\Documents\GitHub\F1-Racing-Simulator\doc\documentation
-.tex"
+("E:\Dokumenty\Stosowana\III rok\Symulacje\doc\documentation.tex"
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -15,19 +13,10 @@ german-x-2012-05-30, nynorsk, oriya, panjabi, pinyin, polish, portuguese, roman
 ian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swissgerm
 an, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, usengl
 ishmax, welsh, loaded.
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\extsizes\extarticle.cls"
-Document Class: extarticle 1996/10/08 v1.0 Non Standard LaTeX document class
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\article.cls"
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\size10.clo"
 File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
-)
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\exscale.sty"
-Package: exscale 2007/10/29 v2.1h Standard LaTeX package exscale
-LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 52.
-LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
-(Font)                  OMX/cmex/m/n --> OMX/cmex/m/n on input line 52.
-LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
-(Font)                  OMX/cmex/m/n --> OMX/cmex/m/n on input line 52.
-\big@size=\dimen102
 )
 \c@part=\count79
 \c@section=\count80
@@ -39,7 +28,7 @@ LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 \c@table=\count86
 \abovecaptionskip=\skip41
 \belowcaptionskip=\skip42
-\bibindent=\dimen103
+\bibindent=\dimen102
 )
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\inputenc.sty"
 Package: inputenc 2008/03/30 v1.1d Input encoding file
@@ -323,13 +312,13 @@ Language: polish 2005/03/31 v1.2l Polish support from the babel system
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\babel\babel.def"
 File: babel.def 2008/07/08 v3.8m Babel common definitions
 \babel@savecnt=\count87
-\U@D=\dimen104
+\U@D=\dimen103
 )
 Package babel Info: Making " an active character on input line 83.
-\pl@left=\dimen105
-\pl@down=\dimen106
-\pl@right=\dimen107
-\pl@temp=\dimen108
+\pl@left=\dimen104
+\pl@down=\dimen105
+\pl@right=\dimen106
+\pl@temp=\dimen107
 ))
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\cite\cite.sty"
 LaTeX Info: Redefining \cite on input line 302.
@@ -340,13 +329,70 @@ Package: cite 2010/09/10  v 5.3
 \Urlmuskip=\muskip10
 Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
-Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdfpages\pdfpages.sty"
+Package: pdfpages 2013/08/25 v0.4v Insert pages of external PDF documents (AM)
 
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ifthen.sty"
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\calc.sty"
+Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count88
+\calc@Bcount=\count89
+\calc@Adimen=\dimen108
+\calc@Bdimen=\dimen109
+\calc@Askip=\skip43
+\calc@Bskip=\skip44
+LaTeX Info: Redefining \setlength on input line 76.
+LaTeX Info: Redefining \addtolength on input line 77.
+\calc@Ccount=\count90
+\calc@Cskip=\skip45
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\eso-pic\eso-pic.sty"
+Package: eso-pic 2013/10/06 v2.0d eso-pic (RN)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\atbegshi.sty"
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+))
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks16
 )
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty"
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+\Gread@gobject=\count91
+)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
 Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
@@ -357,180 +403,444 @@ Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: pdftex.def on input line 91.
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
-File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
-Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
-Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+\Gin@req@height=\dimen110
+\Gin@req@width=\dimen111
 )
-\Gread@gobject=\count88
-))
-\Gin@req@height=\dimen109
-\Gin@req@width=\dimen110
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdfpages\pppdftex.def"
+File: pppdftex.def 2013/08/25 v0.4v Pdfpages driver for pdfTeX (AM)
 )
+\AM@pagebox=\box26
+\AM@toc@title=\toks17
+\c@AM@survey=\count92
+\AM@templatesizebox=\box27
+)
+("E:\Dokumenty\Stosowana\III rok\Symulacje\doc\documentation.aux")
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for OT4/cmr/m/n on input line 49.
+LaTeX Font Info:    ... okay on input line 49.
+\AtBeginShipoutBox=\box28
 
-LaTeX Warning: Unused global option(s):
-    [12p].
-
-
-("C:\Users\Sabina Rydzek\Documents\GitHub\F1-Racing-Simulator\doc\documentation
-.aux")
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OT4/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
- ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count89
-\scratchdimen=\dimen111
-\scratchbox=\box26
-\nofMPsegments=\count90
-\nofMParguments=\count91
-\everyMPshowfont=\toks17
-\MPscratchCnt=\count92
-\MPscratchDim=\dimen112
-\MPnumerator=\count93
-\makeMPintoPDFobject=\count94
-\everyMPtoPDFconversion=\toks18
+\scratchcounter=\count93
+\scratchdimen=\dimen112
+\scratchbox=\box29
+\nofMPsegments=\count94
+\nofMParguments=\count95
+\everyMPshowfont=\toks18
+\MPscratchCnt=\count96
+\MPscratchDim=\dimen113
+\MPnumerator=\count97
+\makeMPintoPDFobject=\count98
+\everyMPtoPDFconversion=\toks19
 )
-LaTeX Font Info:    Try loading font information for OML+plm on input line 50.
+LaTeX Font Info:    Try loading font information for OML+plm on input line 51.
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\polski\omlplm.fd"
 File: omlplm.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
-LaTeX Font Info:    Try loading font information for OMS+plsy on input line 50.
+LaTeX Font Info:    Try loading font information for OMS+plsy on input line 51.
 
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\polski\omsplsy.fd"
 File: omsplsy.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
-LaTeX Font Info:    Try loading font information for OMX+plex on input line 50.
+LaTeX Font Info:    Try loading font information for OMX+plex on input line 51.
 
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\polski\omxplex.fd"
 File: omxplex.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
 LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <12> on input line 50.
+(Font)              <12> on input line 51.
 LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <8> on input line 50.
+(Font)              <8> on input line 51.
 LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <6> on input line 50.
+(Font)              <6> on input line 51.
  [1
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <10> on input line 65.
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <7> on input line 65.
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <5> on input line 65.
+
 Underfull \hbox (badness 10000) in paragraph at lines 65--66
 
  []
 
+<silv.jpg, id=11, 427.5975pt x 436.63126pt>
+File: silv.jpg Graphic file (type jpg)
+ <use silv.jpg>
+Package pdftex.def Info: silv.jpg used on input line 71.
+(pdftex.def)             Requested size: 171.03596pt x 174.6494pt.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 78.
 
-Underfull \hbox (badness 10000) in paragraph at lines 67--68
-
- []
-
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <10> on input line 73.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <7> on input line 73.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <5> on input line 73.
-
-Underfull \hbox (badness 10000) in paragraph at lines 73--74
-
- []
-
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 83.
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 83.
- [2]
-Overfull \hbox (0.16716pt too wide) in paragraph at lines 96--97
-\OT4/cmr/m/n/10 Dobrym s¡-siedz-twem do za-sto-so-wa-nia jest roz-sze-rzone s¡-
-siedz-two Mo-ore'a, które
- []
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 78.
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 99--100
+Underfull \hbox (badness 10000) in paragraph at lines 86--87
 
  []
 
+[2 <E:/Dokumenty/Stosowana/III rok/Symulacje/doc/silv.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--91
+
+ []
+
+<alg.png, id=18, 370.38374pt x 167.87718pt>
+File: alg.png Graphic file (type png)
+ <use alg.png>
+Package pdftex.def Info: alg.png used on input line 96.
+(pdftex.def)             Requested size: 333.34227pt x 151.08806pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 101--102
 
  []
 
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 107--108
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
+
+ []
+
+[3 <E:/Dokumenty/Stosowana/III rok/Symulacje/doc/alg.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 123--124
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 109--110
+Overfull \hbox (4.67883pt too wide) in paragraph at lines 144--145
+[]\OT4/cmr/m/n/10 SurfaceType - ROAD, GRASS, WORSE ROAD, BAR-RIER, START LINE,
+ []
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 148--149
 
  []
 
 
-("C:\Users\Sabina Rydzek\Documents\GitHub\F1-Racing-Simulator\doc\documentation
-.bbl"
-LaTeX Font Info:    Try loading font information for OT4+cmtt on input line 11.
+Underfull \hbox (badness 10000) in paragraph at lines 158--159
 
+ []
+
+<scroll.png, id=28, 430.60875pt x 33.87656pt>
+File: scroll.png Graphic file (type png)
+ <use scroll.png>
+Package pdftex.def Info: scroll.png used on input line 165.
+(pdftex.def)             Requested size: 344.48746pt x 27.10127pt.
+ [5]
+Underfull \hbox (badness 10000) in paragraph at lines 195--196
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 197--198
+
+ []
+
+[6 <E:/Dokumenty/Stosowana/III rok/Symulacje/doc/scroll.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 231--232
+
+ []
+
+[7] <visibility-top.png, id=41, 264.99pt x 174.6525pt>
+File: visibility-top.png Graphic file (type png)
+
+<use visibility-top.png>
+Package pdftex.def Info: visibility-top.png used on input line 235.
+(pdftex.def)             Requested size: 158.99522pt x 104.7923pt.
+
+<visibility-top-left.png, id=43, 208.78pt x 196.735pt>
+File: visibility-top-left.png Graphic file (type png)
+
+<use visibility-top-left.png>
+Package pdftex.def Info: visibility-top-left.png used on input line 242.
+(pdftex.def)             Requested size: 125.26895pt x 118.04189pt.
+ [8 <E:/Dokumenty/Stosowana/III rok/Symulacje/doc/visibility-top.png> <E:/Dokum
+enty/Stosowana/III rok/Symulacje/doc/visibility-top-left.png>] <uml.pdf, id=50,
+ 598.48593pt x 846.16125pt>
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf>
+Package pdftex.def Info: uml.pdf used on input line 281.
+(pdftex.def)             Requested size: 598.48447pt x 846.1592pt.
+File: uml.pdf Graphic file (type pdf)
+
+<use uml.pdf>
+Package pdftex.def Info: uml.pdf used on input line 281.
+(pdftex.def)             Requested size: 598.48447pt x 846.1592pt.
+ [9] [10] <uml.pdf, id=59, page=1, 598.48593pt x 846.16125pt>
+File: uml.pdf Graphic file (type pdf)
+
+<use uml.pdf, page 1>
+Package pdftex.def Info: uml.pdf, page1 used on input line 281.
+(pdftex.def)             Requested size: 598.48447pt x 846.1592pt.
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf, page 1>
+Package pdftex.def Info: uml.pdf, page1 used on input line 281.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf, page 1>
+Package pdftex.def Info: uml.pdf, page1 used on input line 281.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+File: uml.pdf Graphic file (type pdf)
+
+<use uml.pdf, page 1>
+Package pdftex.def Info: uml.pdf, page1 used on input line 281.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf, page 1>
+Package pdftex.def Info: uml.pdf, page1 used on input line 281.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+ [11 <E:/Dokumenty/Stosowana/III rok/Symulacje/doc/uml.pdf>]
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf>
+Package pdftex.def Info: uml.pdf used on input line 282.
+(pdftex.def)             Requested size: 598.48447pt x 846.1592pt.
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf>
+Package pdftex.def Info: uml.pdf used on input line 282.
+(pdftex.def)             Requested size: 598.48447pt x 846.1592pt.
+
+<uml.pdf, id=73, page=2, 598.48593pt x 846.16125pt>
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf, page 2>
+Package pdftex.def Info: uml.pdf, page2 used on input line 282.
+(pdftex.def)             Requested size: 598.48447pt x 846.1592pt.
+File: uml.pdf Graphic file (type pdf)
+
+<use uml.pdf, page 2>
+Package pdftex.def Info: uml.pdf, page2 used on input line 282.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf, page 2>
+Package pdftex.def Info: uml.pdf, page2 used on input line 282.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf, page 2>
+Package pdftex.def Info: uml.pdf, page2 used on input line 282.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+File: uml.pdf Graphic file (type pdf)
+
+<use uml.pdf, page 2>
+Package pdftex.def Info: uml.pdf, page2 used on input line 282.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+ [12 <E:/Dokumenty/Stosowana/III rok/Symulacje/doc/uml.pdf>]
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf>
+Package pdftex.def Info: uml.pdf used on input line 283.
+(pdftex.def)             Requested size: 598.48447pt x 846.1592pt.
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf>
+Package pdftex.def Info: uml.pdf used on input line 283.
+(pdftex.def)             Requested size: 598.48447pt x 846.1592pt.
+
+<uml.pdf, id=88, page=3, 598.48593pt x 846.16125pt>
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf, page 3>
+Package pdftex.def Info: uml.pdf, page3 used on input line 283.
+(pdftex.def)             Requested size: 598.48447pt x 846.1592pt.
+File: uml.pdf Graphic file (type pdf)
+
+<use uml.pdf, page 3>
+Package pdftex.def Info: uml.pdf, page3 used on input line 283.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf, page 3>
+Package pdftex.def Info: uml.pdf, page3 used on input line 283.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+File: uml.pdf Graphic file (type pdf)
+ <use uml.pdf, page 3>
+Package pdftex.def Info: uml.pdf, page3 used on input line 283.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+File: uml.pdf Graphic file (type pdf)
+
+<use uml.pdf, page 3>
+Package pdftex.def Info: uml.pdf, page3 used on input line 283.
+(pdftex.def)             Requested size: 562.37595pt x 795.10765pt.
+ [13 <E:/Dokumenty/Stosowana/III rok/Symulacje/doc/uml.pdf>]
+LaTeX Font Info:    Try loading font information for OT4+cmtt on input line 286
+.
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\polski\ot4cmtt.fd"
 File: ot4cmtt.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
-Underfull \hbox (badness 3343) in paragraph at lines 15--20
-[]\OT4/cmr/m/n/10 Formula One World Cham-pion-ship Li-mi-ted.  Hun-ga-ro-ring c
-ir-cuit.
+<options.png, id=94, 261.97874pt x 194.97844pt>
+File: options.png Graphic file (type png)
+ <use options.png>
+Package pdftex.def Info: options.png used on input line 305.
+(pdftex.def)             Requested size: 209.58327pt x 155.98294pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 310--313
+
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 15--20
-$\OT4/cmtt/m/n/10 http : / / www . formula1 . com / races / in _ detail / hunga
-ry _ 903 / circuit _$
+Underfull \hbox (badness 10000) in paragraph at lines 314--315
+
  []
 
-) [4]
-("C:\Users\Sabina Rydzek\Documents\GitHub\F1-Racing-Simulator\doc\documentation
-.aux") ) 
+<results.png, id=95, 341.77687pt x 164.11313pt>
+File: results.png Graphic file (type png)
+ <use results.png>
+Package pdftex.def Info: results.png used on input line 323.
+(pdftex.def)             Requested size: 273.42186pt x 131.29066pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<wet.png, id=96, 343.2825pt x 164.11313pt>
+File: wet.png Graphic file (type png)
+ <use wet.png>
+Package pdftex.def Info: wet.png used on input line 330.
+(pdftex.def)             Requested size: 274.62636pt x 131.29066pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<wetdry.png, id=97, 342.5297pt x 164.86594pt>
+File: wetdry.png Graphic file (type png)
+ <use wetdry.png>
+Package pdftex.def Info: wetdry.png used on input line 337.
+(pdftex.def)             Requested size: 274.02412pt x 131.8929pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<stats.png, id=98, 341.77687pt x 163.3603pt>
+File: stats.png Graphic file (type png)
+ <use stats.png>
+Package pdftex.def Info: stats.png used on input line 344.
+(pdftex.def)             Requested size: 273.42186pt x 130.6884pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 349--350
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 355--356
+
+ []
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 357--358
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 359--368
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 371--372
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 373--374
+
+ []
+
+[15 <E:/Dokumenty/Stosowana/III rok/Symulacje/doc/options.png>] [16 <E:/Dokumen
+ty/Stosowana/III rok/Symulacje/doc/results.png> <E:/Dokumenty/Stosowana/III rok
+/Symulacje/doc/wet.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 382--383
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 384--385
+
+ []
+
+[17 <E:/Dokumenty/Stosowana/III rok/Symulacje/doc/wetdry.png> <E:/Dokumenty/Sto
+sowana/III rok/Symulacje/doc/stats.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 389--390
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 391--392
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 396--397
+
+ []
+
+[18] ("E:\Dokumenty\Stosowana\III rok\Symulacje\doc\documentation.bbl"
+Underfull \hbox (badness 10000) in paragraph at lines 9--14
+[]\OT4/cmr/m/n/10 Christian Dan-ner.  Si-lver-stone cir-cuit tracj map.  $\OT4/
+cmtt/m/n/10 http :$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--14
+$\OT4/cmtt/m/n/10 / / www . f1fanatic . co . uk / f1-[]information / going-[]to
+-[]a-[]race /$
+ []
+
+) [19] ("E:\Dokumenty\Stosowana\III rok\Symulacje\doc\documentation.aux") ) 
 Here is how much of TeX's memory you used:
- 2199 strings out of 493921
- 30078 string characters out of 3144851
- 81482 words of memory out of 3000000
- 5456 multiletter control sequences out of 15000+200000
- 15121 words of font info for 42 fonts, out of 3000000 for 9000
+ 3493 strings out of 493921
+ 46712 string characters out of 3144851
+ 109395 words of memory out of 3000000
+ 6707 multiletter control sequences out of 15000+200000
+ 15627 words of font info for 43 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 27i,6n,24p,766b,242s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/pltt.enc}{C:/Prog
-ram Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plmi.enc}{C:/Program Files (x86)/
-MiKTeX 2.9/fonts/enc/dvips/pl/plit.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts
-/enc/dvips/pl/plrm.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/pl
-sc.enc}<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10
-.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plbx12.pfb><C:/Pr
-ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plbx9.pfb><C:/Program Files 
-(x86)/MiKTeX 2.9/fonts/type1/public/pl/plcsc10.pfb><C:/Program Files (x86)/MiKT
-eX 2.9/fonts/type1/public/pl/plmi10.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
-s/type1/public/pl/plr10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
-ic/pl/plr12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr17.
-pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr9.pfb><C:/Progr
-am Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plti10.pfb><C:/Program Files (x
-86)/MiKTeX 2.9/fonts/type1/public/pl/pltt10.pfb>
-Output written on documentation.pdf (4 pages, 107816 bytes).
+ 38i,18n,42p,836b,429s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/
+Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/pltt.enc}{C:/Program Files (x
+86)/MiKTeX 2.9/fonts/enc/dvips/pl/plms.enc}{C:/Program Files (x86)/MiKTeX 2.9/f
+onts/enc/dvips/pl/plrm.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/p
+l/plmi.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plit.enc}{C:/P
+rogram Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plsc.enc}<C:/Program Files (x8
+6)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)
+/MiKTeX 2.9/fonts/type1/public/pl/plbx10.pfb><C:/Program Files (x86)/MiKTeX 2.9
+/fonts/type1/public/pl/plbx12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type
+1/public/pl/plbx9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/
+plcsc10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plmi10.pfb
+><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plmi7.pfb><C:/Program
+ Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr10.pfb><C:/Program Files (x86)
+/MiKTeX 2.9/fonts/type1/public/pl/plr12.pfb><C:/Program Files (x86)/MiKTeX 2.9/
+fonts/type1/public/pl/plr17.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/
+public/pl/plr7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr
+9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plsy10.pfb><C:/P
+rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plsy7.pfb><C:/Program Files
+ (x86)/MiKTeX 2.9/fonts/type1/public/pl/plti10.pfb><C:/Program Files (x86)/MiKT
+eX 2.9/fonts/type1/public/pl/pltt10.pfb>
+Output written on documentation.pdf (19 pages, 407263 bytes).
 PDF statistics:
- 64 PDF objects out of 1000 (max. 8388607)
+ 175 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 101 words of extra memory for PDF output out of 10000 (max. 10000000)
 
