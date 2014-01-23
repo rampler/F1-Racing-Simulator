@@ -100,7 +100,7 @@ Jednym z ciekawszych podejść do tematu symulowania wyścigów F1 za pomocą au
 
 Podejście GCA upraszcza model, ponieważ w chwili $t$, automat wie już, gdzie będzie znajdował się w chwili $t+1$. Wie dokładnie, na których komórkach znajdują się samochody przed nim i za nim. Niestety przy próbie modelowania samochodów w trakcie wyścigu, sprawa się komplikuje, ponieważ listę z dołączeniami, na której oparty jest algorytm, trzeba rozszerzać i dopisywać kolejne warunki. \\
 
-W pracy Hoffmanna i Margensterna opisane jest podejście do algorytmu wyznaczania trasy przez jadący samochód. Na drodze ustawianie są punkty, które są dla pojazdu tymczasowymi celami, które stara się osiągnąć. Na każdym odcinku przyspiesza, a później hamuje. Pozwala to jednak na płynne przemieszczanie się samochodu po torze bez obijania się o barierki.
+W pracy Hoffmanna i Margensterna \cite{maurice} opisane jest podejście do algorytmu wyznaczania trasy przez jadący samochód. Na drodze ustawianie są punkty, które są dla pojazdu tymczasowymi celami, które stara się osiągnąć. Na każdym odcinku przyspiesza, a później hamuje. Pozwala to jednak na płynne przemieszczanie się samochodu po torze bez obijania się o barierki.
 
 
 \section{Automaty komórkowe}
@@ -141,7 +141,7 @@ Bolid reprezentowany jest przez środek ciężkości znajdujący się w jednej k
 
 \subsection{Komórki}
 \begin{itemize}
-\item SurfaceType - ROAD, GRASS, WORSE ROAD, BARRIER, START LINE, SAND - określają typ nawierzchni oraz przypisane im współczynniki, które wpływają na m.in. na szybkość, przyczepność bolidów. Bolidy wypadają z wyścigu, gdy ich prędkość spadnie do zera.
+\item SurfaceType - ROAD, GRASS, WORSE ROAD, BARRIER, START LINE, SAND - określają typ nawierzchni oraz przypisane im współczynniki, które wpływają m.in. na szybkość, przyczepność bolidów. 
 \item Direction -  NONE, TOP LEFT, TOP, TOP RIGHT, LEFT, RIGHT, BOTTOM LEFT, BOTTOM, BOTTOM RIGHT; - określają kierunki, w których może poruszać się bolid, z tych wybierane są te, na które pozwala orientacja bolidu, trasa oraz reguły. Określany jest tutaj również kąt położenia nakładki bolidu na siatce
 \end{itemize}
 
@@ -155,7 +155,7 @@ Podstawowym sąsiedztwem dla komórki jest sąsiedztwo Moore'a. Na decyzję kier
 \section{Modelowanie ruchu bolidów}
 Projektowanie modelu ruchu bolidów oparliśmy na rozwiązaniu przedstawionym w pracy \textit{Social Distances} \cite{was}. Samochód reprezentowany jest przez prostokąt o środku znajdującym się w środku jednej z komórek. Bok komórki to $2,6 m$ w rzeczywistości, dlatego modelowane przez nas bolidy mają długość $5,2 m$.
 
-Samochód może poruszać się w 8 kierunkach, z których każdy jest odpowiednim kątem obrotu prostokąta będącego naszym bolidem. Przejazd bolidu na sąsiednią, odpowiednią komórkę zależny jest od orientacji bolidów w przestrzeni (czyli położenia reprezentujących je prostokątów). Bolidy starają się unikać kolizji, dlatego jeżeli konfiguracja uznana jest za niebezpieczną, bolid może zwolnić, przyspieszyć, bądź spróbować zmienić swoją orientację. Oczywiście, jeżeli nie będzie to możliwe, na co mogą wypływać odpowiednie współczynniki przyczepności albo umiejętności kierowców, nastąpi zderzenie i bolidy wypadną z toru.   \\
+Samochód może poruszać się w 8 kierunkach, z których każdy jest odpowiednim kątem obrotu (wielokrotności $45^{\circ}$) prostokąta będącego naszym bolidem. Przejazd bolidu na sąsiednią, odpowiednią komórkę zależny jest od orientacji bolidów w przestrzeni (czyli położenia reprezentujących je prostokątów). Bolidy starają się unikać kolizji, dlatego jeżeli konfiguracja uznana jest za niebezpieczną, bolid może zwolnić, przyspieszyć, bądź spróbować zmienić swoją orientację. Oczywiście, jeżeli nie będzie to możliwe, na co mogą wypływać odpowiednie współczynniki przyczepności albo umiejętności kierowców, nastąpi zderzenie i bolidy odpadną z wyścigu.   \\
 
 \subsection{Skalowanie}
 Dużym problemem jest skalowanie, ponieważ tory są bardzo duże w stosunku do wielkości bolidu. Aplikacja posiada możliwość przybliżania i oddalania widoku siatki oraz opcję podążania za wybranym samochodem.
@@ -192,20 +192,20 @@ Wyjścia systemu to:
 
 \section{Automaty komórkowe - zastosowanie w projekcie}
 \subsection{Siatka komórek}
-Tor F1 oraz jego otoczenie jest tablicą komórek o różnych współczynnikach w zależności od ich typu (trawa, krawężnik, asfalt itp.). Głównym problemem w zastosowaniu modelu automatów komórkowych jest to, że bolid jako ciało stałe zajmuje więcej niż jedną komórkę. Oddziaływanie na siebie wielu \textit{bloków} komórek kłóci się z podstawowym założeniem, że w obliczeniach pod uwagę brane są tylko komórki w określonym sąsiedztwie \cite{particleSimulation}. Aby poradzić sobie z tym problemem, bolid przedstawiony jest tylko jako środek ciężkości (jego obrzeża są nakładką na torze). 	\\
+Tor F1 oraz jego otoczenie jest tablicą komórek o różnych współczynnikach w zależności od ich typu (trawa, piasek, asfalt itp.). Głównym problemem w zastosowaniu modelu automatów komórkowych jest to, że bolid jako ciało stałe zajmuje więcej niż jedną komórkę. Oddziaływanie na siebie wielu \textit{bloków} komórek kłóci się z podstawowym założeniem, że w obliczeniach pod uwagę brane są tylko komórki w określonym sąsiedztwie \cite{particleSimulation}. Aby poradzić sobie z tym problemem, bolid przedstawiony jest tylko jako środek ciężkości (jego obrzeża są nakładką na torze). 	\\
 
-Na przedstawienie toru jako tablicy złożonej z komórek odpowiedniego typu pozwala TrackEditor. Część potrzebnych nam skryptów wykonaliśmy w środowisku Matlab. \\
+Na przedstawienie toru jako tablicy złożonej z komórek odpowiedniego typu pozwala TrackEditor. Część potrzebnych  skryptów wykonana została w środowisku Matlab. \\
 
 Do toru ręcznie dodany jest punkt startowy oraz ustawione na starcie bolidy.
 
 \subsection{Stany komórek}
-W komórce może znajdować się środek ciężkości samochodu, bądź nie.
+W komórce może znajdować się środek ciężkości samochodu (1), bądź nie (0).
 
 \subsection{Reguły}
 \subsubsection{Podstawowe kroki algorytmu}
 \begin{enumerate}
 \item Sprawdzanie, kiedy nastąpi kolizja
-\item Przeliczanie drogi oraz prędkości, ewentualne przełączanie KERS
+\item Przeliczanie drogi oraz prędkości, ewentualna aktywacja KERS
 \item Element losowości - dołączany element błędu kierowcy
 \item Sprawdzanie możliwych komórek, na które samochód może przejechać oraz dystansu od przeciwników przed bolidem
 \item Obliczanie nowej prędkości
@@ -225,22 +225,22 @@ v = v_{0} + at
 $$
 
 \subsubsection{Element losowy - błędy kierowców}
-Każdy kierowca ma przypisany poziom umiejętności. Są to MONKEY, NOVICE, INTERMEDIATE, PRO, EXPERT, MASTER, w rosnącej kolejności. W zależności od poziomu, odejmowane są odpowiednie współczynniki do prędkości (utrzymanie przyczepności na torze) oraz liczona możliwość popełnienia przez niego błędu w ocenie sytuacji, wyboru odpowiedniego kierunku.
+Każdy kierowca ma przypisany poziom umiejętności. Są to MONKEY, NOVICE, INTERMEDIATE, PRO, EXPERT, MASTER, w rosnącej kolejności. W zależności od poziomu, odejmowane są odpowiednie współczynniki do przyspieszenia (utrzymanie przyczepności na torze) oraz liczona możliwość popełnienia przez niego błędu w ocenie sytuacji, wyboru odpowiedniego kierunku.
 
 \subsubsection{Driver visibility}
-Driver visibility to przestrzeń, która ma wpływ na zachowanie kierowcy. Jest w postaci trójkątnej, rozszerzająca się od bolidu. Na jej podstawie wyliczany jest kierunek, do którego obrania próbuje dążyć kierowca. Wyliczana jest średnia z każdego rzędu komórek, a następnie mediana. Wygląd przestrzeni zmienia się w zależności od kąta położenia bolidu.\\
+Driver visibility to przestrzeń, która ma wpływ na zachowanie kierowcy. Jest w postaci trójkątnej, rozszerzająca się od bolidu. Na jej podstawie wyliczany jest kierunek, do którego obrania próbuje dążyć kierowca. Wyliczana jest mediana z każdego rzędu komórek, a następnie z tego uzyskiwana średnia. Wygląd przestrzeni zmienia się w zależności od kąta położenia bolidu.\\
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale=0.6]{visibility-top.png}
-\caption{Driver visibility przy kącie $0^{\circ}$}
+\caption{Driver visibility dla wielokrotności kąta $90^{\circ}$}
 \end{center}
 \end{figure}
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale=0.6]{visibility-top-left.png}
-\caption{Driver visibility przy kącie $45^{\circ}$}
+\caption{Driver visibility dla kątów $k+45^{\circ}$}
 \end{center}
 \end{figure}
 
@@ -267,11 +267,14 @@ Samochody wyprzedzają się z bardzo małym prawdopodobieństwem (podobnie jak w
 Wypadkiem może być:
 \begin{itemize}
 \item kolizja - kiedy zderzają się dwa samochody (najczęściej spowodowane gwałtownym hamowaniem)
-\item wypadnięcie z trasy - bolid wypada z wyścigu, kiedy utknie na trawie albo piasku, nie ma już żadnego kierunku do obrania (NONE), a jego przyspieszenie jest mniejsze od zera.
+\item wypadnięcie z trasy - bolid wypada z wyścigu, kiedy utknie na trawie albo piasku, nie ma już żadnego kierunku do obrania (NONE), a jego przyspieszenie jest mniejsze od zera
+\item uderzenie w barierę
 \end{itemize}
 
 \section{Zakończenie symulacji}
 Symulacja nie ma z góry określonych warunków zakończenia. Zakończenie wywoływane jest na życzenie użytkownika.
+
+\pagebreak
 
 \section{Implementacja}
 \subsection{Wybór języka}
@@ -300,19 +303,18 @@ Elementy GUI:
 \item Results - otwiera okno z wynikami
 \end{itemize}
 
+Simulation speed wpływa na przedstawienie na symulacji jednej sekundy (np. $2x$ oznacza, że jedna sekunda symulacji to $0.5s$ w rzeczywistości. \\
+Iteration delay odpowiada za to, jak wiele iteracji przypada na jedną sekundę. \\
+Refreshing odpowiada za tempo odświeżania tabeli wyników i statystyk.\\
+
+Współczynniki Gas, Brake i None określają wartość przyspieszenia (hamowania) w różnych zakresach prędkości samochodu.\\
+\pagebreak
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale=0.8]{options.png}
 \caption{Możliwości wpływu na symulację}
 \end{center}
 \end{figure}
-
-Simulation speed wpływa na przedstawienie na symulacji jednej sekundy (np. $0.5x$ oznacza, że jedna sekunda symulacji to $0.5s$ w rzeczywistości. \\
-Iteration delay odpowiada za to, jak wiele iteracji przypada na jedną sekundę. \\
-Refreshing odpowiada za tempo odświeżania tabeli wyników i statystyk.\\
-
-Współczynniki Gas, Brake i None określają wartość przyspieszenia (hamowania) w różnych zakresach prędkości samochodu.\\
-
 
 
 \section{Wyniki symulacji}
@@ -325,6 +327,8 @@ Współczynniki Gas, Brake i None określają wartość przyspieszenia (hamowani
 \end{center}
 \end{figure}
 
+\pagebreak
+
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale=0.8]{wet.png}
@@ -335,7 +339,7 @@ Współczynniki Gas, Brake i None określają wartość przyspieszenia (hamowani
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale=0.8]{wetdry.png}
-\caption{Przykładowe wyniki po pierwszym okrążeniu na nawierzchni suchej (opony DRY)}
+\caption{Przykładowe wyniki po pierwszym okrążeniu na nawierzchni mokrej (opony DRY)}
 \end{center}
 \end{figure}
 
@@ -370,6 +374,8 @@ Kalibracja współczynników przyspieszania i hamowania jest również dostępna
 
 Aktywacja KERS trwa tyle samo, ile w rzeczywistości, a jej współczynnik można przeliczyć na dodatkowych $80$ koni mechanicznych.\\
 
+\pagebreak
+
 Rekord toru należy do Webbera i wynosi $1:33.401$. Prędkości samochodów dopasowane są tak, aby wynik najlepszego kierowcy był zbliżony do czasu Webbera. System KERS (Kinetic energy recovery system) wykorzystywany jest najczęściej na najdłuższej prostej toru - Wellington(1034m). \\
 
 Walidację rozpoczął test komponentów programu. Zostało sprawdzone, czy samochody rysują się poprawnie i czy zmiany współczynników faktycznie mają wpływ na zachowanie się bolidów. Testowanie funkcjonalności było sprawdzeniem poprawności algorytmu - m.in. czy samochody prawidłowo odczytują zbliżający się zakręt, czy nie przekraczają dozwolonych prędkości i czy starają się unikać kolizji. Weryfikacja ilościowa projektu potwierdziła, że prędkości osiągane przez kierowców zgadzają się z prędkościami osiąganymi rzeczywiście, a czasy przejazdu odzwierciedlają umiejętności kierowców, co szczególnie widać na ostrych zakrętach.
@@ -402,10 +408,11 @@ Jednym z ważnych elementów projektu jest także przyjazne dla użytkownika GUI
 \item możliwość wyboru opon dla konkretnego kierowcy
 \item poprawa umiejętności wyboru idealnej trasy przez kierowców
 \item zamodelowanie pitstopu
-\item prosta możliwość wczytywania nowych tras
+\item prosta możliwość przystosowywania nowych tras do wczytywania
 \item zaplecze mechaniczne i fizyczne - podobne do statystyk RaceSim \cite{race}
 \item poprawa wyglądu siatki, ewentualna zmiana kształtu komórek
 \item poprawa współczynników
+\item zrównoleglenie obliczeń, umożliwiające zwiększenie ich dokładności oraz wielkości siatki
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
