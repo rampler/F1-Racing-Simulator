@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.11.13)  23 JAN 2014 23:34
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.11.13)  24 JAN 2014 12:40
 entering extended mode
 **documentation.tex
 ("E:\Dokumenty\Stosowana\III rok\Symulacje\doc\documentation.tex"
@@ -520,9 +520,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 101--102
  []
 
 
-LaTeX Warning: Citation `maurice' on page 3 undefined on input line 103.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 108--109
 
  []
@@ -547,7 +544,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 158--159
 
  []
 
-<scroll.png, id=29, 430.60875pt x 33.87656pt>
+<scroll.png, id=28, 430.60875pt x 33.87656pt>
 File: scroll.png Graphic file (type png)
  <use scroll.png>
 Package pdftex.def Info: scroll.png used on input line 165.
@@ -783,7 +780,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 402--403
 
 ("E:\Dokumenty\Stosowana\III rok\Symulacje\doc\documentation.bbl"
 Underfull \hbox (badness 10000) in paragraph at lines 9--14
-[]\OT4/cmr/m/n/10 Christian Dan-ner.  Si-lver-stone cir-cuit tracj map.  $\OT4/
+[]\OT4/cmr/m/n/10 Christian Dan-ner.  Si-lver-stone cir-cuit track map.  $\OT4/
 cmtt/m/n/10 http :$
  []
 
@@ -793,39 +790,36 @@ $\OT4/cmtt/m/n/10 / / www . f1fanatic . co . uk / f1-[]information / going-[]to
 -[]a-[]race /$
  []
 
-[19]) [20] ("E:\Dokumenty\Stosowana\III rok\Symulacje\doc\documentation.aux")
-
-LaTeX Warning: There were undefined references.
-
- ) 
+[19]) [20] ("E:\Dokumenty\Stosowana\III rok\Symulacje\doc\documentation.aux") )
+ 
 Here is how much of TeX's memory you used:
  3494 strings out of 493921
  46721 string characters out of 3144851
- 107395 words of memory out of 3000000
+ 107399 words of memory out of 3000000
  6708 multiletter control sequences out of 15000+200000
  15627 words of font info for 43 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  38i,18n,42p,836b,429s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/pltt.enc}{C:/Program Fi
-les (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plrm.enc}{C:/Program Files (x86)/MiKTeX
- 2.9/fonts/enc/dvips/pl/plms.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/d
-vips/pl/plmi.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plit.enc
-}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plsc.enc}<C:/Program Fil
-es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/public/pl/plbx10.pfb><C:/Program Files (x86)/MiKT
-eX 2.9/fonts/type1/public/pl/plbx12.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
-s/type1/public/pl/plbx9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
-ic/pl/plcsc10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plmi
-10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plmi7.pfb><C:/P
-rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr10.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr12.pfb><C:/Program Files (x86)/MiKTe
-X 2.9/fonts/type1/public/pl/plr17.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
-type1/public/pl/plr7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/
-pl/plr9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plsy10.pfb
-><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plsy7.pfb><C:/Program
- Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plti10.pfb><C:/Program Files (x86
-)/MiKTeX 2.9/fonts/type1/public/pl/pltt10.pfb>
-Output written on documentation.pdf (20 pages, 408167 bytes).
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/pltt.enc}{C:/Program File
+s (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plrm.enc}{C:/Program Files (x86)/MiKTeX 2
+.9/fonts/enc/dvips/pl/plms.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvi
+ps/pl/plmi.enc}{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plit.enc}{
+C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/pl/plsc.enc}<C:/Program Files
+ (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (
+x86)/MiKTeX 2.9/fonts/type1/public/pl/plbx10.pfb><C:/Program Files (x86)/MiKTeX
+ 2.9/fonts/type1/public/pl/plbx12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
+type1/public/pl/plbx9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public
+/pl/plcsc10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plmi10
+.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plmi7.pfb><C:/Pro
+gram Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plr10.pfb><C:/Program Files (
+x86)/MiKTeX 2.9/fonts/type1/public/pl/plr12.pfb><C:/Program Files (x86)/MiKTeX 
+2.9/fonts/type1/public/pl/plr17.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/ty
+pe1/public/pl/plr7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl
+/plr9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plsy10.pfb><
+C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/pl/plsy7.pfb><C:/Program F
+iles (x86)/MiKTeX 2.9/fonts/type1/public/pl/plti10.pfb><C:/Program Files (x86)/
+MiKTeX 2.9/fonts/type1/public/pl/pltt10.pfb>
+Output written on documentation.pdf (20 pages, 407771 bytes).
 PDF statistics:
  178 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

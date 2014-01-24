@@ -7,7 +7,7 @@ Carter Chamberlain.
 
 \bibitem{fanatic}
 Christian Danner.
-\newblock Silverstone circuit tracj map.
+\newblock Silverstone circuit track map.
 \newblock
   \url{http://www.f1fanatic.co.uk/f1-information/going-to-a-race/silverstone-circuit-information/}.
 \newblock Accessed: 23-01-2013.
@@ -22,6 +22,11 @@ Jacopo~Tagliabue Francesco~Berto.
 Rolf Hoffmann.
 \newblock Gca-w algorithms for traffic simulation.
 \newblock 2011.
+
+\bibitem{maurice}
+Rolf~Hoffmann i~Maurice~Margenstern.
+\newblock Modelling and simulation of a car race.
+\newblock 2012.
 
 \bibitem{kulak}
 Krzysztof Kułakowski.
